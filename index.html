@@ -1,0 +1,737 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Esquires' Legal — Advocates, Notaries &amp; Arbitrators</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400;1,9..144,500;1,9..144,600&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --blue:#0C1B32;
+    --blue-soft:#152945;
+    --paper:#F7F4ED;
+    --paper-2:#F1ECE1;
+    --gold:#AD8A46;
+    --gold-soft:#C9AD70;
+    --ink:#14161A;
+    --green:#0D251D;
+    --line: rgba(12,27,50,0.14);
+    --line-on-dark: rgba(247,244,237,0.18);
+    --serif: 'Fraunces', serif;
+    --sans: 'Inter', sans-serif;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html{scroll-behavior:smooth;}
+  body{
+    background:var(--paper);
+    color:var(--ink);
+    font-family:var(--sans);
+    font-weight:400;
+    -webkit-font-smoothing:antialiased;
+    overflow-x:hidden;
+  }
+  ::selection{background:var(--gold-soft); color:var(--blue);}
+  a{color:inherit; text-decoration:none;}
+  img{max-width:100%; display:block;}
+
+  .wrap{ max-width:1180px; margin:0 auto; padding:0 40px; }
+  @media(max-width:700px){ .wrap{padding:0 24px;} }
+
+  .eyebrow{
+    font-family:var(--sans); font-size:0.72rem; letter-spacing:0.22em;
+    text-transform:uppercase; color:var(--gold); font-weight:600;
+  }
+  .eyebrow.on-dark{ color:var(--gold-soft); }
+
+  /* ---------- NAV ---------- */
+  header{
+    position:fixed; top:0; left:0; width:100%; z-index:200;
+    background:rgba(247,244,237,0.72);
+    backdrop-filter:blur(14px) saturate(140%);
+    -webkit-backdrop-filter:blur(14px) saturate(140%);
+    border-bottom:1px solid var(--line);
+    transition:background .4s ease;
+  }
+  .nav-inner{
+    max-width:1180px; margin:0 auto; padding:0 40px;
+    height:78px; display:flex; align-items:center; justify-content:space-between;
+  }
+  @media(max-width:700px){ .nav-inner{padding:0 24px; height:66px;} }
+  .brand{
+    font-family:var(--serif); font-style:italic; font-weight:500;
+    font-size:1.28rem; letter-spacing:0.01em; color:var(--blue);
+  }
+  .brand span{ font-style:normal; font-weight:400; font-size:0.6rem; letter-spacing:0.28em;
+    display:block; text-transform:uppercase; color:var(--gold); margin-top:1px; font-family:var(--sans);}
+  nav.links{ display:flex; gap:2.4rem; }
+  nav.links a{
+    font-size:0.76rem; letter-spacing:0.08em; text-transform:uppercase;
+    color:var(--blue); font-weight:500; position:relative; padding-bottom:4px;
+  }
+  nav.links a::after{
+    content:""; position:absolute; left:0; bottom:0; width:0; height:1px; background:var(--gold);
+    transition:width .35s ease;
+  }
+  nav.links a:hover::after{ width:100%; }
+  .nav-cta{
+    font-size:0.72rem; letter-spacing:0.1em; text-transform:uppercase; font-weight:600;
+    border:1px solid var(--blue); padding:0.65rem 1.3rem; color:var(--blue);
+    transition:all .3s ease;
+  }
+  .nav-cta:hover{ background:var(--blue); color:var(--paper); }
+  .menu-btn{ display:none; flex-direction:column; gap:5px; cursor:pointer; }
+  .menu-btn span{ width:24px; height:1px; background:var(--blue); }
+  @media(max-width:880px){
+    nav.links{ display:none; }
+    .menu-btn{ display:flex; }
+  }
+
+  /* ---------- HERO ---------- */
+  .hero{
+    min-height:100svh; display:flex; flex-direction:column; justify-content:center;
+    position:relative; padding-top:78px;
+  }
+  .hero-inner{ max-width:1180px; margin:0 auto; padding:0 40px; width:100%; }
+  @media(max-width:700px){ .hero-inner{padding:0 24px;} }
+  .hero .eyebrow{ display:flex; align-items:center; gap:0.9rem; margin-bottom:2rem; }
+  .hero .eyebrow .dash{ width:34px; height:1px; background:var(--gold); display:inline-block; }
+  .hero h1{
+    font-family:var(--serif); font-style:italic; font-weight:400;
+    font-size:clamp(2.6rem, 7vw, 6rem); line-height:1.04; color:var(--blue);
+    max-width:16ch; letter-spacing:-0.01em;
+  }
+  .hero-sub{
+    margin-top:2.2rem; max-width:44ch; font-size:1.02rem; line-height:1.85;
+    color:#3c4350; font-weight:300;
+  }
+  .hero-actions{ margin-top:2.8rem; display:flex; gap:1rem; flex-wrap:wrap; }
+  .btn-primary{
+    background:var(--blue); color:var(--paper); font-size:0.74rem; letter-spacing:0.1em;
+    text-transform:uppercase; font-weight:600; padding:1rem 2rem; display:inline-block;
+    border:1px solid var(--blue); transition:all .3s ease;
+  }
+  .btn-primary:hover{ background:transparent; color:var(--blue); }
+  .btn-ghost{
+    font-size:0.74rem; letter-spacing:0.1em; text-transform:uppercase; font-weight:600;
+    padding:1rem 2rem; display:inline-block; border:1px solid var(--line); color:var(--blue);
+    transition:all .3s ease;
+  }
+  .btn-ghost:hover{ border-color:var(--blue); }
+  .scroll-cue{
+    position:absolute; bottom:2.6rem; left:40px; display:flex; align-items:center; gap:0.7rem;
+    font-size:0.68rem; letter-spacing:0.18em; text-transform:uppercase; color:#8b8f97;
+  }
+  @media(max-width:700px){ .scroll-cue{ left:24px; } }
+  .scroll-cue .ln{ width:44px; height:1px; background:#8b8f97; animation:pulse 2.4s ease-in-out infinite; }
+  @keyframes pulse{ 0%,100%{opacity:.3;} 50%{opacity:1;} }
+
+  /* ---------- CLAUSE HEADS (signature element) ---------- */
+  .clause-head{
+    display:flex; align-items:baseline; gap:1rem; padding:0 0 1.6rem 0;
+    border-top:1px solid var(--line); padding-top:1.4rem; margin-bottom:2.6rem;
+  }
+  .clause-head .num{ font-family:var(--serif); font-style:italic; color:var(--gold); font-size:1rem; }
+  .clause-head .label{ font-size:0.72rem; letter-spacing:0.22em; text-transform:uppercase; color:#6b7280; font-weight:600; }
+  .on-dark .clause-head{ border-top-color:var(--line-on-dark); }
+  .on-dark .clause-head .label{ color:rgba(247,244,237,0.55); }
+
+  section{ padding:7rem 0; }
+  @media(max-width:700px){ section{ padding:4.6rem 0; } }
+
+  .section-title{
+    font-family:var(--serif); font-weight:400; font-size:clamp(1.9rem,3.6vw,2.9rem);
+    color:var(--blue); line-height:1.18; letter-spacing:-0.01em;
+  }
+  .section-title em{ font-style:italic; color:var(--gold); font-weight:400; }
+  .on-dark .section-title{ color:var(--paper); }
+
+  /* ---------- STAT BAR ---------- */
+  .stat-bar{
+    border-top:1px solid var(--line); border-bottom:1px solid var(--line);
+    padding:3.2rem 0;
+  }
+  .stat-grid{ display:grid; grid-template-columns:repeat(4,1fr); }
+  .stat-grid > div{ padding:0 1.6rem; border-left:1px solid var(--line); }
+  .stat-grid > div:first-child{ border-left:none; padding-left:0; }
+  @media(max-width:760px){
+    .stat-grid{ grid-template-columns:repeat(2,1fr); row-gap:2.2rem; }
+    .stat-grid > div:nth-child(3){ border-left:none; padding-left:0; }
+  }
+  .stat-num{ font-family:var(--serif); font-style:italic; font-size:clamp(2rem,4vw,3.1rem); color:var(--blue); }
+  .stat-num span{ color:var(--gold); }
+  .stat-label{ margin-top:0.5rem; font-size:0.7rem; letter-spacing:0.14em; text-transform:uppercase; color:#6b7280; }
+
+  /* ---------- ABOUT ---------- */
+  .about-grid{ display:grid; grid-template-columns:1.1fr 0.9fr; gap:5rem; align-items:start; }
+  @media(max-width:860px){ .about-grid{ grid-template-columns:1fr; gap:3rem; } }
+  .about-grid p{ font-size:1rem; line-height:1.95; color:#3c4350; font-weight:300; margin-top:1.4rem; }
+  .about-grid p:first-of-type{ margin-top:0; }
+  .pull{
+    border-left:2px solid var(--gold); padding-left:1.8rem; margin-top:0.4rem;
+  }
+  .pull p{
+    font-family:var(--serif); font-style:italic; font-size:1.5rem; line-height:1.5; color:var(--blue);
+    font-weight:400;
+  }
+  .pull .attrib{
+    margin-top:1.2rem; font-family:var(--sans); font-style:normal; font-size:0.72rem;
+    letter-spacing:0.14em; text-transform:uppercase; color:#8b8f97; font-weight:600;
+  }
+
+  /* ---------- ACCORDIONS ---------- */
+  .accordion-list{ border-top:1px solid var(--line); }
+  .acc-item{ border-bottom:1px solid var(--line); }
+  .acc-trigger{
+    width:100%; background:none; border:none; text-align:left; cursor:pointer;
+    padding:1.7rem 0; display:flex; align-items:center; justify-content:space-between; gap:2rem;
+    font-family:var(--serif); font-size:1.28rem; color:var(--blue); font-weight:400;
+  }
+  .acc-trigger .idx{ font-family:var(--sans); font-size:0.72rem; color:var(--gold); letter-spacing:0.1em;
+    margin-right:1.1rem; font-weight:600; }
+  .acc-trigger-text{ display:flex; align-items:baseline; flex:1; }
+  .acc-mark{ position:relative; width:16px; height:16px; flex:none; }
+  .acc-mark::before, .acc-mark::after{
+    content:""; position:absolute; background:var(--blue); transition:transform .35s ease, opacity .3s ease;
+  }
+  .acc-mark::before{ width:16px; height:1px; top:7px; left:0; }
+  .acc-mark::after{ width:1px; height:16px; top:0; left:7px; }
+  .acc-item.open .acc-mark::after{ transform:rotate(90deg); opacity:0; }
+  .acc-panel{
+    max-height:0; overflow:hidden; transition:max-height .5s cubic-bezier(.4,0,.2,1);
+  }
+  .acc-panel-inner{ padding:0 0 2rem 0; max-width:62ch; }
+  .acc-panel-inner p{ font-size:0.95rem; line-height:1.85; color:#3c4350; font-weight:300; }
+  .on-dark .acc-trigger{ color:var(--paper); }
+  .on-dark .acc-item{ border-bottom-color:var(--line-on-dark); }
+  .on-dark .acc-mark::before, .on-dark .acc-mark::after{ background:var(--paper); }
+  .on-dark .accordion-list{ border-top-color:var(--line-on-dark); }
+  .on-dark .acc-panel-inner p{ color:rgba(247,244,237,0.72); }
+
+  /* ---------- FINANCIAL ADVISORY (dark green) ---------- */
+  .advisory{ background:var(--green); color:var(--paper); }
+  .advisory-grid{ display:grid; grid-template-columns:0.9fr 1.1fr; gap:5rem; align-items:start; }
+  @media(max-width:860px){ .advisory-grid{ grid-template-columns:1fr; gap:2.6rem; } }
+  .advisory p.lead{ font-size:1.02rem; line-height:1.95; color:rgba(247,244,237,0.78); font-weight:300; margin-top:1.4rem; }
+  .served-row{ display:flex; gap:0; margin-top:2.6rem; border-top:1px solid var(--line-on-dark); }
+  .served-row > div{ flex:1; padding:1.4rem 1.6rem 0 0; border-right:1px solid var(--line-on-dark); }
+  .served-row > div:last-child{ border-right:none; }
+  @media(max-width:600px){ .served-row{ flex-direction:column; } .served-row > div{ border-right:none; border-bottom:1px solid var(--line-on-dark); padding:1.2rem 0; } }
+  .served-row .k{ font-family:var(--serif); font-style:italic; font-size:1.1rem; color:var(--gold-soft); }
+  .served-row .v{ margin-top:0.4rem; font-size:0.78rem; color:rgba(247,244,237,0.6); letter-spacing:0.02em; }
+
+  /* ---------- LEADERSHIP ---------- */
+  .lead-grid{ display:grid; grid-template-columns:repeat(4,1fr); gap:1px; background:var(--line); border:1px solid var(--line); margin-top:1rem;}
+  @media(max-width:900px){ .lead-grid{ grid-template-columns:repeat(2,1fr); } }
+  .lead-card{
+    background:var(--paper); padding:2.2rem 1.6rem; cursor:pointer; position:relative; overflow:hidden;
+  }
+  .lead-avatar{
+    width:64px; height:64px; border:1px solid var(--blue); display:flex; align-items:center; justify-content:center;
+    font-family:var(--serif); font-style:italic; font-size:1.3rem; color:var(--blue); margin-bottom:1.4rem;
+  }
+  .lead-name{ font-family:var(--serif); font-size:1.08rem; color:var(--blue); line-height:1.3; }
+  .lead-title{ margin-top:0.4rem; font-size:0.7rem; letter-spacing:0.06em; color:var(--gold); text-transform:uppercase; font-weight:600; }
+  .lead-bio{
+    max-height:0; overflow:hidden; transition:max-height .45s ease;
+  }
+  .lead-bio-inner{ padding-top:1rem; font-size:0.82rem; line-height:1.7; color:#4a5160; font-weight:300; }
+  .lead-tap{ margin-top:1.1rem; font-size:0.66rem; letter-spacing:0.14em; text-transform:uppercase; color:#9a9ea5; }
+  .lead-card.open .lead-tap{ opacity:0; height:0; margin:0; }
+
+  /* ---------- CONTACT ---------- */
+  .contact-grid{ display:grid; grid-template-columns:1fr 1fr; gap:4.5rem; }
+  @media(max-width:860px){ .contact-grid{ grid-template-columns:1fr; gap:2.6rem; } }
+  .office{ padding:1.5rem 0; border-bottom:1px solid var(--line); }
+  .office:first-child{ padding-top:0; }
+  .office .flag{ font-size:0.7rem; letter-spacing:0.14em; text-transform:uppercase; color:var(--gold); font-weight:600; }
+  .office .addr{ margin-top:0.5rem; font-size:0.92rem; line-height:1.7; color:#3c4350; font-weight:300; }
+  .form-field{ margin-bottom:1.5rem; }
+  .form-field label{ display:block; font-size:0.68rem; letter-spacing:0.14em; text-transform:uppercase; color:#6b7280; margin-bottom:0.6rem; font-weight:600; }
+  .form-field input, .form-field textarea{
+    width:100%; border:none; border-bottom:1px solid var(--line); background:transparent;
+    padding:0.7rem 0; font-family:var(--sans); font-size:0.94rem; color:var(--ink); font-weight:300;
+  }
+  .form-field input:focus, .form-field textarea:focus{ outline:none; border-bottom-color:var(--blue); }
+  .form-field textarea{ resize:none; height:70px; }
+
+  /* ---------- CLOSING QUOTE ---------- */
+  .closing{ text-align:center; padding:8rem 0; }
+  .closing p{
+    font-family:var(--serif); font-style:italic; font-size:clamp(1.5rem,3.4vw,2.4rem); color:var(--blue);
+    max-width:20ch; margin:0 auto; line-height:1.4;
+  }
+  .closing .rule{ width:1px; height:56px; background:var(--gold); margin:0 auto 2rem; }
+
+  /* ---------- FOOTER ---------- */
+  footer{ background:var(--blue); color:rgba(247,244,237,0.7); padding:5rem 0 2.4rem; }
+  .foot-grid{ display:grid; grid-template-columns:1.4fr 1fr 1fr 1fr; gap:3rem; }
+  @media(max-width:760px){ .foot-grid{ grid-template-columns:1fr 1fr; row-gap:2.4rem; } }
+  .foot-brand{ font-family:var(--serif); font-style:italic; font-size:1.3rem; color:var(--paper); }
+  .foot-tag{ margin-top:1rem; font-size:0.82rem; line-height:1.8; max-width:32ch; font-weight:300; }
+  .foot-col h4{ font-size:0.68rem; letter-spacing:0.16em; text-transform:uppercase; color:var(--gold-soft); margin-bottom:1.2rem; font-weight:600; }
+  .foot-col a, .foot-col div{ display:block; font-size:0.84rem; margin-bottom:0.7rem; font-weight:300; }
+  .foot-bottom{
+    margin-top:4.5rem; padding-top:1.8rem; border-top:1px solid var(--line-on-dark);
+    display:flex; justify-content:space-between; flex-wrap:wrap; gap:1rem;
+    font-size:0.72rem; color:rgba(247,244,237,0.45);
+  }
+
+  /* reveal on scroll */
+  .reveal{ opacity:0; transform:translateY(26px); transition:opacity .9s ease, transform .9s ease; }
+  .reveal.in{ opacity:1; transform:translateY(0); }
+
+  @media (prefers-reduced-motion: reduce){
+    .reveal{ opacity:1; transform:none; transition:none; }
+    html{ scroll-behavior:auto; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="nav-inner">
+    <div class="brand">Esquires' <span>Legal &nbsp;·&nbsp; Chambers</span></div>
+    <nav class="links">
+      <a href="#firm">Firm</a>
+      <a href="#practice">Practice</a>
+      <a href="#advisory">Advisory</a>
+      <a href="#counsel">Counsel</a>
+      <a href="#contact">Contact</a>
+    </nav>
+    <a href="#contact" class="nav-cta">Book Consultation</a>
+    <div class="menu-btn" aria-hidden="true"><span></span><span></span><span></span></div>
+  </div>
+</header>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-inner">
+    <div class="eyebrow"><span class="dash"></span> Esquires' Legal — Nigeria &amp; International</div>
+    <h1>Counsel for consequential matters.</h1>
+    <p class="hero-sub">A chambers of Advocates, Notaries and Arbitrators built for institutions, government and enterprise — with a presence across Nigeria and associate offices in Douala, London, New York and Houston.</p>
+    <div class="hero-actions">
+      <a href="#practice" class="btn-primary">Our Practice</a>
+      <a href="#contact" class="btn-ghost">Book a Consultation</a>
+    </div>
+  </div>
+  <div class="scroll-cue"><span class="ln"></span> Scroll</div>
+</section>
+
+<!-- STAT BAR -->
+<div class="stat-bar wrap-outer">
+  <div class="wrap stat-grid reveal">
+    <div><div class="stat-num">20<span>+</span></div><div class="stat-label">Years of Practice</div></div>
+    <div><div class="stat-num">16</div><div class="stat-label">Practice Areas</div></div>
+    <div><div class="stat-num">5</div><div class="stat-label">Global Offices</div></div>
+    <div><div class="stat-num">12</div><div class="stat-label">States, Nationwide</div></div>
+  </div>
+</div>
+
+<!-- ABOUT -->
+<section id="firm">
+  <div class="wrap">
+    <div class="clause-head reveal"><span class="num">01</span><span class="label">The Firm</span></div>
+    <div class="about-grid">
+      <div class="reveal">
+        <h2 class="section-title">A dynamic chambers, <em>built on precedent.</em></h2>
+        <p>Esquires' Legal is a dynamic set of Chambers with highly experienced legal practitioners, Arbitrators and Notaries Public based primarily in Nigeria — an international law firm with offices in Lagos and Abuja, and associate offices in Douala, London, New York and Houston.</p>
+        <p>Our membership of the African Bar Association gives us a wide network of international associates across the African continent. We advise corporate institutions, government agencies and private clients with the same rigour we would bring to a sovereign matter.</p>
+      </div>
+      <div class="pull reveal">
+        <p>"Integrity in Efficacy."</p>
+        <div class="attrib">— The Firm's Motto</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOUNDATION: Vision / Mission / Philosophy -->
+<section style="padding-top:0;">
+  <div class="wrap">
+    <div class="clause-head reveal"><span class="num">02</span><span class="label">Foundation</span></div>
+    <h2 class="section-title reveal" style="margin-bottom:2.2rem;">Mission, Vision <em>&amp; Philosophy.</em></h2>
+    <div class="accordion-list reveal">
+      <div class="acc-item">
+        <button class="acc-trigger"><span class="acc-trigger-text"><span class="idx">MISSION</span>To provide superior, bespoke legal service</span><span class="acc-mark"></span></button>
+        <div class="acc-panel"><div class="acc-panel-inner"><p>To provide superior bespoke legal services and advisory solutions globally that meet unique challenges and exceed stated expectations, in accordance with the highest professional standards and ethics.</p></div></div>
+      </div>
+      <div class="acc-item">
+        <button class="acc-trigger"><span class="acc-trigger-text"><span class="idx">VISION</span>Uncompromising service, beyond the legal frame</span><span class="acc-mark"></span></button>
+        <div class="acc-panel"><div class="acc-panel-inner"><p>To satisfy clients with uncompromising professional legal services, including other areas of enterprise and endeavour related to, but outside, the legal framework.</p></div></div>
+      </div>
+      <div class="acc-item">
+        <button class="acc-trigger"><span class="acc-trigger-text"><span class="idx">PHILOSOPHY</span>Practical advice, delivered on time, on budget</span><span class="acc-mark"></span></button>
+        <div class="acc-panel"><div class="acc-panel-inner"><p>We draw from a wide pool of expertise to deliver specialised, personalised service — practical yet innovative, performed on time and on budget, with the client always in mind. Each brief is managed closely by a partner or associate responsible for the full relationship.</p></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SERVICES -->
+<section id="practice">
+  <div class="wrap">
+    <div class="clause-head reveal"><span class="num">03</span><span class="label">Practice</span></div>
+    <h2 class="section-title reveal" style="margin-bottom:2.2rem;">What We <em>Practice.</em></h2>
+    <div class="accordion-list reveal">
+
+      <div class="acc-item">
+        <button class="acc-trigger"><span class="acc-trigger-text"><span class="idx">01</span>Corporate Law &amp; Secretarial</span><span class="acc-mark"></span></button>
+        <div class="acc-panel"><div class="acc-panel-inner"><p>Business and commercial law; commercial transactions, mergers &amp; acquisitions, management buy-out/in; international trade, corporate finance and securities. Full company secretarial services, and all pre- and post-incorporation work for corporates, NGOs and trustees.</p></div></div>
+      </div>
+
+      <div class="acc-item">
+        <button class="acc-trigger"><span class="acc-trigger-text"><span class="idx">02</span>Real Property &amp; Conveyancing</span><span class="acc-mark"></span></button>
+        <div class="acc-panel"><div class="acc-panel-inner"><p>Sale, purchase, mortgage and re-mortgage; commercial and industrial leasing; real estate financing and development, for private and institutional landholders.</p></div></div>
+      </div>
+
+      <div class="acc-item">
+        <button class="acc-trigger"><span class="acc-trigger-text"><span class="idx">03</span>Maritime, Admiralty &amp; Shipping</span><span class="acc-mark"></span></button>
+        <div class="acc-panel"><div class="acc-panel-inner"><p>A strategically positioned Nigerian maritime and admiralty practice serving international shipowners, charterers, marine insurers, P&amp;I Clubs and offshore operators.</p></div></div>
+      </div>
+
+      <div class="acc-item">
+        <button class="acc-trigger"><span class="acc-trigger-text"><span class="idx">04</span>Legal &amp; Legislative Drafting</span><span class="acc-mark"></span></button>
+        <div class="acc-panel"><div class="acc-panel-inner"><p>Specialist legal and legislative draughting — agreements, MOUs, deeds and settlements — prepared and consulted upon across a wide spectrum of transactions.</p></div></div>
+      </div>
+
+      <div class="acc-item">
+        <button class="acc-trigger"><span class="acc-trigger-text"><span class="idx">05</span>Arbitration, ADR &amp; Mediation</span><span class="acc-mark"></span></button>
+        <div class="acc-panel"><div class="acc-panel-inner"><p>Arbitration, conciliation and negotiation, including international arbitration, mediation and settlement of disputes — principally in admiralty, maritime and commercial matters.</p></div></div>
+      </div>
+
+      <div class="acc-item">
+        <button class="acc-trigger"><span class="acc-trigger-text"><span class="idx">06</span>General Litigation</span><span class="acc-mark"></span></button>
+        <div class="acc-panel"><div class="acc-panel-inner"><p>A strong litigation practice representing clients before all courts of record, up to the apex court of the land — the Supreme Court of Nigeria.</p></div></div>
+      </div>
+
+      <div class="acc-item">
+        <button class="acc-trigger"><span class="acc-trigger-text"><span class="idx">07</span>Intellectual Property</span><span class="acc-mark"></span></button>
+        <div class="acc-panel"><div class="acc-panel-inner"><p>Copyrights, patents and trademarks — litigating disputed marks, and advising on the protection and commercial exploitation of patents and copyrights.</p></div></div>
+      </div>
+
+      <div class="acc-item">
+        <button class="acc-trigger"><span class="acc-trigger-text"><span class="idx">08</span>Energy &amp; Power</span><span class="acc-mark"></span></button>
+        <div class="acc-panel"><div class="acc-panel-inner"><p>Licensing of companies with NERC and NBET; acting for DISCOs and alternative energy companies across the regulatory lifecycle.</p></div></div>
+      </div>
+
+      <div class="acc-item">
+        <button class="acc-trigger"><span class="acc-trigger-text"><span class="idx">09</span>Notarial Services</span><span class="acc-mark"></span></button>
+        <div class="acc-panel"><div class="acc-panel-inner"><p>Bespoke notary services to clientele ranging from corporate institutions to individuals, including authentication, certification and bills of exchange.</p></div></div>
+      </div>
+
+      <div class="acc-item">
+        <button class="acc-trigger"><span class="acc-trigger-text"><span class="idx">10</span>Media, Entertainment &amp; Sports</span><span class="acc-mark"></span></button>
+        <div class="acc-panel"><div class="acc-panel-inner"><p>Specialised legal services across media, entertainment and sports, including representation in proceedings before the Court of Arbitration for Sport (CAS).</p></div></div>
+      </div>
+
+      <div class="acc-item">
+        <button class="acc-trigger"><span class="acc-trigger-text"><span class="idx">11</span>Immigration &amp; Nationality</span><span class="acc-mark"></span></button>
+        <div class="acc-panel"><div class="acc-panel-inner"><p>Over 20 years' experience handling immigration and visa matters across jurisdictions in Europe, the Americas and Africa.</p></div></div>
+      </div>
+
+      <div class="acc-item">
+        <button class="acc-trigger"><span class="acc-trigger-text"><span class="idx">12</span>Consumer Protection &amp; Anti-trust</span><span class="acc-mark"></span></button>
+        <div class="acc-panel"><div class="acc-panel-inner"><p>A fairly novel area in Nigerian law. We actively represent clients and petitioners before the Federal Competition and Consumer Protection Commission (FCCPC).</p></div></div>
+      </div>
+
+      <div class="acc-item">
+        <button class="acc-trigger"><span class="acc-trigger-text"><span class="idx">13</span>Family Law</span><span class="acc-mark"></span></button>
+        <div class="acc-panel"><div class="acc-panel-inner"><p>Family responsibility proceedings, cohabitation contracts, child and spousal support, divorce, adoption and custody matters.</p></div></div>
+      </div>
+
+      <div class="acc-item">
+        <button class="acc-trigger"><span class="acc-trigger-text"><span class="idx">14</span>Customary Law &amp; Practice</span><span class="acc-mark"></span></button>
+        <div class="acc-panel"><div class="acc-panel-inner"><p>Customary law practice and custom, with pragmatic, traditional application to marriage, land, inheritance and ancillary matters.</p></div></div>
+      </div>
+
+      <div class="acc-item">
+        <button class="acc-trigger"><span class="acc-trigger-text"><span class="idx">15</span>Proof Reading &amp; Editing</span><span class="acc-mark"></span></button>
+        <div class="acc-panel"><div class="acc-panel-inner"><p>Assisting authors in editing and proofing their works, for an international clientele spanning the globe.</p></div></div>
+      </div>
+
+      <div class="acc-item">
+        <button class="acc-trigger"><span class="acc-trigger-text"><span class="idx">16</span>Other Areas</span><span class="acc-mark"></span></button>
+        <div class="acc-panel"><div class="acc-panel-inner"><p>Education law, wills and probate, housing law (landlord and tenancy), information and communications technology, and class actions.</p></div></div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- FINANCIAL ADVISORY -->
+<section id="advisory" class="advisory on-dark">
+  <div class="wrap">
+    <div class="clause-head reveal"><span class="num">04</span><span class="label">Advisory</span></div>
+    <div class="advisory-grid">
+      <div class="reveal">
+        <h2 class="section-title">Financial &amp; Corporate <em>Advisory.</em></h2>
+      </div>
+      <div class="reveal">
+        <p class="lead">Beyond litigation and drafting, the Firm advises on international trade, corporate finance and securities — structuring transactions, managing pre- and post-incorporation work, and acting as company secretary to corporate clientele across sectors.</p>
+        <p class="lead">We are equally at home advising a government agency as we are a multinational — the same standard of diligence applies regardless of the size of the balance sheet.</p>
+        <div class="served-row">
+          <div><div class="k">Private</div><div class="v">Corporates &amp; Trustees</div></div>
+          <div><div class="k">Institutional</div><div class="v">Banks, Insurers, DFIs</div></div>
+          <div><div class="k">Government</div><div class="v">Agencies &amp; MDAs</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- LEADERSHIP -->
+<section id="counsel">
+  <div class="wrap">
+    <div class="clause-head reveal"><span class="num">05</span><span class="label">Counsel</span></div>
+    <h2 class="section-title reveal" style="margin-bottom:2.2rem;">Principal &amp; Advisory <em>Counsel.</em></h2>
+    <div class="lead-grid reveal">
+
+      <div class="lead-card" data-bio="Principal Consulting Counsel / Solicitor / Barrister, Notary Public. Leads the Firm's corporate, maritime and arbitration practice.">
+        <div class="lead-avatar">AO</div>
+        <div class="lead-name">Austin J. Otah</div>
+        <div class="lead-title">Principal Counsel</div>
+        <div class="lead-tap">Tap for bio</div>
+        <div class="lead-bio"><div class="lead-bio-inner"></div></div>
+      </div>
+
+      <div class="lead-card" data-bio="Senator, Federal Republic of Nigeria. Provides advisory guidance to the Firm on matters of governance, policy and public affairs.">
+        <div class="lead-avatar">VN</div>
+        <div class="lead-name">Sen. Victor Ndoma-Egba</div>
+        <div class="lead-title">Advisory Counsel · OFR, CON, SAN</div>
+        <div class="lead-tap">Tap for bio</div>
+        <div class="lead-bio"><div class="lead-bio-inner"></div></div>
+      </div>
+
+      <div class="lead-card" data-bio="Barrister (UK), LLM, PhD. International advisory counsel supporting cross-border and comparative law matters.">
+        <div class="lead-avatar">CC</div>
+        <div class="lead-name">Prof. Charles S. Chatterjee</div>
+        <div class="lead-title">Advisory Counsel</div>
+        <div class="lead-tap">Tap for bio</div>
+        <div class="lead-bio"><div class="lead-bio-inner"></div></div>
+      </div>
+
+      <div class="lead-card" data-bio="LLB, LLM, BL, ACIS. Senior External Associate managing corporate secretarial and compliance matters.">
+        <div class="lead-avatar">EE</div>
+        <div class="lead-name">Elozino Eteghrara</div>
+        <div class="lead-title">Snr. External Associate</div>
+        <div class="lead-tap">Tap for bio</div>
+        <div class="lead-bio"><div class="lead-bio-inner"></div></div>
+      </div>
+
+      <div class="lead-card" data-bio="Called to the Nigerian Bar in 2011, following studies at Benue State University and the Nigerian Law School, Lagos. Senior Associate handling commercial litigation.">
+        <div class="lead-avatar">MI</div>
+        <div class="lead-name">Marvin Ibem</div>
+        <div class="lead-title">Senior Associate</div>
+        <div class="lead-tap">Tap for bio</div>
+        <div class="lead-bio"><div class="lead-bio-inner"></div></div>
+      </div>
+
+      <div class="lead-card" data-bio="LLB, BL, ACMS, MIAD, PGDEML, LLM, PhD. Associate Consultant with a research-driven approach to legislative and policy drafting.">
+        <div class="lead-avatar">RA</div>
+        <div class="lead-name">Richard H. John Aboki</div>
+        <div class="lead-title">Associate Consultant</div>
+        <div class="lead-tap">Tap for bio</div>
+        <div class="lead-bio"><div class="lead-bio-inner"></div></div>
+      </div>
+
+      <div class="lead-card" data-bio="BA (Hons), LLB, BL, MA, LLM. Associate Consultant advising on family, property and general litigation matters.">
+        <div class="lead-avatar">OO</div>
+        <div class="lead-name">Oladele Osinuga</div>
+        <div class="lead-title">Associate Consultant</div>
+        <div class="lead-tap">Tap for bio</div>
+        <div class="lead-bio"><div class="lead-bio-inner"></div></div>
+      </div>
+
+      <div class="lead-card" data-bio="LLB (Sheffield). Associate Consultant and International Real Estate Specialist, advising on cross-border property transactions.">
+        <div class="lead-avatar">GO</div>
+        <div class="lead-name">Godwin Okri</div>
+        <div class="lead-title">Real Estate Specialist</div>
+        <div class="lead-tap">Tap for bio</div>
+        <div class="lead-bio"><div class="lead-bio-inner"></div></div>
+      </div>
+
+      <div class="lead-card" data-bio="LLB, LLM, BL. International Associate based in Cameroon, practising across French and English legal systems in business, corporate and maritime law.">
+        <div class="lead-avatar">TN</div>
+        <div class="lead-name">Nkwayep Tiwo Noffé</div>
+        <div class="lead-title">International Associate · Cameroon</div>
+        <div class="lead-tap">Tap for bio</div>
+        <div class="lead-bio"><div class="lead-bio-inner"></div></div>
+      </div>
+
+      <div class="lead-card" data-bio="LLB, BL. External Associate supporting the Firm's litigation and advisory practice.">
+        <div class="lead-avatar">KM</div>
+        <div class="lead-name">Kyenret Comfort Mimang</div>
+        <div class="lead-title">External Associate</div>
+        <div class="lead-tap">Tap for bio</div>
+        <div class="lead-bio"><div class="lead-bio-inner"></div></div>
+      </div>
+
+      <div class="lead-card" data-bio="LLB, BL, AICMC. Associate advising on corporate and commercial matters.">
+        <div class="lead-avatar">TO</div>
+        <div class="lead-name">Toluwani Ibukun Onifade</div>
+        <div class="lead-title">Associate</div>
+        <div class="lead-tap">Tap for bio</div>
+        <div class="lead-bio"><div class="lead-bio-inner"></div></div>
+      </div>
+
+      <div class="lead-card" data-bio="LLB, BL. Associate practising across family and general litigation matters.">
+        <div class="lead-avatar">EO</div>
+        <div class="lead-name">Esther Adebola Olanipekun</div>
+        <div class="lead-title">Associate</div>
+        <div class="lead-tap">Tap for bio</div>
+        <div class="lead-bio"><div class="lead-bio-inner"></div></div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="wrap">
+    <div class="clause-head reveal"><span class="num">06</span><span class="label">Contact</span></div>
+    <h2 class="section-title reveal" style="margin-bottom:2.6rem;">Instruct the <em>Firm.</em></h2>
+    <div class="contact-grid">
+      <div class="reveal">
+        <div class="office">
+          <div class="flag">Abuja — Main Office</div>
+          <div class="addr">1st Floor, B Wing, Park N Shop Bus. Centre, No. 24 Aminu Kano Crescent, Wuse II, Abuja, Nigeria.</div>
+        </div>
+        <div class="office">
+          <div class="flag">Lagos, Nigeria</div>
+          <div class="addr">Associate Chambers, Lagos.</div>
+        </div>
+        <div class="office">
+          <div class="flag">London, United Kingdom</div>
+          <div class="addr">98 Coldharbour Lane, Camberwell, London SE5 9PU.</div>
+        </div>
+        <div class="office">
+          <div class="flag">New York, USA</div>
+          <div class="addr">18 East Broadway, Suite 600A, New York 10013.</div>
+        </div>
+        <div class="office" style="border-bottom:none;">
+          <div class="flag">Douala, Cameroon &amp; Houston, USA</div>
+          <div class="addr">Associate offices.</div>
+        </div>
+      </div>
+      <div class="reveal">
+        <div class="form-field"><label>Full Name</label><input type="text" placeholder="Your name"></div>
+        <div class="form-field"><label>Organisation</label><input type="text" placeholder="Company / institution"></div>
+        <div class="form-field"><label>Matter</label><input type="text" placeholder="Area of law"></div>
+        <div class="form-field"><label>Brief</label><textarea placeholder="A short description of your matter"></textarea></div>
+        <a href="#" class="btn-primary" style="margin-top:0.5rem;">Submit Instruction</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CLOSING QUOTE -->
+<div class="closing wrap reveal">
+  <div class="rule"></div>
+  <p>"The ordinary person deserves the same quality of counsel as the state."</p>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="wrap">
+    <div class="foot-grid">
+      <div>
+        <div class="foot-brand">Esquires' Legal</div>
+        <p class="foot-tag">Advocates, Notaries &amp; Arbitrators. A dynamic chambers based in Nigeria, with associate offices across Africa, Europe and North America.</p>
+      </div>
+      <div class="foot-col">
+        <h4>Navigate</h4>
+        <a href="#firm">The Firm</a>
+        <a href="#practice">Practice</a>
+        <a href="#advisory">Advisory</a>
+        <a href="#counsel">Counsel</a>
+      </div>
+      <div class="foot-col">
+        <h4>Contact</h4>
+        <div>+234 (0) 81 5047 0073</div>
+        <div>info@esquireslegal.com</div>
+        <div>Mon–Fri, 9:00–18:00</div>
+      </div>
+      <div class="foot-col">
+        <h4>Chambers</h4>
+        <div>Lagos · Abuja</div>
+        <div>Douala · London</div>
+        <div>New York · Houston</div>
+      </div>
+    </div>
+    <div class="foot-bottom">
+      <div>© 2026 Esquires' Legal. BN 2003538.</div>
+      <div>Associate Chambers: Lagos, Kano, Kaduna, Plateau, Enugu, Delta, Edo, Rivers, Cross-River, Akwa-Ibom, Kwara &amp; Oyo States. &nbsp;·&nbsp; <a href="admin/login.html" style="text-decoration:underline;">Admin</a></div>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // Accordion behaviour (foundation + services)
+  document.querySelectorAll('.acc-item').forEach(function(item){
+    var trigger = item.querySelector('.acc-trigger');
+    var panel = item.querySelector('.acc-panel');
+    trigger.addEventListener('click', function(){
+      var isOpen = item.classList.contains('open');
+      // close siblings within the same accordion-list
+      var list = item.closest('.accordion-list');
+      list.querySelectorAll('.acc-item.open').forEach(function(openItem){
+        if(openItem !== item){
+          openItem.classList.remove('open');
+          openItem.querySelector('.acc-panel').style.maxHeight = null;
+        }
+      });
+      if(isOpen){
+        item.classList.remove('open');
+        panel.style.maxHeight = null;
+      } else {
+        item.classList.add('open');
+        panel.style.maxHeight = panel.scrollHeight + 'px';
+      }
+    });
+  });
+
+  // Leadership bio reveal
+  document.querySelectorAll('.lead-card').forEach(function(card){
+    var bio = card.querySelector('.lead-bio');
+    var bioInner = card.querySelector('.lead-bio-inner');
+    bioInner.textContent = card.getAttribute('data-bio');
+    card.addEventListener('click', function(){
+      var isOpen = card.classList.contains('open');
+      if(isOpen){
+        card.classList.remove('open');
+        bio.style.maxHeight = null;
+      } else {
+        card.classList.add('open');
+        bio.style.maxHeight = bio.scrollHeight + 'px';
+      }
+    });
+  });
+
+  // Scroll-triggered reveal
+  var reveals = document.querySelectorAll('.reveal');
+  var io = new IntersectionObserver(function(entries){
+    entries.forEach(function(entry){
+      if(entry.isIntersecting){
+        entry.target.classList.add('in');
+        io.unobserve(entry.target);
+      }
+    });
+  }, {threshold:0.12, rootMargin:'0px 0px -60px 0px'});
+  reveals.forEach(function(el){ io.observe(el); });
+
+  // Nav background solidify on scroll
+  var header = document.querySelector('header');
+  window.addEventListener('scroll', function(){
+    if(window.scrollY > 40){
+      header.style.background = 'rgba(247,244,237,0.92)';
+    } else {
+      header.style.background = 'rgba(247,244,237,0.72)';
+    }
+  });
+</script>
+
+</body>
+</html>
