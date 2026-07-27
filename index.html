@@ -272,6 +272,37 @@
   .lead-tap{ margin-top:1.1rem; font-size:0.66rem; letter-spacing:0.14em; text-transform:uppercase; color:#9a9ea5; }
   .lead-card.open .lead-tap{ opacity:0; height:0; margin:0; }
 
+  /* ---------- BIO MODAL (mobile Counsel bios — avoids the inline expansion
+     ballooning page length on narrow screens) ---------- */
+  .bio-modal{ position:fixed; inset:0; z-index:300; display:none; }
+  .bio-modal.open{ display:block; }
+  .bio-modal-scrim{
+    position:absolute; inset:0; background:rgba(12,27,50,0.55);
+    opacity:0; transition:opacity .3s ease;
+  }
+  .bio-modal.open .bio-modal-scrim{ opacity:1; }
+  .bio-modal-panel{
+    position:absolute; left:0; right:0; bottom:0; max-height:82svh; overflow-y:auto;
+    background:var(--paper); border-top:1px solid var(--gold);
+    padding:2.4rem 1.6rem 2.6rem; transform:translateY(100%);
+    transition:transform .35s cubic-bezier(.4,0,.2,1);
+  }
+  .bio-modal.open .bio-modal-panel{ transform:translateY(0); }
+  .bio-modal-close{
+    position:absolute; top:1.3rem; right:1.5rem; background:none; border:none;
+    font-size:0.66rem; letter-spacing:0.14em; text-transform:uppercase;
+    color:#9a9ea5; font-weight:600; padding:0.5rem;
+  }
+  .bio-modal-close:hover{ color:var(--blue); }
+  .bio-modal-avatar{
+    width:56px; height:56px; border:1px solid var(--blue); display:flex; align-items:center; justify-content:center;
+    font-family:var(--serif); font-style:italic; font-size:1.15rem; color:var(--blue); margin-bottom:1.3rem;
+  }
+  .bio-modal-name{ font-family:var(--serif); font-size:1.4rem; color:var(--blue); line-height:1.28; padding-right:3rem; }
+  .bio-modal-title{ margin-top:0.5rem; font-size:0.72rem; letter-spacing:0.08em; color:var(--gold); text-transform:uppercase; font-weight:600; }
+  .bio-modal-text{ margin-top:1.5rem; font-size:0.9rem; line-height:1.8; color:#3c4350; font-weight:300; white-space:pre-line; }
+  body.modal-open{ overflow:hidden; }
+
   /* ---------- CONTACT ---------- */
   .contact-grid{ display:grid; grid-template-columns:1fr 1fr; gap:4.5rem; }
   @media(max-width:860px){ .contact-grid{ grid-template-columns:1fr; gap:2.6rem; } }
@@ -759,6 +790,18 @@ Called to the Nigerian Bar in 2017 with second class upper honours from Igbinedi
   </div>
 </footer>
 
+<!-- BIO MODAL (mobile) -->
+<div class="bio-modal" id="bio-modal" aria-hidden="true">
+  <div class="bio-modal-scrim" id="bio-modal-scrim"></div>
+  <div class="bio-modal-panel" role="dialog" aria-modal="true" aria-labelledby="bio-modal-name">
+    <button type="button" class="bio-modal-close" id="bio-modal-close">Close ✕</button>
+    <div class="bio-modal-avatar" id="bio-modal-avatar"></div>
+    <div class="bio-modal-name" id="bio-modal-name"></div>
+    <div class="bio-modal-title" id="bio-modal-title"></div>
+    <div class="bio-modal-text" id="bio-modal-text"></div>
+  </div>
+</div>
+
 <script src="config.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script>
@@ -788,7 +831,39 @@ Called to the Nigerian Bar in 2017 with second class upper honours from Igbinedi
     }
   }
 
+  // Below the lead-grid's own 2-column breakpoint, bios open in a bottom-sheet
+  // modal instead of expanding inline — inline expansion inside a narrow grid
+  // made the Counsel section balloon in length as more bios were opened.
+  var MOBILE_LEAD_QUERY = window.matchMedia('(max-width:900px)');
+  var bioModal = document.getElementById('bio-modal');
+
+  function openBioModal(card){
+    if(!bioModal) return;
+    document.getElementById('bio-modal-avatar').textContent = card.querySelector('.lead-avatar').textContent;
+    document.getElementById('bio-modal-name').textContent = card.querySelector('.lead-name').textContent;
+    document.getElementById('bio-modal-title').textContent = card.querySelector('.lead-title').textContent;
+    document.getElementById('bio-modal-text').textContent = card.getAttribute('data-bio') || '';
+    bioModal.classList.add('open');
+    bioModal.setAttribute('aria-hidden', 'false');
+    document.body.classList.add('modal-open');
+    document.getElementById('bio-modal-close').focus();
+  }
+  function closeBioModal(){
+    if(!bioModal) return;
+    bioModal.classList.remove('open');
+    bioModal.setAttribute('aria-hidden', 'true');
+    document.body.classList.remove('modal-open');
+  }
+  if(bioModal){
+    document.getElementById('bio-modal-close').addEventListener('click', closeBioModal);
+    document.getElementById('bio-modal-scrim').addEventListener('click', closeBioModal);
+  }
+
   function toggleLeadCard(card){
+    if(MOBILE_LEAD_QUERY.matches){
+      openBioModal(card);
+      return;
+    }
     var bio = card.querySelector('.lead-bio');
     var isOpen = card.classList.contains('open');
     if(isOpen){
@@ -815,6 +890,10 @@ Called to the Nigerian Bar in 2017 with second class upper honours from Igbinedi
     if(card){ toggleLeadCard(card); return; }
   });
   document.addEventListener('keydown', function(e){
+    if(e.key === 'Escape'){
+      if(bioModal && bioModal.classList.contains('open')) closeBioModal();
+      return;
+    }
     if(e.key !== 'Enter' && e.key !== ' ') return;
     var card = e.target.closest('.lead-card');
     if(card){ e.preventDefault(); toggleLeadCard(card); }
@@ -1043,3 +1122,4 @@ Called to the Nigerian Bar in 2017 with second class upper honours from Igbinedi
 
 </body>
 </html>
+
