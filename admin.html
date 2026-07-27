@@ -1,0 +1,778 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Esquires' Legal — Admin</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400;1,9..144,500;1,9..144,600&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --blue:#0C1B32;
+    --blue-soft:#152945;
+    --paper:#F7F4ED;
+    --paper-2:#F1ECE1;
+    --gold:#AD8A46;
+    --gold-soft:#C9AD70;
+    --ink:#14161A;
+    --green:#0D251D;
+    --line: rgba(12,27,50,0.14);
+    --line-on-dark: rgba(247,244,237,0.18);
+    --serif: 'Fraunces', serif;
+    --sans: 'Inter', sans-serif;
+    --red:#8a2b2b;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  body{
+    background:var(--paper); color:var(--ink); font-family:var(--sans); font-weight:400;
+    -webkit-font-smoothing:antialiased;
+  }
+  a{color:inherit; text-decoration:none;}
+  button{font-family:inherit; cursor:pointer;}
+  a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visible, select:focus-visible{
+    outline:1px solid var(--gold); outline-offset:2px;
+  }
+  .wrap{ max-width:1080px; margin:0 auto; padding:0 40px; }
+  @media(max-width:700px){ .wrap{padding:0 20px;} }
+
+  .eyebrow{
+    font-family:var(--sans); font-size:0.72rem; letter-spacing:0.22em;
+    text-transform:uppercase; color:var(--gold); font-weight:600;
+  }
+
+  /* ---------- LOGIN ---------- */
+  .login-screen{
+    min-height:100svh; display:flex; align-items:center; justify-content:center; padding:2rem;
+  }
+  .login-card{
+    width:100%; max-width:380px; border:1px solid var(--line); padding:3rem 2.4rem;
+  }
+  .login-card .brand{ font-family:var(--serif); font-style:italic; font-size:1.6rem; color:var(--blue); margin-bottom:0.3rem; }
+  .login-card .eyebrow{ display:block; margin-bottom:1.6rem; }
+  .login-error{
+    margin-top:1.2rem; font-size:0.82rem; color:var(--red); display:none;
+  }
+
+  /* ---------- FORM FIELDS (shared with public site) ---------- */
+  .form-field{ margin-bottom:1.4rem; }
+  .form-field label{ display:block; font-size:0.68rem; letter-spacing:0.14em; text-transform:uppercase; color:#6b7280; margin-bottom:0.5rem; font-weight:600; }
+  .form-field input, .form-field textarea, .form-field select{
+    width:100%; border:none; border-bottom:1px solid var(--line); background:transparent;
+    padding:0.6rem 0; font-family:var(--sans); font-size:0.92rem; color:var(--ink); font-weight:400;
+  }
+  .form-field input:focus, .form-field textarea:focus, .form-field select:focus{ outline:none; border-bottom-color:var(--blue); }
+  .form-field textarea{ resize:vertical; min-height:60px; }
+
+  .btn-primary{
+    background:var(--blue); color:var(--paper); font-size:0.72rem; letter-spacing:0.1em;
+    text-transform:uppercase; font-weight:600; padding:0.85rem 1.6rem; display:inline-block;
+    border:1px solid var(--blue); transition:all .2s ease;
+  }
+  .btn-primary:hover{ background:transparent; color:var(--blue); }
+  .btn-primary:disabled{ opacity:0.5; cursor:default; }
+  .btn-ghost{
+    font-size:0.72rem; letter-spacing:0.1em; text-transform:uppercase; font-weight:600;
+    padding:0.85rem 1.6rem; display:inline-block; border:1px solid var(--line); color:var(--blue);
+    background:none; transition:all .2s ease;
+  }
+  .btn-ghost:hover{ border-color:var(--blue); }
+  .btn-text{
+    background:none; border:none; font-size:0.68rem; letter-spacing:0.1em; text-transform:uppercase;
+    color:#6b7280; font-weight:600; padding:0.3rem 0;
+  }
+  .btn-text:hover{ color:var(--blue); }
+  .btn-text.danger:hover{ color:var(--red); }
+
+  /* ---------- DASHBOARD SHELL ---------- */
+  .admin-header{
+    border-bottom:1px solid var(--line); padding:1.4rem 0;
+  }
+  .admin-header .wrap{ display:flex; align-items:center; justify-content:space-between; gap:1.5rem; flex-wrap:wrap; }
+  .admin-header .brand{ font-family:var(--serif); font-style:italic; font-size:1.2rem; color:var(--blue); }
+  .admin-header .brand span{ font-style:normal; font-weight:400; font-size:0.6rem; letter-spacing:0.24em;
+    display:block; text-transform:uppercase; color:var(--gold); margin-top:2px; font-family:var(--sans); }
+  .admin-header .who{ display:flex; align-items:center; gap:1.2rem; font-size:0.78rem; color:#6b7280; }
+
+  .tabs{ border-bottom:1px solid var(--line); }
+  .tabs .wrap{ display:flex; gap:2.2rem; }
+  .tab-btn{
+    background:none; border:none; padding:1.1rem 0; font-size:0.76rem; letter-spacing:0.1em;
+    text-transform:uppercase; font-weight:600; color:#6b7280; border-bottom:2px solid transparent; margin-bottom:-1px;
+  }
+  .tab-btn.active{ color:var(--blue); border-bottom-color:var(--gold); }
+
+  main{ padding:3rem 0 6rem; }
+  .tab-panel{ display:none; }
+  .tab-panel.active{ display:block; }
+
+  .section-head{ font-family:var(--serif); font-size:1.4rem; color:var(--blue); margin-bottom:0.3rem; }
+  .section-sub{ font-size:0.82rem; color:#6b7280; margin-bottom:1.6rem; }
+
+  /* ---------- CONTENT ACCORDION ---------- */
+  .accordion-list{ border-top:1px solid var(--line); }
+  .acc-item{ border-bottom:1px solid var(--line); }
+  .acc-trigger{
+    width:100%; background:none; border:none; text-align:left; cursor:pointer;
+    padding:1.3rem 0; display:flex; align-items:center; justify-content:space-between; gap:1rem;
+    font-family:var(--serif); font-size:1.1rem; color:var(--blue); font-weight:400;
+  }
+  .acc-mark{ position:relative; width:14px; height:14px; flex:none; }
+  .acc-mark::before, .acc-mark::after{ content:""; position:absolute; background:var(--blue); transition:transform .3s ease, opacity .25s ease; }
+  .acc-mark::before{ width:14px; height:1px; top:6px; left:0; }
+  .acc-mark::after{ width:1px; height:14px; top:0; left:6px; }
+  .acc-item.open .acc-mark::after{ transform:rotate(90deg); opacity:0; }
+  .acc-panel{ max-height:0; overflow:hidden; transition:max-height .4s ease; }
+  .acc-panel-inner{ padding:0 0 2rem 0; }
+
+  .flat-fields{ margin-bottom:1.6rem; }
+  .list-label{ font-size:0.68rem; letter-spacing:0.14em; text-transform:uppercase; color:#6b7280; font-weight:600; margin:1.6rem 0 0.8rem; }
+  .repeater-item{
+    border:1px solid var(--line); padding:1.2rem 1.4rem 0.4rem; margin-bottom:1rem; position:relative;
+  }
+  .repeater-item .form-field{ margin-bottom:1.1rem; }
+  .repeater-item-head{ display:flex; justify-content:flex-end; margin-bottom:0.4rem; }
+  .btn-add{
+    background:none; border:1px dashed var(--line); color:var(--blue); font-size:0.72rem; letter-spacing:0.1em;
+    text-transform:uppercase; font-weight:600; padding:0.75rem 1rem; width:100%; text-align:center; margin-top:0.4rem;
+  }
+  .btn-add:hover{ border-color:var(--gold); color:var(--gold); }
+  .string-list-row{ display:flex; gap:0.8rem; align-items:flex-end; margin-bottom:0.9rem; }
+  .string-list-row .form-field{ flex:1; margin-bottom:0; }
+
+  .save-row{ display:flex; align-items:center; gap:1rem; margin-top:1.2rem; }
+  .save-status{ font-size:0.78rem; color:#6b7280; }
+  .save-status.ok{ color:var(--blue); }
+  .save-status.err{ color:var(--red); }
+
+  /* ---------- BLOG ---------- */
+  .blog-toolbar{ display:flex; justify-content:space-between; align-items:center; margin-bottom:1.6rem; }
+  .blog-row{
+    display:flex; justify-content:space-between; align-items:center; gap:1rem; padding:1.1rem 0; border-bottom:1px solid var(--line);
+  }
+  .blog-row-title{ font-family:var(--serif); font-size:1.05rem; color:var(--blue); }
+  .blog-row-meta{ font-size:0.72rem; letter-spacing:0.06em; text-transform:uppercase; color:#8b8f97; margin-top:0.3rem; }
+  .blog-row-actions{ display:flex; gap:1.2rem; flex:none; }
+  .blog-form{ border:1px solid var(--line); padding:1.6rem 1.8rem; margin-bottom:2rem; }
+  .blog-empty{ padding:2rem 0; font-family:var(--serif); font-style:italic; color:#6b7280; }
+
+  /* ---------- BOOKINGS ---------- */
+  table.bookings{ width:100%; border-collapse:collapse; font-size:0.84rem; }
+  table.bookings th{
+    text-align:left; font-size:0.66rem; letter-spacing:0.1em; text-transform:uppercase; color:#6b7280;
+    font-weight:600; padding:0.7rem 0.8rem 0.7rem 0; border-bottom:1px solid var(--line); white-space:nowrap;
+  }
+  table.bookings td{ padding:0.9rem 0.8rem 0.9rem 0; border-bottom:1px solid var(--line); vertical-align:top; }
+  table.bookings td.note{ max-width:220px; color:#4a5160; }
+  table.bookings select{ border:1px solid var(--line); background:var(--paper); padding:0.35rem 0.5rem; font-size:0.78rem; font-family:inherit; }
+  .table-scroll{ overflow-x:auto; }
+
+  .loading-row, .empty-row{ padding:2rem 0; color:#6b7280; font-size:0.88rem; }
+</style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div class="login-screen" id="login-screen">
+  <div class="login-card">
+    <div class="brand">Esquires' Legal</div>
+    <span class="eyebrow">Admin</span>
+    <form id="login-form">
+      <div class="form-field"><label>Email</label><input type="email" id="login-email" required autocomplete="username"></div>
+      <div class="form-field"><label>Password</label><input type="password" id="login-password" required autocomplete="current-password"></div>
+      <button type="submit" class="btn-primary" id="login-submit" style="width:100%;">Sign In</button>
+      <div class="login-error" id="login-error"></div>
+    </form>
+  </div>
+</div>
+
+<!-- DASHBOARD -->
+<div id="dashboard" style="display:none;">
+  <header class="admin-header">
+    <div class="wrap">
+      <div class="brand">Esquires' <span>Legal · Admin</span></div>
+      <div class="who">
+        <span id="who-email"></span>
+        <a href="index.html" class="btn-text">View Site</a>
+        <button class="btn-text" id="sign-out-btn">Sign Out</button>
+      </div>
+    </div>
+  </header>
+
+  <nav class="tabs">
+    <div class="wrap">
+      <button class="tab-btn active" data-tab="content">Content</button>
+      <button class="tab-btn" data-tab="blog">Blog</button>
+      <button class="tab-btn" data-tab="bookings">Bookings</button>
+    </div>
+  </nav>
+
+  <main class="wrap">
+    <section class="tab-panel active" id="tab-content">
+      <div class="section-head">Site Content</div>
+      <div class="section-sub">Edits here publish live to the public site as soon as you save each section.</div>
+      <div class="accordion-list" id="content-accordion"></div>
+    </section>
+
+    <section class="tab-panel" id="tab-blog">
+      <div class="blog-toolbar">
+        <div>
+          <div class="section-head">Blog</div>
+          <div class="section-sub" style="margin-bottom:0;">Posts appear publicly on the site's Blog section, newest first.</div>
+        </div>
+        <button class="btn-primary" id="blog-new-btn">New Post</button>
+      </div>
+      <div id="blog-form-wrap"></div>
+      <div id="blog-list-wrap"><div class="loading-row">Loading…</div></div>
+    </section>
+
+    <section class="tab-panel" id="tab-bookings">
+      <div class="section-head">Consultation Bookings</div>
+      <div class="section-sub">Submissions from the public "Book a Consultation" form.</div>
+      <div class="table-scroll">
+        <table class="bookings" id="bookings-table" style="display:none;">
+          <thead><tr>
+            <th>Received</th><th>Name</th><th>Organisation</th><th>Matter</th><th>Phone</th><th>Email</th><th>Note</th><th>Status</th><th></th>
+          </tr></thead>
+          <tbody id="bookings-tbody"></tbody>
+        </table>
+      </div>
+      <div class="loading-row" id="bookings-loading">Loading…</div>
+      <div class="empty-row" id="bookings-empty" style="display:none;">No bookings yet.</div>
+    </section>
+  </main>
+</div>
+
+<script src="config.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script>
+(function(){
+  if(!window.SITE_CONFIG || !window.SITE_CONFIG.SUPABASE_URL || !window.SITE_CONFIG.SUPABASE_ANON_KEY){
+    document.getElementById('login-error').textContent = 'Site is not configured with Supabase credentials (config.js).';
+    document.getElementById('login-error').style.display = 'block';
+    return;
+  }
+  var sb = supabase.createClient(window.SITE_CONFIG.SUPABASE_URL, window.SITE_CONFIG.SUPABASE_ANON_KEY);
+
+  function esc(s){
+    return String(s == null ? '' : s).replace(/[&<>"']/g, function(c){
+      return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];
+    });
+  }
+
+  // -----------------------------------------------------------------
+  // Auth
+  // -----------------------------------------------------------------
+  var loginScreen = document.getElementById('login-screen');
+  var dashboard = document.getElementById('dashboard');
+  var loginForm = document.getElementById('login-form');
+  var loginError = document.getElementById('login-error');
+  var loginSubmit = document.getElementById('login-submit');
+
+  loginForm.addEventListener('submit', async function(e){
+    e.preventDefault();
+    loginError.style.display = 'none';
+    loginSubmit.disabled = true;
+    loginSubmit.textContent = 'Signing in…';
+    var email = document.getElementById('login-email').value.trim();
+    var password = document.getElementById('login-password').value;
+    var res = await sb.auth.signInWithPassword({ email: email, password: password });
+    loginSubmit.disabled = false;
+    loginSubmit.textContent = 'Sign In';
+    if(res.error){
+      loginError.textContent = res.error.message || 'Sign in failed.';
+      loginError.style.display = 'block';
+    }
+  });
+
+  document.getElementById('sign-out-btn').addEventListener('click', async function(){
+    await sb.auth.signOut();
+  });
+
+  sb.auth.onAuthStateChange(function(event, session){
+    if(session){
+      showDashboard(session);
+    } else {
+      dashboard.style.display = 'none';
+      loginScreen.style.display = 'flex';
+    }
+  });
+
+  function showDashboard(session){
+    loginScreen.style.display = 'none';
+    dashboard.style.display = 'block';
+    document.getElementById('who-email').textContent = session.user.email;
+    if(!dashboard.dataset.loaded){
+      dashboard.dataset.loaded = '1';
+      loadContentTab();
+      loadBlogTab();
+      loadBookingsTab();
+    }
+  }
+
+  // -----------------------------------------------------------------
+  // Tabs
+  // -----------------------------------------------------------------
+  document.querySelectorAll('.tab-btn').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      document.querySelectorAll('.tab-btn').forEach(function(b){ b.classList.remove('active'); });
+      document.querySelectorAll('.tab-panel').forEach(function(p){ p.classList.remove('active'); });
+      btn.classList.add('active');
+      document.getElementById('tab-' + btn.dataset.tab).classList.add('active');
+    });
+  });
+
+  // -----------------------------------------------------------------
+  // Shared form-building helpers
+  // -----------------------------------------------------------------
+  function field(container, obj, key, label, opts){
+    opts = opts || {};
+    var wrap = document.createElement('div');
+    wrap.className = 'form-field';
+    var lab = document.createElement('label');
+    lab.textContent = label;
+    wrap.appendChild(lab);
+    var input = document.createElement(opts.textarea ? 'textarea' : 'input');
+    if(!opts.textarea) input.type = 'text';
+    input.value = obj[key] == null ? '' : obj[key];
+    input.addEventListener('input', function(){ obj[key] = input.value; });
+    wrap.appendChild(input);
+    container.appendChild(wrap);
+    return wrap;
+  }
+
+  function renderStringList(container, obj, key, label){
+    var listLabel = document.createElement('div');
+    listLabel.className = 'list-label';
+    listLabel.textContent = label;
+    container.appendChild(listLabel);
+    if(!Array.isArray(obj[key])) obj[key] = [];
+    var listEl = document.createElement('div');
+    container.appendChild(listEl);
+
+    function redraw(){
+      listEl.innerHTML = '';
+      obj[key].forEach(function(_, i){
+        var row = document.createElement('div');
+        row.className = 'string-list-row';
+        var fwrap = document.createElement('div');
+        fwrap.className = 'form-field';
+        var ta = document.createElement('textarea');
+        ta.value = obj[key][i];
+        ta.addEventListener('input', function(){ obj[key][i] = ta.value; });
+        fwrap.appendChild(ta);
+        row.appendChild(fwrap);
+        var rm = document.createElement('button');
+        rm.type = 'button';
+        rm.className = 'btn-text danger';
+        rm.textContent = 'Remove';
+        rm.addEventListener('click', function(){ obj[key].splice(i, 1); redraw(); });
+        row.appendChild(rm);
+        listEl.appendChild(row);
+      });
+    }
+    redraw();
+
+    var add = document.createElement('button');
+    add.type = 'button';
+    add.className = 'btn-add';
+    add.textContent = '+ Add';
+    add.addEventListener('click', function(){ obj[key].push(''); redraw(); });
+    container.appendChild(add);
+  }
+
+  function renderObjectList(container, obj, key, label, itemFields){
+    var listLabel = document.createElement('div');
+    listLabel.className = 'list-label';
+    listLabel.textContent = label;
+    container.appendChild(listLabel);
+    if(!Array.isArray(obj[key])) obj[key] = [];
+    var listEl = document.createElement('div');
+    container.appendChild(listEl);
+
+    function redraw(){
+      listEl.innerHTML = '';
+      obj[key].forEach(function(item, i){
+        var card = document.createElement('div');
+        card.className = 'repeater-item';
+        var head = document.createElement('div');
+        head.className = 'repeater-item-head';
+        var rm = document.createElement('button');
+        rm.type = 'button';
+        rm.className = 'btn-text danger';
+        rm.textContent = 'Remove';
+        rm.addEventListener('click', function(){ obj[key].splice(i, 1); redraw(); });
+        head.appendChild(rm);
+        card.appendChild(head);
+        itemFields.forEach(function(f){
+          field(card, item, f.key, f.label, {textarea: !!f.textarea});
+        });
+        listEl.appendChild(card);
+      });
+    }
+    redraw();
+
+    var add = document.createElement('button');
+    add.type = 'button';
+    add.className = 'btn-add';
+    add.textContent = '+ Add ' + label.replace(/s$/, '');
+    add.addEventListener('click', function(){
+      var blank = {};
+      itemFields.forEach(function(f){ blank[f.key] = ''; });
+      obj[key].push(blank);
+      redraw();
+    });
+    container.appendChild(add);
+  }
+
+  // -----------------------------------------------------------------
+  // Content tab
+  // -----------------------------------------------------------------
+  var CONTENT_SECTIONS = [
+    { key:'hero', label:'Hero', build: function(c, d){
+      field(c, d, 'eyebrow', 'Eyebrow');
+      field(c, d, 'title', 'Title');
+      field(c, d, 'sub', 'Subtitle', {textarea:true});
+      field(c, d, 'cta_primary', 'Primary Button Label');
+      field(c, d, 'cta_secondary', 'Secondary Button Label');
+    }},
+    { key:'stats', label:'Stats', build: function(c, d, wrapper){
+      if(!Array.isArray(wrapper.value)) wrapper.value = [];
+      renderObjectList({appendChild:function(n){c.appendChild(n);}}, wrapper, 'value', 'Stats', [
+        {key:'value', label:'Value'}, {key:'suffix', label:'Suffix'}, {key:'label', label:'Label'}
+      ]);
+    }, raw:true },
+    { key:'firm', label:'The Firm', build: function(c, d){
+      field(c, d, 'title_pre', 'Title (plain part)');
+      field(c, d, 'title_em', 'Title (emphasis part)');
+      renderStringList(c, d, 'paragraphs', 'Paragraphs');
+      field(c, d, 'quote', 'Pull Quote');
+      field(c, d, 'quote_attrib', 'Quote Attribution');
+    }},
+    { key:'foundation', label:'Foundation (Mission / Vision / Philosophy)', build: function(c, d){
+      field(c, d, 'title_pre', 'Title (plain part)');
+      field(c, d, 'title_em', 'Title (emphasis part)');
+      renderObjectList(c, d, 'items', 'Items', [
+        {key:'idx', label:'Tag (e.g. MISSION)'}, {key:'head', label:'Heading'}, {key:'body', label:'Body', textarea:true}
+      ]);
+    }},
+    { key:'practice', label:'Practice Areas', build: function(c, d){
+      field(c, d, 'title_pre', 'Title (plain part)');
+      field(c, d, 'title_em', 'Title (emphasis part)');
+      renderObjectList(c, d, 'items', 'Practice Areas', [
+        {key:'idx', label:'Number'}, {key:'head', label:'Heading'}, {key:'body', label:'Body', textarea:true}
+      ]);
+    }},
+    { key:'advisory', label:'Financial & Corporate Advisory', build: function(c, d){
+      field(c, d, 'title_pre', 'Title (plain part)');
+      field(c, d, 'title_em', 'Title (emphasis part)');
+      renderStringList(c, d, 'paragraphs', 'Paragraphs');
+      renderObjectList(c, d, 'served', 'Who We Serve', [
+        {key:'k', label:'Label'}, {key:'v', label:'Value'}
+      ]);
+    }},
+    { key:'leadership', label:'Counsel (Leadership)', build: function(c, d){
+      field(c, d, 'title_pre', 'Title (plain part)');
+      field(c, d, 'title_em', 'Title (emphasis part)');
+      renderObjectList(c, d, 'members', 'Members', [
+        {key:'initials', label:'Initials'}, {key:'name', label:'Name'}, {key:'title', label:'Title'}, {key:'bio', label:'Bio', textarea:true}
+      ]);
+    }},
+    { key:'contact', label:'Contact', build: function(c, d){
+      field(c, d, 'title_pre', 'Title (plain part)');
+      field(c, d, 'title_em', 'Title (emphasis part)');
+      renderObjectList(c, d, 'offices', 'Offices', [
+        {key:'flag', label:'Location'}, {key:'addr', label:'Address', textarea:true}
+      ]);
+    }},
+    { key:'footer', label:'Footer', build: function(c, d){
+      field(c, d, 'tagline', 'Tagline', {textarea:true});
+      field(c, d, 'phone', 'Phone');
+      field(c, d, 'email', 'Email');
+      field(c, d, 'hours', 'Hours');
+      renderStringList(c, d, 'chambers', 'Chambers Lines');
+      field(c, d, 'copyright', 'Copyright Line');
+      field(c, d, 'associate_chambers', 'Associate Chambers Line', {textarea:true});
+    }},
+    { key:'closing', label:'Closing Quote', build: function(c, d){
+      field(c, d, 'quote', 'Quote');
+    }}
+  ];
+
+  var contentData = {};
+
+  async function loadContentTab(){
+    var accordion = document.getElementById('content-accordion');
+    accordion.innerHTML = '<div class="loading-row">Loading…</div>';
+    var res = await sb.from('site_content').select('key,value');
+    if(res.error){
+      accordion.innerHTML = '<div class="empty-row">Could not load site content: ' + esc(res.error.message) + '</div>';
+      return;
+    }
+    (res.data || []).forEach(function(row){ contentData[row.key] = row.value; });
+
+    accordion.innerHTML = '';
+    CONTENT_SECTIONS.forEach(function(section){
+      if(contentData[section.key] === undefined){
+        contentData[section.key] = section.raw ? [] : {};
+      }
+      var item = document.createElement('div');
+      item.className = 'acc-item';
+
+      var trigger = document.createElement('button');
+      trigger.type = 'button';
+      trigger.className = 'acc-trigger';
+      trigger.setAttribute('aria-expanded', 'false');
+      trigger.innerHTML = '<span>' + esc(section.label) + '</span><span class="acc-mark"></span>';
+      item.appendChild(trigger);
+
+      var panel = document.createElement('div');
+      panel.className = 'acc-panel';
+      var panelInner = document.createElement('div');
+      panelInner.className = 'acc-panel-inner';
+      var fieldsWrap = document.createElement('div');
+      fieldsWrap.className = 'flat-fields';
+
+      var dataRef = section.raw ? { value: contentData[section.key] } : contentData[section.key];
+      section.build(fieldsWrap, dataRef);
+      panelInner.appendChild(fieldsWrap);
+
+      var saveRow = document.createElement('div');
+      saveRow.className = 'save-row';
+      var saveBtn = document.createElement('button');
+      saveBtn.type = 'button';
+      saveBtn.className = 'btn-primary';
+      saveBtn.textContent = 'Save ' + section.label;
+      var status = document.createElement('span');
+      status.className = 'save-status';
+      saveBtn.addEventListener('click', async function(){
+        saveBtn.disabled = true;
+        status.textContent = 'Saving…';
+        status.className = 'save-status';
+        var valueToSave = section.raw ? dataRef.value : dataRef;
+        var res = await sb.from('site_content').upsert({ key: section.key, value: valueToSave }, { onConflict: 'key' });
+        saveBtn.disabled = false;
+        if(res.error){
+          status.textContent = 'Failed: ' + res.error.message;
+          status.className = 'save-status err';
+        } else {
+          status.textContent = 'Saved.';
+          status.className = 'save-status ok';
+        }
+      });
+      saveRow.appendChild(saveBtn);
+      saveRow.appendChild(status);
+      panelInner.appendChild(saveRow);
+
+      panel.appendChild(panelInner);
+      item.appendChild(panel);
+      accordion.appendChild(item);
+
+      trigger.addEventListener('click', function(){
+        var isOpen = item.classList.contains('open');
+        if(isOpen){
+          item.classList.remove('open');
+          panel.style.maxHeight = null;
+          trigger.setAttribute('aria-expanded', 'false');
+        } else {
+          item.classList.add('open');
+          panel.style.maxHeight = panel.scrollHeight + 'px';
+          trigger.setAttribute('aria-expanded', 'true');
+        }
+      });
+    });
+  }
+
+  // -----------------------------------------------------------------
+  // Blog tab
+  // -----------------------------------------------------------------
+  var blogPosts = [];
+  var blogFormWrap = document.getElementById('blog-form-wrap');
+  var blogListWrap = document.getElementById('blog-list-wrap');
+
+  async function loadBlogTab(){
+    blogListWrap.innerHTML = '<div class="loading-row">Loading…</div>';
+    var res = await sb.from('blog_posts').select('*').order('created_at', {ascending:false});
+    if(res.error){
+      blogListWrap.innerHTML = '<div class="empty-row">Could not load posts: ' + esc(res.error.message) + '</div>';
+      return;
+    }
+    blogPosts = res.data || [];
+    renderBlogList();
+  }
+
+  function renderBlogList(){
+    if(!blogPosts.length){
+      blogListWrap.innerHTML = '<div class="blog-empty">No posts yet.</div>';
+      return;
+    }
+    blogListWrap.innerHTML = '';
+    blogPosts.forEach(function(post){
+      var row = document.createElement('div');
+      row.className = 'blog-row';
+      var left = document.createElement('div');
+      var dateStr = '';
+      try { dateStr = new Date(post.created_at).toLocaleDateString('en-GB', {day:'2-digit', month:'short', year:'numeric'}); } catch(e){}
+      left.innerHTML = '<div class="blog-row-title">' + esc(post.title) + '</div><div class="blog-row-meta">By ' + esc(post.author) + ' · ' + esc(dateStr) + '</div>';
+      row.appendChild(left);
+      var actions = document.createElement('div');
+      actions.className = 'blog-row-actions';
+      var editBtn = document.createElement('button');
+      editBtn.className = 'btn-text';
+      editBtn.textContent = 'Edit';
+      editBtn.addEventListener('click', function(){ openBlogForm(post); });
+      var delBtn = document.createElement('button');
+      delBtn.className = 'btn-text danger';
+      delBtn.textContent = 'Delete';
+      delBtn.addEventListener('click', async function(){
+        if(!confirm('Delete "' + post.title + '"? This cannot be undone.')) return;
+        var res = await sb.from('blog_posts').delete().eq('id', post.id);
+        if(res.error){ alert('Failed to delete: ' + res.error.message); return; }
+        blogPosts = blogPosts.filter(function(p){ return p.id !== post.id; });
+        renderBlogList();
+      });
+      actions.appendChild(editBtn);
+      actions.appendChild(delBtn);
+      row.appendChild(actions);
+      blogListWrap.appendChild(row);
+    });
+  }
+
+  function openBlogForm(post){
+    var isEdit = !!post;
+    blogFormWrap.innerHTML = '';
+    var form = document.createElement('div');
+    form.className = 'blog-form';
+    var title = { value: isEdit ? post.title : '' };
+    var author = { value: isEdit ? post.author : '' };
+    var content = { value: isEdit ? post.content : '' };
+
+    field(form, title, 'value', 'Title');
+    field(form, author, 'value', 'Author');
+    field(form, content, 'value', 'Post', {textarea:true});
+    var contentTa = form.querySelector('textarea');
+    contentTa.style.minHeight = '180px';
+
+    var row = document.createElement('div');
+    row.className = 'save-row';
+    var saveBtn = document.createElement('button');
+    saveBtn.className = 'btn-primary';
+    saveBtn.textContent = isEdit ? 'Update Post' : 'Publish Post';
+    var cancelBtn = document.createElement('button');
+    cancelBtn.className = 'btn-text';
+    cancelBtn.textContent = 'Cancel';
+    cancelBtn.addEventListener('click', function(){ blogFormWrap.innerHTML = ''; });
+    var status = document.createElement('span');
+    status.className = 'save-status';
+
+    saveBtn.addEventListener('click', async function(){
+      if(!title.value.trim() || !author.value.trim() || !content.value.trim()){
+        status.textContent = 'Title, author and post body are required.';
+        status.className = 'save-status err';
+        return;
+      }
+      saveBtn.disabled = true;
+      status.textContent = 'Saving…';
+      status.className = 'save-status';
+      var payload = { title: title.value.trim(), author: author.value.trim(), content: content.value.trim() };
+      var res;
+      if(isEdit){
+        res = await sb.from('blog_posts').update(payload).eq('id', post.id);
+      } else {
+        res = await sb.from('blog_posts').insert([payload]);
+      }
+      saveBtn.disabled = false;
+      if(res.error){
+        status.textContent = 'Failed: ' + res.error.message;
+        status.className = 'save-status err';
+        return;
+      }
+      blogFormWrap.innerHTML = '';
+      loadBlogTab();
+    });
+
+    row.appendChild(saveBtn);
+    row.appendChild(cancelBtn);
+    row.appendChild(status);
+    form.appendChild(row);
+    blogFormWrap.appendChild(form);
+  }
+
+  document.getElementById('blog-new-btn').addEventListener('click', function(){ openBlogForm(null); });
+
+  // -----------------------------------------------------------------
+  // Bookings tab
+  // -----------------------------------------------------------------
+  async function loadBookingsTab(){
+    var loading = document.getElementById('bookings-loading');
+    var empty = document.getElementById('bookings-empty');
+    var table = document.getElementById('bookings-table');
+    var tbody = document.getElementById('bookings-tbody');
+    loading.style.display = 'block';
+    empty.style.display = 'none';
+    table.style.display = 'none';
+
+    var res = await sb.from('bookings').select('*').order('created_at', {ascending:false});
+    loading.style.display = 'none';
+    if(res.error){
+      loading.style.display = 'block';
+      loading.textContent = 'Could not load bookings: ' + res.error.message;
+      return;
+    }
+    var rows = res.data || [];
+    if(!rows.length){
+      empty.style.display = 'block';
+      return;
+    }
+    table.style.display = 'table';
+    tbody.innerHTML = '';
+    rows.forEach(function(b){
+      var tr = document.createElement('tr');
+      var dateStr = '';
+      try { dateStr = new Date(b.created_at).toLocaleDateString('en-GB', {day:'2-digit', month:'short', year:'numeric'}); } catch(e){}
+      tr.innerHTML =
+        '<td>' + esc(dateStr) + '</td>' +
+        '<td>' + esc(b.name) + '</td>' +
+        '<td>' + esc(b.organisation) + '</td>' +
+        '<td>' + esc(b.area) + '</td>' +
+        '<td>' + esc(b.phone) + '</td>' +
+        '<td>' + esc(b.email) + '</td>' +
+        '<td class="note">' + esc(b.note) + '</td>';
+
+      var statusTd = document.createElement('td');
+      var select = document.createElement('select');
+      ['new','contacted','closed'].forEach(function(opt){
+        var o = document.createElement('option');
+        o.value = opt;
+        o.textContent = opt.charAt(0).toUpperCase() + opt.slice(1);
+        if((b.status || 'new') === opt) o.selected = true;
+        select.appendChild(o);
+      });
+      select.addEventListener('change', async function(){
+        var res = await sb.from('bookings').update({ status: select.value }).eq('id', b.id);
+        if(res.error) alert('Failed to update status: ' + res.error.message);
+      });
+      statusTd.appendChild(select);
+      tr.appendChild(statusTd);
+
+      var actionTd = document.createElement('td');
+      var delBtn = document.createElement('button');
+      delBtn.className = 'btn-text danger';
+      delBtn.textContent = 'Delete';
+      delBtn.addEventListener('click', async function(){
+        if(!confirm('Delete this booking from ' + b.name + '?')) return;
+        var res = await sb.from('bookings').delete().eq('id', b.id);
+        if(res.error){ alert('Failed to delete: ' + res.error.message); return; }
+        tr.remove();
+      });
+      actionTd.appendChild(delBtn);
+      tr.appendChild(actionTd);
+
+      tbody.appendChild(tr);
+    });
+  }
+})();
+</script>
+</body>
+</html>

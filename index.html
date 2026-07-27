@@ -35,6 +35,9 @@
   ::selection{background:var(--gold-soft); color:var(--blue);}
   a{color:inherit; text-decoration:none;}
   img{max-width:100%; display:block;}
+  a:focus-visible, button:focus-visible, [tabindex]:focus-visible{
+    outline:1px solid var(--gold); outline-offset:3px;
+  }
 
   .wrap{ max-width:1180px; margin:0 auto; padding:0 40px; }
   @media(max-width:700px){ .wrap{padding:0 24px;} }
@@ -234,6 +237,10 @@
   .on-dark .accordion-list{ border-top-color:var(--line-on-dark); }
   .on-dark .acc-panel-inner p{ color:rgba(247,244,237,0.72); }
 
+  /* ---------- BLOG ---------- */
+  .blog-meta{ font-size:0.7rem; letter-spacing:0.1em; text-transform:uppercase; color:#8b8f97; font-weight:600; margin-bottom:0.9rem; }
+  .blog-empty{ padding:2.2rem 0; font-family:var(--serif); font-style:italic; font-size:1.1rem; color:#6b7280; }
+
   /* ---------- FINANCIAL ADVISORY (dark green) ---------- */
   .advisory{ background:var(--green); color:var(--paper); }
   .advisory-grid{ display:grid; grid-template-columns:0.9fr 1.1fr; gap:5rem; align-items:start; }
@@ -323,6 +330,7 @@
       <a href="#practice">Practice</a>
       <a href="#advisory">Advisory</a>
       <a href="#counsel">Counsel</a>
+      <a href="#blog">Blog</a>
       <a href="#contact">Contact</a>
     </nav>
     <a href="#contact" class="nav-cta">Book Consultation</a>
@@ -336,19 +344,20 @@
     <a href="#practice"><span class="num">02</span>Practice</a>
     <a href="#advisory"><span class="num">03</span>Advisory</a>
     <a href="#counsel"><span class="num">04</span>Counsel</a>
-    <a href="#contact"><span class="num">05</span>Contact</a>
+    <a href="#blog"><span class="num">05</span>Blog</a>
+    <a href="#contact"><span class="num">06</span>Contact</a>
   </div>
 </div>
 
 <!-- HERO -->
 <section class="hero">
   <div class="hero-inner">
-    <div class="eyebrow"><span class="dash"></span> Esquires' Legal — Nigeria &amp; International</div>
-    <h1>Counsel for consequential matters.</h1>
-    <p class="hero-sub">A chambers of Advocates, Notaries and Arbitrators built for institutions, government and enterprise — with a presence across Nigeria and associate offices in Douala, London, New York and Houston.</p>
+    <div class="eyebrow"><span class="dash"></span> <span id="hero-eyebrow">Esquires' Legal — Nigeria &amp; International</span></div>
+    <h1 id="hero-title">Counsel for consequential matters.</h1>
+    <p class="hero-sub" id="hero-sub">A chambers of Advocates, Notaries and Arbitrators built for institutions, government and enterprise — with a presence across Nigeria and associate offices in Douala, London, New York and Houston.</p>
     <div class="hero-actions">
-      <a href="#practice" class="btn-primary">Our Practice</a>
-      <a href="#contact" class="btn-ghost">Book a Consultation</a>
+      <a href="#practice" class="btn-primary" id="hero-cta-primary">Our Practice</a>
+      <a href="#contact" class="btn-ghost" id="hero-cta-secondary">Book a Consultation</a>
     </div>
   </div>
   <div class="scroll-cue"><span class="ln"></span> Scroll</div>
@@ -356,7 +365,7 @@
 
 <!-- STAT BAR -->
 <div class="stat-bar wrap-outer">
-  <div class="wrap stat-grid reveal">
+  <div class="wrap stat-grid reveal" id="stats-grid">
     <div><div class="stat-num">20<span>+</span></div><div class="stat-label">Years of Practice</div></div>
     <div><div class="stat-num">16</div><div class="stat-label">Practice Areas</div></div>
     <div><div class="stat-num">5</div><div class="stat-label">Global Offices</div></div>
@@ -370,13 +379,15 @@
     <div class="clause-head reveal"><span class="num">01</span><span class="label">The Firm</span></div>
     <div class="about-grid">
       <div class="reveal">
-        <h2 class="section-title">A dynamic chambers, <em>built on precedent.</em></h2>
-        <p>Esquires' Legal is a dynamic set of Chambers with highly experienced legal practitioners, Arbitrators and Notaries Public based primarily in Nigeria — an international law firm with offices in Lagos and Abuja, and associate offices in Douala, London, New York and Houston.</p>
-        <p>Our membership of the African Bar Association gives us a wide network of international associates across the African continent. We advise corporate institutions, government agencies and private clients with the same rigour we would bring to a sovereign matter.</p>
+        <h2 class="section-title" id="firm-title">A dynamic chambers, <em>built on precedent.</em></h2>
+        <div id="firm-paragraphs">
+          <p>Esquires' Legal is a dynamic set of Chambers with highly experienced legal practitioners, Arbitrators and Notaries Public based primarily in Nigeria — an international law firm with offices in Lagos and Abuja, and associate offices in Douala, London, New York and Houston.</p>
+          <p>Our membership of the African Bar Association gives us a wide network of international associates across the African continent. We advise corporate institutions, government agencies and private clients with the same rigour we would bring to a sovereign matter.</p>
+        </div>
       </div>
       <div class="pull reveal">
-        <p>"Integrity in Efficacy."</p>
-        <div class="attrib">— The Firm's Motto</div>
+        <p id="firm-quote">"Integrity in Efficacy."</p>
+        <div class="attrib" id="firm-quote-attrib">— The Firm's Motto</div>
       </div>
     </div>
   </div>
@@ -386,18 +397,18 @@
 <section style="padding-top:0;">
   <div class="wrap">
     <div class="clause-head reveal"><span class="num">02</span><span class="label">Foundation</span></div>
-    <h2 class="section-title reveal" style="margin-bottom:2.2rem;">Mission, Vision <em>&amp; Philosophy.</em></h2>
-    <div class="accordion-list reveal">
+    <h2 class="section-title reveal" style="margin-bottom:2.2rem;" id="foundation-title">Mission, Vision <em>&amp; Philosophy.</em></h2>
+    <div class="accordion-list reveal" id="foundation-list">
       <div class="acc-item">
-        <button class="acc-trigger"><span class="acc-trigger-text"><span class="idx">MISSION</span>To provide superior, bespoke legal service</span><span class="acc-mark"></span></button>
+        <button class="acc-trigger" aria-expanded="false"><span class="acc-trigger-text"><span class="idx">MISSION</span>To provide superior, bespoke legal service</span><span class="acc-mark"></span></button>
         <div class="acc-panel"><div class="acc-panel-inner"><p>To provide superior bespoke legal services and advisory solutions globally that meet unique challenges and exceed stated expectations, in accordance with the highest professional standards and ethics.</p></div></div>
       </div>
       <div class="acc-item">
-        <button class="acc-trigger"><span class="acc-trigger-text"><span class="idx">VISION</span>Uncompromising service, beyond the legal frame</span><span class="acc-mark"></span></button>
+        <button class="acc-trigger" aria-expanded="false"><span class="acc-trigger-text"><span class="idx">VISION</span>Uncompromising service, beyond the legal frame</span><span class="acc-mark"></span></button>
         <div class="acc-panel"><div class="acc-panel-inner"><p>To satisfy clients with uncompromising professional legal services, including other areas of enterprise and endeavour related to, but outside, the legal framework.</p></div></div>
       </div>
       <div class="acc-item">
-        <button class="acc-trigger"><span class="acc-trigger-text"><span class="idx">PHILOSOPHY</span>Practical advice, delivered on time, on budget</span><span class="acc-mark"></span></button>
+        <button class="acc-trigger" aria-expanded="false"><span class="acc-trigger-text"><span class="idx">PHILOSOPHY</span>Practical advice, delivered on time, on budget</span><span class="acc-mark"></span></button>
         <div class="acc-panel"><div class="acc-panel-inner"><p>We draw from a wide pool of expertise to deliver specialised, personalised service — practical yet innovative, performed on time and on budget, with the client always in mind. Each brief is managed closely by a partner or associate responsible for the full relationship.</p></div></div>
       </div>
     </div>
@@ -408,86 +419,86 @@
 <section id="practice">
   <div class="wrap">
     <div class="clause-head reveal"><span class="num">03</span><span class="label">Practice</span></div>
-    <h2 class="section-title reveal" style="margin-bottom:2.2rem;">What We <em>Practice.</em></h2>
-    <div class="accordion-list reveal">
+    <h2 class="section-title reveal" style="margin-bottom:2.2rem;" id="practice-title">What We <em>Practice.</em></h2>
+    <div class="accordion-list reveal" id="practice-list">
 
       <div class="acc-item">
-        <button class="acc-trigger"><span class="acc-trigger-text"><span class="idx">01</span>Corporate Law &amp; Secretarial</span><span class="acc-mark"></span></button>
+        <button class="acc-trigger" aria-expanded="false"><span class="acc-trigger-text"><span class="idx">01</span>Corporate Law &amp; Secretarial</span><span class="acc-mark"></span></button>
         <div class="acc-panel"><div class="acc-panel-inner"><p>Business and commercial law; commercial transactions, mergers &amp; acquisitions, management buy-out/in; international trade, corporate finance and securities. Full company secretarial services, and all pre- and post-incorporation work for corporates, NGOs and trustees.</p></div></div>
       </div>
 
       <div class="acc-item">
-        <button class="acc-trigger"><span class="acc-trigger-text"><span class="idx">02</span>Real Property &amp; Conveyancing</span><span class="acc-mark"></span></button>
+        <button class="acc-trigger" aria-expanded="false"><span class="acc-trigger-text"><span class="idx">02</span>Real Property &amp; Conveyancing</span><span class="acc-mark"></span></button>
         <div class="acc-panel"><div class="acc-panel-inner"><p>Sale, purchase, mortgage and re-mortgage; commercial and industrial leasing; real estate financing and development, for private and institutional landholders.</p></div></div>
       </div>
 
       <div class="acc-item">
-        <button class="acc-trigger"><span class="acc-trigger-text"><span class="idx">03</span>Maritime, Admiralty &amp; Shipping</span><span class="acc-mark"></span></button>
+        <button class="acc-trigger" aria-expanded="false"><span class="acc-trigger-text"><span class="idx">03</span>Maritime, Admiralty &amp; Shipping</span><span class="acc-mark"></span></button>
         <div class="acc-panel"><div class="acc-panel-inner"><p>A strategically positioned Nigerian maritime and admiralty practice serving international shipowners, charterers, marine insurers, P&amp;I Clubs and offshore operators.</p></div></div>
       </div>
 
       <div class="acc-item">
-        <button class="acc-trigger"><span class="acc-trigger-text"><span class="idx">04</span>Legal &amp; Legislative Drafting</span><span class="acc-mark"></span></button>
+        <button class="acc-trigger" aria-expanded="false"><span class="acc-trigger-text"><span class="idx">04</span>Legal &amp; Legislative Drafting</span><span class="acc-mark"></span></button>
         <div class="acc-panel"><div class="acc-panel-inner"><p>Specialist legal and legislative draughting — agreements, MOUs, deeds and settlements — prepared and consulted upon across a wide spectrum of transactions.</p></div></div>
       </div>
 
       <div class="acc-item">
-        <button class="acc-trigger"><span class="acc-trigger-text"><span class="idx">05</span>Arbitration, ADR &amp; Mediation</span><span class="acc-mark"></span></button>
+        <button class="acc-trigger" aria-expanded="false"><span class="acc-trigger-text"><span class="idx">05</span>Arbitration, ADR &amp; Mediation</span><span class="acc-mark"></span></button>
         <div class="acc-panel"><div class="acc-panel-inner"><p>Arbitration, conciliation and negotiation, including international arbitration, mediation and settlement of disputes — principally in admiralty, maritime and commercial matters.</p></div></div>
       </div>
 
       <div class="acc-item">
-        <button class="acc-trigger"><span class="acc-trigger-text"><span class="idx">06</span>General Litigation</span><span class="acc-mark"></span></button>
+        <button class="acc-trigger" aria-expanded="false"><span class="acc-trigger-text"><span class="idx">06</span>General Litigation</span><span class="acc-mark"></span></button>
         <div class="acc-panel"><div class="acc-panel-inner"><p>A strong litigation practice representing clients before all courts of record, up to the apex court of the land — the Supreme Court of Nigeria.</p></div></div>
       </div>
 
       <div class="acc-item">
-        <button class="acc-trigger"><span class="acc-trigger-text"><span class="idx">07</span>Intellectual Property</span><span class="acc-mark"></span></button>
+        <button class="acc-trigger" aria-expanded="false"><span class="acc-trigger-text"><span class="idx">07</span>Intellectual Property</span><span class="acc-mark"></span></button>
         <div class="acc-panel"><div class="acc-panel-inner"><p>Copyrights, patents and trademarks — litigating disputed marks, and advising on the protection and commercial exploitation of patents and copyrights.</p></div></div>
       </div>
 
       <div class="acc-item">
-        <button class="acc-trigger"><span class="acc-trigger-text"><span class="idx">08</span>Energy &amp; Power</span><span class="acc-mark"></span></button>
+        <button class="acc-trigger" aria-expanded="false"><span class="acc-trigger-text"><span class="idx">08</span>Energy &amp; Power</span><span class="acc-mark"></span></button>
         <div class="acc-panel"><div class="acc-panel-inner"><p>Licensing of companies with NERC and NBET; acting for DISCOs and alternative energy companies across the regulatory lifecycle.</p></div></div>
       </div>
 
       <div class="acc-item">
-        <button class="acc-trigger"><span class="acc-trigger-text"><span class="idx">09</span>Notarial Services</span><span class="acc-mark"></span></button>
+        <button class="acc-trigger" aria-expanded="false"><span class="acc-trigger-text"><span class="idx">09</span>Notarial Services</span><span class="acc-mark"></span></button>
         <div class="acc-panel"><div class="acc-panel-inner"><p>Bespoke notary services to clientele ranging from corporate institutions to individuals, including authentication, certification and bills of exchange.</p></div></div>
       </div>
 
       <div class="acc-item">
-        <button class="acc-trigger"><span class="acc-trigger-text"><span class="idx">10</span>Media, Entertainment &amp; Sports</span><span class="acc-mark"></span></button>
+        <button class="acc-trigger" aria-expanded="false"><span class="acc-trigger-text"><span class="idx">10</span>Media, Entertainment &amp; Sports</span><span class="acc-mark"></span></button>
         <div class="acc-panel"><div class="acc-panel-inner"><p>Specialised legal services across media, entertainment and sports, including representation in proceedings before the Court of Arbitration for Sport (CAS).</p></div></div>
       </div>
 
       <div class="acc-item">
-        <button class="acc-trigger"><span class="acc-trigger-text"><span class="idx">11</span>Immigration &amp; Nationality</span><span class="acc-mark"></span></button>
+        <button class="acc-trigger" aria-expanded="false"><span class="acc-trigger-text"><span class="idx">11</span>Immigration &amp; Nationality</span><span class="acc-mark"></span></button>
         <div class="acc-panel"><div class="acc-panel-inner"><p>Over 20 years' experience handling immigration and visa matters across jurisdictions in Europe, the Americas and Africa.</p></div></div>
       </div>
 
       <div class="acc-item">
-        <button class="acc-trigger"><span class="acc-trigger-text"><span class="idx">12</span>Consumer Protection &amp; Anti-trust</span><span class="acc-mark"></span></button>
+        <button class="acc-trigger" aria-expanded="false"><span class="acc-trigger-text"><span class="idx">12</span>Consumer Protection &amp; Anti-trust</span><span class="acc-mark"></span></button>
         <div class="acc-panel"><div class="acc-panel-inner"><p>A fairly novel area in Nigerian law. We actively represent clients and petitioners before the Federal Competition and Consumer Protection Commission (FCCPC).</p></div></div>
       </div>
 
       <div class="acc-item">
-        <button class="acc-trigger"><span class="acc-trigger-text"><span class="idx">13</span>Family Law</span><span class="acc-mark"></span></button>
+        <button class="acc-trigger" aria-expanded="false"><span class="acc-trigger-text"><span class="idx">13</span>Family Law</span><span class="acc-mark"></span></button>
         <div class="acc-panel"><div class="acc-panel-inner"><p>Family responsibility proceedings, cohabitation contracts, child and spousal support, divorce, adoption and custody matters.</p></div></div>
       </div>
 
       <div class="acc-item">
-        <button class="acc-trigger"><span class="acc-trigger-text"><span class="idx">14</span>Customary Law &amp; Practice</span><span class="acc-mark"></span></button>
+        <button class="acc-trigger" aria-expanded="false"><span class="acc-trigger-text"><span class="idx">14</span>Customary Law &amp; Practice</span><span class="acc-mark"></span></button>
         <div class="acc-panel"><div class="acc-panel-inner"><p>Customary law practice and custom, with pragmatic, traditional application to marriage, land, inheritance and ancillary matters.</p></div></div>
       </div>
 
       <div class="acc-item">
-        <button class="acc-trigger"><span class="acc-trigger-text"><span class="idx">15</span>Proof Reading &amp; Editing</span><span class="acc-mark"></span></button>
+        <button class="acc-trigger" aria-expanded="false"><span class="acc-trigger-text"><span class="idx">15</span>Proof Reading &amp; Editing</span><span class="acc-mark"></span></button>
         <div class="acc-panel"><div class="acc-panel-inner"><p>Assisting authors in editing and proofing their works, for an international clientele spanning the globe.</p></div></div>
       </div>
 
       <div class="acc-item">
-        <button class="acc-trigger"><span class="acc-trigger-text"><span class="idx">16</span>Other Areas</span><span class="acc-mark"></span></button>
+        <button class="acc-trigger" aria-expanded="false"><span class="acc-trigger-text"><span class="idx">16</span>Other Areas</span><span class="acc-mark"></span></button>
         <div class="acc-panel"><div class="acc-panel-inner"><p>Education law, wills and probate, housing law (landlord and tenancy), information and communications technology, and class actions.</p></div></div>
       </div>
 
@@ -501,12 +512,14 @@
     <div class="clause-head reveal"><span class="num">04</span><span class="label">Advisory</span></div>
     <div class="advisory-grid">
       <div class="reveal">
-        <h2 class="section-title">Financial &amp; Corporate <em>Advisory.</em></h2>
+        <h2 class="section-title" id="advisory-title">Financial &amp; Corporate <em>Advisory.</em></h2>
       </div>
       <div class="reveal">
-        <p class="lead">Beyond litigation and drafting, the Firm advises on international trade, corporate finance and securities — structuring transactions, managing pre- and post-incorporation work, and acting as company secretary to corporate clientele across sectors.</p>
-        <p class="lead">We are equally at home advising a government agency as we are a multinational — the same standard of diligence applies regardless of the size of the balance sheet.</p>
-        <div class="served-row">
+        <div id="advisory-paragraphs">
+          <p class="lead">Beyond litigation and drafting, the Firm advises on international trade, corporate finance and securities — structuring transactions, managing pre- and post-incorporation work, and acting as company secretary to corporate clientele across sectors.</p>
+          <p class="lead">We are equally at home advising a government agency as we are a multinational — the same standard of diligence applies regardless of the size of the balance sheet.</p>
+        </div>
+        <div class="served-row" id="advisory-served">
           <div><div class="k">Private</div><div class="v">Corporates &amp; Trustees</div></div>
           <div><div class="k">Institutional</div><div class="v">Banks, Insurers, DFIs</div></div>
           <div><div class="k">Government</div><div class="v">Agencies &amp; MDAs</div></div>
@@ -520,10 +533,10 @@
 <section id="counsel">
   <div class="wrap">
     <div class="clause-head reveal"><span class="num">05</span><span class="label">Counsel</span></div>
-    <h2 class="section-title reveal" style="margin-bottom:2.2rem;">Principal &amp; Advisory <em>Counsel.</em></h2>
-    <div class="lead-grid reveal">
+    <h2 class="section-title reveal" style="margin-bottom:2.2rem;" id="leadership-title">Principal &amp; Advisory <em>Counsel.</em></h2>
+    <div class="lead-grid reveal" id="leadership-grid">
 
-      <div class="lead-card" data-bio="PRINCIPAL COUNSEL
+      <div class="lead-card" role="button" tabindex="0" data-bio="PRINCIPAL COUNSEL
 LL.B (Hons), LL.M, Notary Public, CIArb.
 Principal Consulting Counsel and Chief Consulting Officer of Esquires' Legal. A dually qualified legal practitioner with over three decades of experience across maritime, corporate, and international commercial law. Called to the Nigerian Bar in 1990, he holds a Master's Degree in Law from London Guildhall University and is an Associate Member of the Chartered Institute of Arbitrators. A published author and Roster of Counsel for the African Court on Human and Peoples' Rights, he has represented clients before the Court of Arbitration for Sport and regularly appears as a legal analyst on Nigerian television and radio.">
         <div class="lead-avatar">AO</div>
@@ -533,7 +546,7 @@ Principal Consulting Counsel and Chief Consulting Officer of Esquires' Legal. A 
         <div class="lead-bio"><div class="lead-bio-inner"></div></div>
       </div>
 
-      <div class="lead-card" data-bio="ADVISORY COUNSEL
+      <div class="lead-card" role="button" tabindex="0" data-bio="ADVISORY COUNSEL
 OFR, CON, SAN.
 Former Senator of the Federal Republic of Nigeria (2003-2015) and Chairman of the Niger Delta Development Corporation. Founder and Senior Partner of Ndoma-Egba, Ebri & Co. Holds the distinction of being the first and only person elevated to the rank of Senior Advocate of Nigeria from the National Assembly. Member of the London Court of International Arbitration, International Bar Association, and Body of Benchers. Brings unparalleled expertise in governance, privatization, and public policy to the Firm.">
         <div class="lead-avatar">VN</div>
@@ -543,7 +556,7 @@ Former Senator of the Federal Republic of Nigeria (2003-2015) and Chairman of th
         <div class="lead-bio"><div class="lead-bio-inner"></div></div>
       </div>
 
-      <div class="lead-card" data-bio="ADVISORY COUNSEL
+      <div class="lead-card" role="button" tabindex="0" data-bio="ADVISORY COUNSEL
 LL.M, Ph.D, Barrister (England & Wales).
 A foremost international commercial law specialist and practising barrister in England and Wales since 1994. Studied at the University of Cambridge and University of London, and held a professorial position at London Metropolitan University. Currently a Senior Associate Fellow at Warwick University and Associate Fellow of the Institute of Advanced Legal Studies, University of London. Advises on complex cross-border commercial matters including banking, trade, shipping, and insurance.">
         <div class="lead-avatar">CC</div>
@@ -553,7 +566,7 @@ A foremost international commercial law specialist and practising barrister in E
         <div class="lead-bio"><div class="lead-bio-inner"></div></div>
       </div>
 
-      <div class="lead-card" data-bio="SENIOR EXTERNAL ASSOCIATE
+      <div class="lead-card" role="button" tabindex="0" data-bio="SENIOR EXTERNAL ASSOCIATE
 LL.B, BL.
 A maritime and corporate commercial law specialist with deep expertise in shipping, oil and gas, real estate, and employment law. Has served as Head of Chambers at a top maritime law firm and as managing-editor of the Admiralty Law Reports of Nigeria. Acts as a joint expert/consultant in Cabotage law, procedure and practice in Nigeria, and has provided expert reports for Covington & Burling LLP, UK. Represents multinational and local companies at trial and appellate Courts.">
         <div class="lead-avatar">EE</div>
@@ -563,7 +576,7 @@ A maritime and corporate commercial law specialist with deep expertise in shippi
         <div class="lead-bio"><div class="lead-bio-inner"></div></div>
       </div>
 
-      <div class="lead-card" data-bio="SENIOR ASSOCIATE
+      <div class="lead-card" role="button" tabindex="0" data-bio="SENIOR ASSOCIATE
 LL.B, B.L. 
 Senior Associate with extensive experience in commercial litigation, advising and representing clients in a broad range of complex commercial disputes. Renowned for his analytical insight, strategic thinking and unwavering commitment to excellence, Marvin is dedicated to delivering practical, client-focused legal solutions with the highest standards of professionalism and integrity.">
         <div class="lead-avatar">MI</div>
@@ -573,7 +586,7 @@ Senior Associate with extensive experience in commercial litigation, advising an
         <div class="lead-bio"><div class="lead-bio-inner"></div></div>
       </div>
 
-      <div class="lead-card" data-bio="ASSOCIATE CONSULTANT
+      <div class="lead-card" role="button" tabindex="0" data-bio="ASSOCIATE CONSULTANT
 LL.B, BL, ACMS, MIAD, LL.M, Ph.D.
 Called to the Nigerian Bar in 1990 with a Master's Degree in International Affairs and Diplomacy. A Fellow of the Institute of Industrialists and Corporate Administration and former Managing Director/CEO of Kaduna State Development Property Company Limited. Brings extensive experience in research, legal coordination, and private sector management to the Firm's advisory practice.">
         <div class="lead-avatar">RA</div>
@@ -583,7 +596,7 @@ Called to the Nigerian Bar in 1990 with a Master's Degree in International Affai
         <div class="lead-bio"><div class="lead-bio-inner"></div></div>
       </div>
 
-      <div class="lead-card" data-bio="ASSOCIATE CONSULTANT
+      <div class="lead-card" role="button" tabindex="0" data-bio="ASSOCIATE CONSULTANT
 B.A, LL.B, BL, M.A, LL.M.
 An internationally recognized legal expert admitted to the List of Counsel for the Kosovo Specialist Chambers (The Hague) and the List of Assistants to Counsel for the International Criminal Court. Served as Prosecution Advisor for the Pan American Development Foundation and Expert Consultant for the United Nations Development Programme. Brings extensive experience in international criminal law, human rights, and cross-border litigation.">
         <div class="lead-avatar">OO</div>
@@ -593,7 +606,7 @@ An internationally recognized legal expert admitted to the List of Counsel for t
         <div class="lead-bio"><div class="lead-bio-inner"></div></div>
       </div>
 
-      <div class="lead-card" data-bio="INTERNATIONAL REAL ESTATE SPECIALIST
+      <div class="lead-card" role="button" tabindex="0" data-bio="INTERNATIONAL REAL ESTATE SPECIALIST
 LL.B (Sheffield).
 A lawyer, author, and international real estate consultant licensed as a Realtor in Florida State, USA. Author of the bestselling book 'Investing in Property with Strategy' and host of The Okri Property Show (TOPS) television series. Brings extensive experience in international property transactions across the UK, Europe, USA, and Nigeria.">
         <div class="lead-avatar">GO</div>
@@ -603,7 +616,7 @@ A lawyer, author, and international real estate consultant licensed as a Realtor
         <div class="lead-bio"><div class="lead-bio-inner"></div></div>
       </div>
 
-      <div class="lead-card" data-bio="INTERNATIONAL ASSOCIATE · CAMEROON
+      <div class="lead-card" role="button" tabindex="0" data-bio="INTERNATIONAL ASSOCIATE · CAMEROON
 Double Masters in Law (Disputes and Commercial Arbitration; Business Law). Called to the Nigerian Bar (2014) and Cameroon Bar (2015). ADR specialist and Founding Partner of Marcella & Co Law Firm, a bilingual corporate and business transactions-oriented firm. Provides legal advice to multinational corporations including General Electric and advises on cross-border transactions, oil and gas, and maritime law matters.">
         <div class="lead-avatar">TN</div>
         <div class="lead-name">Nkwayep Tiwo Noffé</div>
@@ -612,7 +625,7 @@ Double Masters in Law (Disputes and Commercial Arbitration; Business Law). Calle
         <div class="lead-bio"><div class="lead-bio-inner"></div></div>
       </div>
 
-      <div class="lead-card" data-bio="EXTERNAL ASSOCIATE
+      <div class="lead-card" role="button" tabindex="0" data-bio="EXTERNAL ASSOCIATE
 LL.B, BL.
 Called to the Nigerian Bar in 2017. A dedicated practitioner with special interest in Intellectual Property Protection, International Business Law, Commercial Practice, and Corporate Governance. Member of the Nigerian Bar Association, Unity Bar, and has contributed to legal education through radio programs on nation-building and legal awareness.">
         <div class="lead-avatar">KM</div>
@@ -622,7 +635,7 @@ Called to the Nigerian Bar in 2017. A dedicated practitioner with special intere
         <div class="lead-bio"><div class="lead-bio-inner"></div></div>
       </div>
 
-      <div class="lead-card" data-bio="ASSOCIATE
+      <div class="lead-card" role="button" tabindex="0" data-bio="ASSOCIATE
 LL.B, BL.
 Called to the Nigerian Bar in 2016. Associate Member of the Institute of Chartered Mediators and Conciliators. Member of the Nigerian Bar Association, Unity Bar Abuja. Specializes in Litigation, Corporate Matters, Alternative Dispute Resolution, Commercial Practice, and Corporate Governance.">
         <div class="lead-avatar">TO</div>
@@ -632,7 +645,7 @@ Called to the Nigerian Bar in 2016. Associate Member of the Institute of Charter
         <div class="lead-bio"><div class="lead-bio-inner"></div></div>
       </div>
 
-      <div class="lead-card" data-bio="ASSOCIATE
+      <div class="lead-card" role="button" tabindex="0" data-bio="ASSOCIATE
 LL.B (Hons), BL.
 Called to the Nigerian Bar in 2017 with second class upper honours from Igbinedion University. Previously interned at the chambers of Dayo Akinlaja (SAN) and George Ikoli (SAN). Specializes in Litigation, Corporate Law, Real Estate, and Arbitration, with a particular interest in criminal law and criminology.">
         <div class="lead-avatar">EO</div>
@@ -646,13 +659,24 @@ Called to the Nigerian Bar in 2017 with second class upper honours from Igbinedi
   </div>
 </section>
 
+<!-- BLOG -->
+<section id="blog">
+  <div class="wrap">
+    <div class="clause-head reveal"><span class="num">06</span><span class="label">Blog</span></div>
+    <h2 class="section-title reveal" style="margin-bottom:2.2rem;">Insight &amp; <em>Commentary.</em></h2>
+    <div class="accordion-list reveal" id="blog-list">
+      <div class="blog-empty">No posts yet — check back soon.</div>
+    </div>
+  </div>
+</section>
+
 <!-- CONTACT -->
 <section id="contact">
   <div class="wrap">
-    <div class="clause-head reveal"><span class="num">06</span><span class="label">Contact</span></div>
-    <h2 class="section-title reveal" style="margin-bottom:2.6rem;">Instruct the <em>Firm.</em></h2>
+    <div class="clause-head reveal"><span class="num">07</span><span class="label">Contact</span></div>
+    <h2 class="section-title reveal" style="margin-bottom:2.6rem;" id="contact-title">Instruct the <em>Firm.</em></h2>
     <div class="contact-grid">
-      <div class="reveal">
+      <div class="reveal" id="contact-offices">
         <div class="office">
           <div class="flag">Abuja — Main Office</div>
           <div class="addr">1st Floor, B Wing, Park N Shop Bus. Centre, No. 24 Aminu Kano Crescent, Wuse II, Abuja, Nigeria.</div>
@@ -693,7 +717,7 @@ Called to the Nigerian Bar in 2017 with second class upper honours from Igbinedi
 <!-- CLOSING QUOTE -->
 <div class="closing wrap reveal">
   <div class="rule"></div>
-  <p>"The ordinary person deserves the same quality of counsel as the state."</p>
+  <p id="closing-quote">"The ordinary person deserves the same quality of counsel as the state."</p>
 </div>
 
 <!-- FOOTER -->
@@ -702,7 +726,7 @@ Called to the Nigerian Bar in 2017 with second class upper honours from Igbinedi
     <div class="foot-grid">
       <div>
         <div class="foot-brand">Esquires' Legal</div>
-        <p class="foot-tag">Advocates, Notaries &amp; Arbitrators. A dynamic chambers based in Nigeria, with associate offices across Africa, Europe and North America.</p>
+        <p class="foot-tag" id="footer-tagline">Advocates, Notaries &amp; Arbitrators. A dynamic chambers based in Nigeria, with associate offices across Africa, Europe and North America.</p>
       </div>
       <div class="foot-col">
         <h4>Navigate</h4>
@@ -710,23 +734,27 @@ Called to the Nigerian Bar in 2017 with second class upper honours from Igbinedi
         <a href="#practice">Practice</a>
         <a href="#advisory">Advisory</a>
         <a href="#counsel">Counsel</a>
+        <a href="#blog">Blog</a>
+        <a href="#contact">Contact</a>
       </div>
       <div class="foot-col">
         <h4>Contact</h4>
-        <div>+234 (0) 81 5047 0073</div>
-        <div>info@esquireslegal.com</div>
-        <div>Mon–Fri, 9:00–18:00</div>
+        <div id="footer-phone">+234 (0) 81 5047 0073</div>
+        <div id="footer-email">info@esquireslegal.com</div>
+        <div id="footer-hours">Mon–Fri, 9:00–18:00</div>
       </div>
       <div class="foot-col">
         <h4>Chambers</h4>
-        <div>Lagos · Abuja</div>
-        <div>Douala · London</div>
-        <div>New York · Houston</div>
+        <div id="footer-chambers" style="display:contents">
+          <div>Lagos · Abuja</div>
+          <div>Douala · London</div>
+          <div>New York · Houston</div>
+        </div>
       </div>
     </div>
     <div class="foot-bottom">
-      <div>© 2026 Esquires' Legal. BN 2003538.</div>
-      <div>Associate Chambers: Lagos, Kano, Kaduna, Plateau, Enugu, Delta, Edo, Rivers, Cross-River, Akwa-Ibom, Kwara &amp; Oyo States.</div>
+      <div id="footer-copyright">© 2026 Esquires' Legal. BN 2003538.</div>
+      <div id="footer-associate-chambers">Associate Chambers: Lagos, Kano, Kaduna, Plateau, Enugu, Delta, Edo, Rivers, Cross-River, Akwa-Ibom, Kwara &amp; Oyo States.</div>
     </div>
   </div>
 </footer>
@@ -734,45 +762,62 @@ Called to the Nigerian Bar in 2017 with second class upper honours from Igbinedi
 <script src="config.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script>
-  // Accordion behaviour (foundation + services)
-  document.querySelectorAll('.acc-item').forEach(function(item){
-    var trigger = item.querySelector('.acc-trigger');
+  // Accordion + leadership-card behaviour, delegated on document so it keeps
+  // working after Supabase-hydrated content replaces the static defaults.
+  function toggleAccordion(trigger){
+    var item = trigger.closest('.acc-item');
     var panel = item.querySelector('.acc-panel');
-    trigger.addEventListener('click', function(){
-      var isOpen = item.classList.contains('open');
-      // close siblings within the same accordion-list
-      var list = item.closest('.accordion-list');
-      list.querySelectorAll('.acc-item.open').forEach(function(openItem){
-        if(openItem !== item){
-          openItem.classList.remove('open');
-          openItem.querySelector('.acc-panel').style.maxHeight = null;
-        }
-      });
-      if(isOpen){
-        item.classList.remove('open');
-        panel.style.maxHeight = null;
-      } else {
-        item.classList.add('open');
-        panel.style.maxHeight = panel.scrollHeight + 'px';
+    var list = item.closest('.accordion-list');
+    var isOpen = item.classList.contains('open');
+    list.querySelectorAll('.acc-item.open').forEach(function(openItem){
+      if(openItem !== item){
+        openItem.classList.remove('open');
+        openItem.querySelector('.acc-panel').style.maxHeight = null;
+        var openTrigger = openItem.querySelector('.acc-trigger');
+        if(openTrigger) openTrigger.setAttribute('aria-expanded', 'false');
       }
     });
-  });
+    if(isOpen){
+      item.classList.remove('open');
+      panel.style.maxHeight = null;
+      trigger.setAttribute('aria-expanded', 'false');
+    } else {
+      item.classList.add('open');
+      panel.style.maxHeight = panel.scrollHeight + 'px';
+      trigger.setAttribute('aria-expanded', 'true');
+    }
+  }
 
-  // Leadership bio reveal
-  document.querySelectorAll('.lead-card').forEach(function(card){
+  function toggleLeadCard(card){
     var bio = card.querySelector('.lead-bio');
-    var bioInner = card.querySelector('.lead-bio-inner');
-    bioInner.textContent = card.getAttribute('data-bio');
-    card.addEventListener('click', function(){
-      var isOpen = card.classList.contains('open');
-      if(isOpen){
-        card.classList.remove('open');
-        bio.style.maxHeight = null;
-      } else {
-        card.classList.add('open');
-        bio.style.maxHeight = bio.scrollHeight + 'px';
-      }
+    var isOpen = card.classList.contains('open');
+    if(isOpen){
+      card.classList.remove('open');
+      bio.style.maxHeight = null;
+    } else {
+      card.classList.add('open');
+      bio.style.maxHeight = bio.scrollHeight + 'px';
+    }
+  }
+
+  function refreshLeadCardBios(){
+    document.querySelectorAll('.lead-card').forEach(function(card){
+      var bioInner = card.querySelector('.lead-bio-inner');
+      if(bioInner) bioInner.textContent = card.getAttribute('data-bio') || '';
     });
+  }
+  refreshLeadCardBios();
+
+  document.addEventListener('click', function(e){
+    var trigger = e.target.closest('.acc-trigger');
+    if(trigger){ toggleAccordion(trigger); return; }
+    var card = e.target.closest('.lead-card');
+    if(card){ toggleLeadCard(card); return; }
+  });
+  document.addEventListener('keydown', function(e){
+    if(e.key !== 'Enter' && e.key !== ' ') return;
+    var card = e.target.closest('.lead-card');
+    if(card){ e.preventDefault(); toggleLeadCard(card); }
   });
 
   // Scroll-triggered reveal
@@ -821,11 +866,143 @@ Called to the Nigerian Bar in 2017 with second class upper honours from Igbinedi
     a.addEventListener('click', closeMobileMenu);
   });
 
-  // Consultation booking form -> Supabase
   var supabaseClient = null;
   if (window.SITE_CONFIG && window.SITE_CONFIG.SUPABASE_URL && window.SITE_CONFIG.SUPABASE_ANON_KEY) {
     supabaseClient = supabase.createClient(window.SITE_CONFIG.SUPABASE_URL, window.SITE_CONFIG.SUPABASE_ANON_KEY);
   }
+
+  // ---------------------------------------------------------------------
+  // Live content hydration — every section below has hand-written copy
+  // baked into this HTML as the default. If Supabase has a saved edit for
+  // a section (written from admin.html), we overwrite just that section's
+  // DOM with it. If the fetch fails or a key is missing, the static
+  // markup above is simply left alone — the page never breaks or blanks.
+  // ---------------------------------------------------------------------
+  function esc(s){
+    return String(s == null ? '' : s).replace(/[&<>"']/g, function(c){
+      return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];
+    });
+  }
+  function setText(id, value){
+    var el = document.getElementById(id);
+    if(el && value != null) el.textContent = value;
+  }
+  function setTitle(id, pre, em){
+    var el = document.getElementById(id);
+    if(el) el.innerHTML = esc(pre) + '<em>' + esc(em) + '</em>';
+  }
+  function setHTML(id, html){
+    var el = document.getElementById(id);
+    if(el) el.innerHTML = html;
+  }
+
+  function renderHero(d){
+    setText('hero-eyebrow', d.eyebrow);
+    setText('hero-title', d.title);
+    setText('hero-sub', d.sub);
+    setText('hero-cta-primary', d.cta_primary);
+    setText('hero-cta-secondary', d.cta_secondary);
+  }
+  function renderStats(items){
+    if(!Array.isArray(items)) return;
+    setHTML('stats-grid', items.map(function(it){
+      return '<div><div class="stat-num">' + esc(it.value) + (it.suffix ? '<span>' + esc(it.suffix) + '</span>' : '') + '</div><div class="stat-label">' + esc(it.label) + '</div></div>';
+    }).join(''));
+  }
+  function renderFirm(d){
+    setTitle('firm-title', d.title_pre, d.title_em);
+    if(Array.isArray(d.paragraphs)) setHTML('firm-paragraphs', d.paragraphs.map(function(p){ return '<p>' + esc(p) + '</p>'; }).join(''));
+    setText('firm-quote', d.quote);
+    setText('firm-quote-attrib', d.quote_attrib);
+  }
+  function accordionItemsHTML(items){
+    return items.map(function(it){
+      return '<div class="acc-item"><button class="acc-trigger" aria-expanded="false"><span class="acc-trigger-text"><span class="idx">' + esc(it.idx) + '</span>' + esc(it.head) + '</span><span class="acc-mark"></span></button><div class="acc-panel"><div class="acc-panel-inner"><p>' + esc(it.body) + '</p></div></div></div>';
+    }).join('');
+  }
+  function renderFoundation(d){
+    setTitle('foundation-title', d.title_pre, d.title_em);
+    if(Array.isArray(d.items)) setHTML('foundation-list', accordionItemsHTML(d.items));
+  }
+  function renderPractice(d){
+    setTitle('practice-title', d.title_pre, d.title_em);
+    if(Array.isArray(d.items)) setHTML('practice-list', accordionItemsHTML(d.items));
+  }
+  function renderAdvisory(d){
+    setTitle('advisory-title', d.title_pre, d.title_em);
+    if(Array.isArray(d.paragraphs)) setHTML('advisory-paragraphs', d.paragraphs.map(function(p){ return '<p class="lead">' + esc(p) + '</p>'; }).join(''));
+    if(Array.isArray(d.served)) setHTML('advisory-served', d.served.map(function(s){ return '<div><div class="k">' + esc(s.k) + '</div><div class="v">' + esc(s.v) + '</div></div>'; }).join(''));
+  }
+  function renderLeadership(d){
+    setTitle('leadership-title', d.title_pre, d.title_em);
+    if(Array.isArray(d.members)){
+      setHTML('leadership-grid', d.members.map(function(m){
+        return '<div class="lead-card" role="button" tabindex="0" data-bio="' + esc(m.bio) + '">'
+          + '<div class="lead-avatar">' + esc(m.initials) + '</div>'
+          + '<div class="lead-name">' + esc(m.name) + '</div>'
+          + '<div class="lead-title">' + esc(m.title) + '</div>'
+          + '<div class="lead-tap">Tap for bio</div>'
+          + '<div class="lead-bio"><div class="lead-bio-inner"></div></div>'
+          + '</div>';
+      }).join(''));
+      refreshLeadCardBios();
+    }
+  }
+  function renderContact(d){
+    setTitle('contact-title', d.title_pre, d.title_em);
+    if(Array.isArray(d.offices)) setHTML('contact-offices', d.offices.map(function(o, i){
+      var last = i === d.offices.length - 1;
+      return '<div class="office"' + (last ? ' style="border-bottom:none;"' : '') + '><div class="flag">' + esc(o.flag) + '</div><div class="addr">' + esc(o.addr) + '</div></div>';
+    }).join(''));
+  }
+  function renderFooter(d){
+    setText('footer-tagline', d.tagline);
+    setText('footer-phone', d.phone);
+    setText('footer-email', d.email);
+    setText('footer-hours', d.hours);
+    if(Array.isArray(d.chambers)) setHTML('footer-chambers', d.chambers.map(function(c){ return '<div>' + esc(c) + '</div>'; }).join(''));
+    setText('footer-copyright', d.copyright);
+    setText('footer-associate-chambers', d.associate_chambers);
+  }
+  function renderClosing(d){
+    setText('closing-quote', d.quote);
+  }
+  function renderBlog(posts){
+    var list = document.getElementById('blog-list');
+    if(!list) return;
+    if(!posts || !posts.length){
+      list.innerHTML = '<div class="blog-empty">No posts yet — check back soon.</div>';
+      return;
+    }
+    list.innerHTML = posts.map(function(p){
+      var dateLabel = '';
+      try { dateLabel = new Date(p.created_at).toLocaleDateString('en-GB', {day:'2-digit', month:'short'}).toUpperCase(); } catch(e){}
+      return '<div class="acc-item"><button class="acc-trigger" aria-expanded="false"><span class="acc-trigger-text"><span class="idx">' + esc(dateLabel) + '</span>' + esc(p.title) + '</span><span class="acc-mark"></span></button>'
+        + '<div class="acc-panel"><div class="acc-panel-inner"><div class="blog-meta">By ' + esc(p.author) + '</div><p style="white-space:pre-line">' + esc(p.content) + '</p></div></div></div>';
+    }).join('');
+  }
+
+  var SECTION_RENDERERS = {
+    hero: renderHero, stats: renderStats, firm: renderFirm, foundation: renderFoundation,
+    practice: renderPractice, advisory: renderAdvisory, leadership: renderLeadership,
+    contact: renderContact, footer: renderFooter, closing: renderClosing
+  };
+
+  if(supabaseClient){
+    supabaseClient.from('site_content').select('key,value').then(function(res){
+      if(res.error || !res.data) return;
+      res.data.forEach(function(row){
+        var fn = SECTION_RENDERERS[row.key];
+        if(fn){ try { fn(row.value); } catch(e){ console.error('Failed to render section', row.key, e); } }
+      });
+    }, function(e){ console.error('site_content fetch failed', e); });
+
+    supabaseClient.from('blog_posts').select('*').order('created_at', {ascending:false}).then(function(res){
+      if(!res.error && res.data) renderBlog(res.data);
+    }, function(e){ console.error('blog_posts fetch failed', e); });
+  }
+
+  // Consultation booking form -> Supabase
   var bookingForm = document.getElementById('booking-form');
   var cfSubmit = document.getElementById('cf-submit');
   var cfStatus = document.getElementById('cf-status');
