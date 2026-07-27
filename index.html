@@ -653,11 +653,16 @@ Senior Associate with extensive experience in commercial litigation, advising an
         </div>
       </div>
       <div class="reveal">
-        <div class="form-field"><label>Full Name</label><input type="text" placeholder="Your name"></div>
-        <div class="form-field"><label>Organisation</label><input type="text" placeholder="Company / institution"></div>
-        <div class="form-field"><label>Matter</label><input type="text" placeholder="Area of law"></div>
-        <div class="form-field"><label>Brief</label><textarea placeholder="A short description of your matter"></textarea></div>
-        <a href="#" class="btn-primary" style="margin-top:0.5rem;">Submit Instruction</a>
+        <form id="booking-form">
+          <div class="form-field"><label>Full Name *</label><input type="text" id="cf-name" placeholder="Your name" required></div>
+          <div class="form-field"><label>Phone</label><input type="tel" id="cf-phone" placeholder="+234…"></div>
+          <div class="form-field"><label>Email</label><input type="email" id="cf-email" placeholder="you@example.com"></div>
+          <div class="form-field"><label>Organisation</label><input type="text" id="cf-org" placeholder="Company / institution"></div>
+          <div class="form-field"><label>Matter</label><input type="text" id="cf-area" placeholder="Area of law"></div>
+          <div class="form-field"><label>Brief</label><textarea id="cf-note" placeholder="A short description of your matter"></textarea></div>
+          <button type="submit" class="btn-primary" id="cf-submit" style="margin-top:0.5rem; border:1px solid var(--blue); cursor:pointer;">Submit Instruction</button>
+          <div id="cf-status" style="margin-top:1rem; font-size:0.82rem; display:none;"></div>
+        </form>
       </div>
     </div>
   </div>
@@ -699,11 +704,13 @@ Senior Associate with extensive experience in commercial litigation, advising an
     </div>
     <div class="foot-bottom">
       <div>© 2026 Esquires' Legal. BN 2003538.</div>
-      <div>Associate Chambers: Lagos, Kano, Kaduna, Plateau, Enugu, Delta, Edo, Rivers, Cross-River, Akwa-Ibom, Kwara &amp; Oyo States. &nbsp;·&nbsp; <a href="admin/login.html" style="text-decoration:underline;">Admin</a></div>
+      <div>Associate Chambers: Lagos, Kano, Kaduna, Plateau, Enugu, Delta, Edo, Rivers, Cross-River, Akwa-Ibom, Kwara &amp; Oyo States.</div>
     </div>
   </div>
 </footer>
 
+<script src="config.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script>
   // Accordion behaviour (foundation + services)
   document.querySelectorAll('.acc-item').forEach(function(item){
@@ -790,6 +797,48 @@ Senior Associate with extensive experience in commercial litigation, advising an
   });
   mobileMenu.querySelectorAll('a').forEach(function(a){
     a.addEventListener('click', closeMobileMenu);
+  });
+
+  // Consultation booking form -> Supabase
+  var supabaseClient = null;
+  if (window.SITE_CONFIG && window.SITE_CONFIG.SUPABASE_URL && window.SITE_CONFIG.SUPABASE_ANON_KEY) {
+    supabaseClient = supabase.createClient(window.SITE_CONFIG.SUPABASE_URL, window.SITE_CONFIG.SUPABASE_ANON_KEY);
+  }
+  var bookingForm = document.getElementById('booking-form');
+  var cfSubmit = document.getElementById('cf-submit');
+  var cfStatus = document.getElementById('cf-status');
+  bookingForm.addEventListener('submit', async function(e){
+    e.preventDefault();
+    var name = document.getElementById('cf-name').value.trim();
+    if(!name){ return; }
+    cfSubmit.disabled = true;
+    cfSubmit.textContent = 'Submitting…';
+
+    var ok = false;
+    if (supabaseClient) {
+      var { error } = await supabaseClient.from('bookings').insert([{
+        name: name,
+        phone: document.getElementById('cf-phone').value.trim() || null,
+        email: document.getElementById('cf-email').value.trim() || null,
+        organisation: document.getElementById('cf-org').value.trim() || null,
+        area: document.getElementById('cf-area').value.trim() || null,
+        note: document.getElementById('cf-note').value.trim() || null
+      }]);
+      ok = !error;
+      if (error) console.error(error);
+    }
+
+    cfStatus.style.display = 'block';
+    if(ok){
+      cfStatus.style.color = 'var(--blue)';
+      cfStatus.textContent = "Thank you — we've received your instruction and will be in touch shortly.";
+      bookingForm.reset();
+    } else {
+      cfStatus.style.color = '#8a2b2b';
+      cfStatus.textContent = "Something went wrong submitting this. Please call or email us directly.";
+    }
+    cfSubmit.disabled = false;
+    cfSubmit.textContent = 'Submit Instruction';
   });
 </script>
 
