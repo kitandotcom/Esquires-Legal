@@ -5,7 +5,7 @@
       "name": "esquires-legal-static",
       "runtimeExecutable": "python3",
       "runtimeArgs": ["-m", "http.server", "4173"],
-      "port": 417
+      "port": 4173
     }
   ]
 }
