@@ -302,3 +302,4 @@ insert into public.site_content (key, value) values
 }
 $j$::jsonb)
 on conflict (key) do nothing;
+  
