@@ -11,6 +11,5 @@
 // ---------------------------------------------------------------------------
 
 window.SITE_CONFIG = {
-  SUPABASE_URL: "",       // e.g. "https://xxxxxxxx.supabase.co"
-  SUPABASE_ANON_KEY: "",  // e.g. "sb_publishable_..."
-};
+  SUPABASE_URL: "", https://sveglodupnbaalbserdo.supabase.co
+  SUPABASE_ANON_KEY: "",sb_publishable_NsZoL1tVnulrfYHW3vRndQ_JEtHrQun
