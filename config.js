@@ -12,5 +12,5 @@
 
 window.SITE_CONFIG = {
   SUPABASE_URL: "https://sveglodupnbaalbserdo.supabase.co",
-  SUPABASE_ANON_KEY: "sb_publishable_NsZoL1tVnulrfYHW3vRndQ_JEtHrQ",
+  SUPABASE_ANON_KEY: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InN2ZWdsb2R1cG5iYWFsYnNlcmRvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODUxNDU0MDQsImV4cCI6MjEwMDcyMTQwNH0.rRweKk1BLr3QpJmEsKTX6NjRtNJ5aALObLjLQOhsCDk",
 };
