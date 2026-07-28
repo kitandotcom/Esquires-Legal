@@ -130,6 +130,18 @@
     font-size:clamp(2.6rem, 7vw, 6rem); line-height:1.04; color:var(--blue);
     max-width:16ch; letter-spacing:-0.01em;
   }
+  .hero-mark{ display:flex; flex-direction:column; gap:0.9rem; }
+  .hero-mark-name{
+    font-family:var(--serif); font-style:italic; font-weight:400;
+    font-size:clamp(2.4rem, 6.4vw, 5rem); line-height:1.05; color:var(--blue);
+    letter-spacing:-0.01em;
+  }
+  .hero-mark-tag{
+    font-family:var(--sans); font-style:normal; font-weight:500;
+    font-size:clamp(0.68rem, 1.1vw, 0.82rem); letter-spacing:0.32em;
+    text-transform:uppercase; color:var(--gold);
+  }
+  @media(max-width:700px){ .hero-mark-tag{ letter-spacing:0.22em; } }
   .hero-sub{
     margin-top:2.2rem; max-width:44ch; font-size:1.02rem; line-height:1.85;
     color:#3c4350; font-weight:300;
@@ -355,7 +367,7 @@
 
 <header>
   <div class="nav-inner">
-    <div class="brand">Esquires' <span>Legal &nbsp;·&nbsp; Chambers</span></div>
+    <div class="brand">Esquires' <span>Legal</span></div>
     <nav class="links">
       <a href="#firm">Firm</a>
       <a href="#practice">Practice</a>
@@ -384,7 +396,10 @@
 <section class="hero">
   <div class="hero-inner">
     <div class="eyebrow"><span class="dash"></span> <span id="hero-eyebrow">Esquires' Legal — Nigeria &amp; International</span></div>
-    <h1 id="hero-title">Counsel for consequential matters.</h1>
+    <div class="hero-mark" id="hero-title">
+      <span class="hero-mark-name">Esquires' Legal</span>
+      <span class="hero-mark-tag">Advocates&nbsp;&nbsp;|&nbsp;&nbsp;Notaries&nbsp;&nbsp;|&nbsp;&nbsp;Consult</span>
+    </div>
     <p class="hero-sub" id="hero-sub">A chambers of Advocates, Notaries and Arbitrators built for institutions, government and enterprise — with a presence across Nigeria and associate offices in Douala, London, New York and Houston.</p>
     <div class="hero-actions">
       <a href="#practice" class="btn-primary" id="hero-cta-primary">Our Practice</a>
@@ -1122,4 +1137,3 @@ Called to the Nigerian Bar in 2017 with second class upper honours from Igbinedi
 
 </body>
 </html>
-
