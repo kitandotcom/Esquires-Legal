@@ -134,7 +134,7 @@
   .hero-mark-name{
     font-family:var(--serif); font-style:italic; font-weight:400;
     font-size:clamp(2.4rem, 6.4vw, 5rem); line-height:1.05; color:var(--blue);
-    letter-spacing:-0.01em;
+    letter-spacing:-0.01em; max-width:16ch; display:block;
   }
   .hero-mark-tag{
     font-family:var(--sans); font-style:normal; font-weight:500;
@@ -395,7 +395,6 @@
 <!-- HERO -->
 <section class="hero">
   <div class="hero-inner">
-    <div class="eyebrow"><span class="dash"></span> <span id="hero-eyebrow">Esquires' Legal — Nigeria &amp; International</span></div>
     <div class="hero-mark" id="hero-title">
       <span class="hero-mark-name">Esquires' Legal</span>
       <span class="hero-mark-tag">Advocates&nbsp;&nbsp;|&nbsp;&nbsp;Notaries&nbsp;&nbsp;|&nbsp;&nbsp;Consult</span>
@@ -991,10 +990,8 @@ Called to the Nigerian Bar in 2017 with second class upper honours from Igbinedi
   }
 
   function renderHero(d){
-    setText('hero-eyebrow', d.eyebrow);
-    // hero-title is now the static "Esquires' Legal" wordmark, not an
-    // editable headline — intentionally left out of hydration so a saved
-    // Supabase value can't overwrite it.
+    // hero-eyebrow removed; hero-title is now the static wordmark, not an
+    // editable headline — both intentionally left out of hydration.
     setText('hero-sub', d.sub);
     setText('hero-cta-primary', d.cta_primary);
     setText('hero-cta-secondary', d.cta_secondary);
