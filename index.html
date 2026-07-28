@@ -21,6 +21,13 @@
     --line-on-dark: rgba(247,244,237,0.18);
     --serif: 'Fraunces', serif;
     --sans: 'Inter', sans-serif;
+    --script: 'Matura MT Script Capitals', cursive;
+    --ink-grey:#5A5A60;
+  }
+  @font-face{
+    font-family:'Matura MT Script Capitals';
+    src:url('fonts/MATURASC.TTF') format('truetype');
+    font-weight:400; font-style:normal; font-display:swap;
   }
   *{box-sizing:border-box; margin:0; padding:0;}
   html{scroll-behavior:smooth;}
@@ -62,13 +69,15 @@
     height:78px; display:flex; align-items:center; justify-content:space-between;
   }
   @media(max-width:700px){ .nav-inner{padding:0 24px; height:66px;} }
-  @media(max-width:600px){ .nav-inner{ gap:0.6rem; } .brand{ font-size:1.08rem; } }
+  @media(max-width:600px){ .nav-inner{ gap:0.6rem; } .brand{ font-size:1.35rem; } }
   .brand{
-    font-family:var(--serif); font-style:italic; font-weight:500;
-    font-size:1.28rem; letter-spacing:0.01em; color:var(--blue);
+    font-family:var(--script); font-weight:400;
+    font-size:1.7rem; letter-spacing:0.01em; line-height:1;
+    display:flex; align-items:baseline; gap:0.35rem;
   }
-  .brand span{ font-style:normal; font-weight:400; font-size:0.6rem; letter-spacing:0.28em;
-    display:block; text-transform:uppercase; color:var(--gold); margin-top:1px; font-family:var(--sans);}
+  .brand span{ font-family:var(--script); font-size:1em; font-weight:400;
+    letter-spacing:0.01em; text-transform:none; color:var(--ink-grey); margin-top:0; }
+  .brand .brand-e{ color:var(--ink); }
   nav.links{ display:flex; gap:2.4rem; }
   nav.links a{
     font-size:0.76rem; letter-spacing:0.08em; text-transform:uppercase;
@@ -133,10 +142,12 @@
   }
   .hero-mark{ display:flex; flex-direction:column; gap:0.9rem; }
   .hero-mark-name{
-    font-family:var(--serif); font-style:italic; font-weight:400;
-    font-size:clamp(2.4rem, 6.4vw, 5rem); line-height:1.05; color:var(--blue);
-    letter-spacing:-0.01em; max-width:16ch; display:block;
+    font-family:var(--script); font-weight:400;
+    font-size:clamp(2.6rem, 7vw, 5.4rem); line-height:1.05;
+    letter-spacing:0.01em; display:flex; align-items:baseline; gap:0.5rem; flex-wrap:wrap;
   }
+  .hero-mark-name .name-e{ color:var(--ink); }
+  .hero-mark-name .name-l{ color:var(--ink-grey); }
   .hero-mark-tag{
     font-family:var(--sans); font-style:normal; font-weight:500;
     font-size:clamp(0.68rem, 1.1vw, 0.82rem); letter-spacing:0.32em;
@@ -368,7 +379,7 @@
 
 <header>
   <div class="nav-inner">
-    <div class="brand">Esquires' <span>Legal</span></div>
+    <div class="brand"><span class="brand-e">Esquires'</span><span>Legal</span></div>
     <nav class="links">
       <a href="#firm">Firm</a>
       <a href="#practice">Practice</a>
@@ -397,7 +408,7 @@
 <section class="hero">
   <div class="hero-inner">
     <div class="hero-mark" id="hero-title">
-      <span class="hero-mark-name">Esquires' Legal</span>
+      <span class="hero-mark-name"><span class="name-e">Esquires'</span><span class="name-l">Legal</span></span>
       <span class="hero-mark-tag">Advocates&nbsp;&nbsp;|&nbsp;&nbsp;Notaries&nbsp;&nbsp;|&nbsp;&nbsp;Consult</span>
     </div>
     <p class="hero-sub" id="hero-sub">A dynamic set of Chambers with highly experienced legal practitioners, Arbitrators and Notaries Public based primarily in Nigeria. It is an International Law firm with offices in the Cities of Lagos and Abuja (Nigeria),Associate Offices and major Cities in Douala, Cameroon, London (UK), New York and Houston [USA]. Furthermore, our membership of the African Bar Association (AFBA) has given us a wide network of international associates across the African Continent</p>
