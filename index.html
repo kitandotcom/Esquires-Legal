@@ -992,7 +992,9 @@ Called to the Nigerian Bar in 2017 with second class upper honours from Igbinedi
 
   function renderHero(d){
     setText('hero-eyebrow', d.eyebrow);
-    setText('hero-title', d.title);
+    // hero-title is now the static "Esquires' Legal" wordmark, not an
+    // editable headline — intentionally left out of hydration so a saved
+    // Supabase value can't overwrite it.
     setText('hero-sub', d.sub);
     setText('hero-cta-primary', d.cta_primary);
     setText('hero-cta-secondary', d.cta_secondary);
