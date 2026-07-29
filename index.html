@@ -73,21 +73,23 @@
   .nav-inner{
     max-width:1180px; margin:0 auto; padding:0 40px;
     height:78px; display:flex; align-items:center; justify-content:space-between;
+    gap:1.4rem;
   }
   @media(max-width:700px){ .nav-inner{padding:0 24px; height:66px;} }
   @media(max-width:600px){ .nav-inner{ gap:0.6rem; } .brand{ font-size:1.35rem; } }
-  @media(min-width:701px){ .brand{ font-size:3.4rem; margin-left:-24px; } }
+  @media(min-width:701px) and (max-width:1024px){ .brand{ font-size:2.6rem; margin-left:-12px; } }
+  @media(min-width:1025px){ .brand{ font-size:3.4rem; margin-left:-24px; } }
   .brand{
     font-family:var(--script); font-weight:400;
     font-size:1.7rem; letter-spacing:0.01em; line-height:1;
-    display:flex; align-items:baseline; gap:0.35rem;
+    display:flex; align-items:baseline; gap:0.35rem; flex-shrink:0;
   }
   .brand span{ font-size:1em; font-weight:400;
     letter-spacing:0.01em; margin-top:0; }
   .brand .brand-e{ color:var(--ink); font-family:var(--script); font-size:0.72em; letter-spacing:normal; }
   .brand .brand-l{ color:var(--ink-grey); font-family:var(--bauhaus);
     text-transform:none; font-size:0.82em; letter-spacing:normal; }
-  nav.links{ display:flex; gap:2.4rem; }
+  nav.links{ display:flex; gap:1.7rem; }
   nav.links a{
     font-size:0.76rem; letter-spacing:0.08em; text-transform:uppercase;
     color:var(--blue); font-weight:500; position:relative; padding-bottom:4px;
