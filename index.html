@@ -77,8 +77,16 @@
   }
   @media(max-width:700px){ .nav-inner{padding:0 24px; height:66px;} }
   @media(max-width:600px){ .nav-inner{ gap:0.6rem; } .brand{ font-size:1.35rem; } }
-  @media(min-width:701px) and (max-width:1024px){ .brand{ font-size:2.6rem; margin-left:-12px; } }
-  @media(min-width:1025px){ .brand{ font-size:3.4rem; margin-left:-24px; } }
+  @media(min-width:701px) and (max-width:1024px){
+    .brand{ font-size:1.85rem; margin-left:-6px; gap:0.6rem; }
+    .brand .brand-e{ letter-spacing:1ch; }
+    .brand .brand-l{ letter-spacing:2ch; }
+  }
+  @media(min-width:1025px){
+    .brand{ font-size:2.5rem; margin-left:-14px; gap:0.8rem; }
+    .brand .brand-e{ letter-spacing:1ch; }
+    .brand .brand-l{ letter-spacing:2ch; }
+  }
   .brand{
     font-family:var(--script); font-weight:400;
     font-size:1.7rem; letter-spacing:0.01em; line-height:1;
@@ -86,9 +94,9 @@
   }
   .brand span{ font-size:1em; font-weight:400;
     letter-spacing:0.01em; margin-top:0; }
-  .brand .brand-e{ color:var(--ink); font-family:var(--script); font-size:0.72em; letter-spacing:normal; }
+  .brand .brand-e{ color:var(--ink); font-family:var(--script); font-size:0.72em; letter-spacing:2px; }
   .brand .brand-l{ color:var(--ink-grey); font-family:var(--bauhaus);
-    text-transform:none; font-size:0.82em; letter-spacing:normal; }
+    text-transform:none; font-size:0.82em; letter-spacing:3px; }
   nav.links{ display:flex; gap:1.7rem; }
   nav.links a{
     font-size:0.76rem; letter-spacing:0.08em; text-transform:uppercase;
