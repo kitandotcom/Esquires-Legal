@@ -137,7 +137,7 @@
   /* ---------- HERO ---------- */
   .hero{
     min-height:100svh; display:flex; flex-direction:column; justify-content:center;
-    position:relative; padding-top:78px;
+    position:relative; padding-top:100px;
   }
   .hero-inner{ max-width:1180px; margin:0 auto; padding:0 40px; width:100%; }
   @media(max-width:700px){ .hero-inner{padding:0 24px;} }
@@ -164,7 +164,7 @@
   }
   @media(max-width:700px){ .hero-mark-tag{ letter-spacing:0.22em; } }
   .hero-sub{
-    margin-top:3.4rem; max-width:44ch; font-size:1.02rem; line-height:1.85;
+    margin-top:1.3rem; max-width:44ch; font-size:1.02rem; line-height:1.85;
     color:#3c4350; font-weight:300;
   }
   .hero-actions{ margin-top:2.8rem; display:flex; gap:1rem; flex-wrap:wrap; }
@@ -180,13 +180,6 @@
     transition:all .3s ease;
   }
   .btn-ghost:hover{ border-color:var(--blue); }
-  .scroll-cue{
-    position:absolute; bottom:2.6rem; left:40px; display:flex; align-items:center; gap:0.7rem;
-    font-size:0.68rem; letter-spacing:0.18em; text-transform:uppercase; color:#8b8f97;
-  }
-  @media(max-width:700px){ .scroll-cue{ left:24px; } }
-  .scroll-cue .ln{ width:44px; height:1px; background:#8b8f97; animation:pulse 2.4s ease-in-out infinite; }
-  @keyframes pulse{ 0%,100%{opacity:.3;} 50%{opacity:1;} }
 
   /* ---------- CLAUSE HEADS (signature element) ---------- */
   .clause-head{
@@ -426,7 +419,6 @@
       <a href="#contact" class="btn-ghost" id="hero-cta-secondary">Book a Consultation</a>
     </div>
   </div>
-  <div class="scroll-cue"><span class="ln"></span> Scroll</div>
 </section>
 
 <!-- STAT BAR -->
