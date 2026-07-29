@@ -85,7 +85,7 @@
   .brand span{ font-size:1em; font-weight:400;
     letter-spacing:0.01em; margin-top:0; }
   .brand .brand-e{ color:var(--ink); font-family:var(--script); font-size:0.72em; letter-spacing:2px; }
-  .brand .brand-l{ color:var(--ink-grey); font-family:var(--bauhaus);
+  .brand .brand-l{ color:var(--ink-grey); font-family:var(--bauhaus); font-weight:700;
     text-transform:none; font-size:0.82em; letter-spacing:3px; }
   @media(max-width:600px){ .nav-inner{ gap:0.6rem; } .brand{ font-size:1.2rem; } }
   @media(min-width:701px) and (max-width:1024px){
@@ -94,7 +94,7 @@
     .brand .brand-l{ letter-spacing:2ch; }
   }
   @media(min-width:1025px){
-    .brand{ font-size:2.5rem; margin-left:-14px; gap:0.8rem; }
+    .brand{ font-size:1.9rem; margin-left:-10px; gap:0.7rem; }
     .brand .brand-e{ letter-spacing:1ch; }
     .brand .brand-l{ letter-spacing:2ch; }
   }
@@ -114,6 +114,11 @@
     transition:all .3s ease;
   }
   .nav-cta:hover{ background:var(--blue); color:var(--paper); }
+  @media(min-width:1025px){
+    nav.links{ gap:0.75rem; }
+    nav.links a{ font-size:0.6rem; }
+    .nav-cta{ padding:0.55rem 0.75rem; font-size:0.56rem; }
+  }
   .menu-btn{ display:none; flex-direction:column; gap:5px; cursor:pointer; margin-left:1.6rem;
     background:none; border:none; padding:6px; }
   @media(max-width:600px){
@@ -184,7 +189,7 @@
     letter-spacing:0.01em; display:flex; align-items:baseline; gap:0.5rem; flex-wrap:wrap;
   }
   .hero-mark-name .name-e{ color:var(--ink); font-family:var(--script); font-size:0.72em; letter-spacing:14px; }
-  .hero-mark-name .name-l{ color:var(--ink-grey); font-family:var(--bauhaus);
+  .hero-mark-name .name-l{ color:var(--ink-grey); font-family:var(--bauhaus); font-weight:700;
     text-transform:none; font-size:0.62em; letter-spacing:14px; }
   .hero-mark-tag{
     font-family:var(--sans); font-style:normal; font-weight:500;
