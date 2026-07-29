@@ -181,6 +181,14 @@
     text-transform:uppercase; color:var(--gold);
   }
   @media(max-width:700px){ .hero-mark-tag{ letter-spacing:0.22em; } }
+  @media(max-width:700px){
+    .hero-mark-name{
+      flex-wrap:nowrap; gap:0.3rem;
+      font-size:clamp(1.4rem, 8.5vw, 2.4rem);
+    }
+    .hero-mark-name .name-e{ letter-spacing:2vw; white-space:nowrap; }
+    .hero-mark-name .name-l{ letter-spacing:2vw; white-space:nowrap; }
+  }
   .hero-sub{
     margin-top:1.3rem; max-width:44ch; font-size:1.02rem; line-height:1.85;
     color:#3c4350; font-weight:300;
