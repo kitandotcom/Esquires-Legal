@@ -124,6 +124,10 @@
     nav.links{ display:none; }
     .menu-btn{ display:flex; }
   }
+  @media(min-width:701px) and (max-width:880px){
+    .nav-cta{ padding:0.5rem 0.9rem; font-size:0.6rem; letter-spacing:0.05em; }
+    .menu-btn{ margin-left:1.4rem; flex-shrink:0; }
+  }
   .menu-btn.open span:nth-child(1){ transform:translateY(6px) rotate(45deg); }
   .menu-btn.open span:nth-child(2){ opacity:0; }
   .menu-btn.open span:nth-child(3){ transform:translateY(-6px) rotate(-45deg); }
