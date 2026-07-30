@@ -1204,7 +1204,7 @@ Esther has a particular interest in criminology and criminal law, and is working
       });
     }, function(e){ console.error('site_content fetch failed', e); });
 
-    supabaseClient.from('blog_posts').select('*').order('created_at', {ascending:false}).then(function(res){
+    supabaseClient.from('blog_posts').select('*').eq('status', 'published').order('created_at', {ascending:false}).then(function(res){
       if(!res.error && res.data) renderBlog(res.data);
     }, function(e){ console.error('blog_posts fetch failed', e); });
   }
