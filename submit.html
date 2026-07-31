@@ -28,6 +28,7 @@
   .hidden{ display:none; }
   .list-item{ border:1px solid var(--line); border-radius:6px; padding:0.9rem; margin-top:0.8rem; }
   .list-item .status{ font-size:0.72rem; text-transform:uppercase; letter-spacing:0.05em; color:var(--gold); font-weight:600; }
+  .publish-btn{ margin-top:0.7rem; margin-left:0; padding:0.45rem 0.9rem; font-size:0.8rem; display:block; }
 </style>
 </head>
 <body>
@@ -62,7 +63,7 @@
     <button id="submit-btn">Submit for Review</button>
     <div class="msg" id="submit-msg"></div>
 
-    <h2 style="font-size:1rem; margin-top:2.5rem;">Your Recent Submissions</h2>
+    <h2 style="font-size:1rem; margin-top:2.5rem;" id="posts-heading">Your Recent Submissions</h2>
     <div id="my-posts"></div>
   </div>
 
@@ -75,25 +76,50 @@
   var appView = document.getElementById('app-view');
   var loginMsg = document.getElementById('login-msg');
   var submitMsg = document.getElementById('submit-msg');
+  var currentRole = null;
 
   function showMsg(el, text, isError){
     el.textContent = text;
     el.className = 'msg ' + (isError ? 'err' : 'ok');
   }
 
-  function loadMyPosts(userEmail){
-    sb.from('blog_posts').select('*').order('created_at', {ascending:false}).limit(10)
-      .then(function(res){
-        var box = document.getElementById('my-posts');
-        if(res.error || !res.data || !res.data.length){
-          box.innerHTML = '<p class="sub">No submissions yet.</p>';
-          return;
-        }
-        box.innerHTML = res.data.map(function(p){
-          return '<div class="list-item"><div class="status">' + p.status + '</div>'
-            + '<strong>' + escapeHtml(p.title) + '</strong><div class="sub">by ' + escapeHtml(p.author) + '</div></div>';
-        }).join('');
-      });
+  function loadPosts(){
+    var query = sb.from('blog_posts').select('*').order('created_at', {ascending:false}).limit(20);
+    if(currentRole === 'admin'){
+      query = query.eq('status', 'pending');
+    }
+    query.then(function(res){
+      var box = document.getElementById('my-posts');
+      if(res.error || !res.data || !res.data.length){
+        box.innerHTML = '<p class="sub">' + (currentRole === 'admin' ? 'No pending posts.' : 'No submissions yet.') + '</p>';
+        return;
+      }
+      box.innerHTML = res.data.map(function(p){
+        var publishBtn = (currentRole === 'admin' && p.status === 'pending')
+          ? '<button class="publish-btn" data-id="' + p.id + '">Publish</button>' : '';
+        return '<div class="list-item"><div class="status">' + p.status + '</div>'
+          + '<strong>' + escapeHtml(p.title) + '</strong><div class="sub">by ' + escapeHtml(p.author) + '</div>'
+          + publishBtn + '</div>';
+      }).join('');
+      if(currentRole === 'admin'){
+        Array.prototype.forEach.call(document.querySelectorAll('.publish-btn'), function(btn){
+          btn.addEventListener('click', function(){
+            var id = btn.getAttribute('data-id');
+            btn.disabled = true;
+            btn.textContent = 'Publishing...';
+            sb.from('blog_posts').update({ status: 'published' }).eq('id', id).then(function(upd){
+              if(upd.error){
+                btn.disabled = false;
+                btn.textContent = 'Publish';
+                alert(upd.error.message);
+                return;
+              }
+              loadPosts();
+            });
+          });
+        });
+      }
+    });
   }
 
   function escapeHtml(s){
@@ -106,7 +132,12 @@
     loginView.classList.add('hidden');
     appView.classList.remove('hidden');
     document.getElementById('whoami').textContent = 'Signed in as ' + session.user.email;
-    loadMyPosts(session.user.email);
+    sb.from('profiles').select('role').eq('id', session.user.id).single().then(function(res){
+      currentRole = (res.data && res.data.role) || 'editor';
+      document.getElementById('whoami').textContent = 'Signed in as ' + session.user.email + (currentRole === 'admin' ? ' (admin)' : '');
+      document.getElementById('posts-heading').textContent = currentRole === 'admin' ? 'Pending Posts' : 'Your Recent Submissions';
+      loadPosts();
+    });
   }
 
   sb.auth.getSession().then(function(res){
@@ -145,7 +176,7 @@
       showMsg(submitMsg, 'Submitted — it will appear on the site once reviewed.', false);
       document.getElementById('post-title').value = '';
       document.getElementById('post-content').value = '';
-      sb.auth.getSession().then(function(r){ if(r.data.session) loadMyPosts(r.data.session.user.email); });
+      sb.auth.getSession().then(function(r){ if(r.data.session) loadPosts(); });
     });
   });
 </script>
