@@ -29,6 +29,16 @@
   .list-item{ border:1px solid var(--line); border-radius:6px; padding:0.9rem; margin-top:0.8rem; }
   .list-item .status{ font-size:0.72rem; text-transform:uppercase; letter-spacing:0.05em; color:var(--gold); font-weight:600; }
   .publish-btn{ margin-top:0.7rem; margin-left:0; padding:0.45rem 0.9rem; font-size:0.8rem; display:block; }
+  .tabs{ display:flex; gap:0.5rem; margin-top:1.5rem; border-bottom:1px solid var(--line); }
+  .tab-btn{ margin:0; padding:0.6rem 0.2rem; background:none; color:#888; border:none; border-bottom:2px solid transparent; border-radius:0; font-size:0.9rem; font-weight:600; cursor:pointer; }
+  .tab-btn.active{ color:var(--blue); border-bottom-color:var(--blue); }
+  .tab-btn:hover{ opacity:1; }
+  .panel{ margin-top:1.5rem; }
+  .panel.hidden{ display:none; }
+  .booking-item{ border:1px solid var(--line); border-radius:6px; padding:0.9rem; margin-top:0.8rem; }
+  .booking-item .when{ font-size:0.72rem; color:#888; margin-bottom:0.4rem; }
+  .booking-item .row{ font-size:0.9rem; margin-top:0.2rem; }
+  .booking-item .row strong{ display:inline-block; min-width:100px; color:#555; font-weight:600; font-size:0.8rem; }
 </style>
 </head>
 <body>
@@ -48,23 +58,36 @@
   <div id="app-view" class="hidden">
     <div class="topbar">
       <div>
-        <h1>Submit a Post</h1>
+        <h1 id="app-title">Submit a Post</h1>
         <p class="sub" id="whoami"></p>
       </div>
       <button class="logout" id="logout-btn">Sign out</button>
     </div>
 
-    <label>Your Name (shown as the author)</label>
-    <input type="text" id="post-author" placeholder="e.g. Jesse Otah">
-    <label>Title</label>
-    <input type="text" id="post-title" placeholder="Post title">
-    <label>Content</label>
-    <textarea id="post-content" placeholder="Write the post here..."></textarea>
-    <button id="submit-btn">Submit for Review</button>
-    <div class="msg" id="submit-msg"></div>
+    <div class="tabs">
+      <button class="tab-btn active" id="tab-posts-btn">Posts</button>
+      <button class="tab-btn" id="tab-bookings-btn">Bookings</button>
+    </div>
 
-    <h2 style="font-size:1rem; margin-top:2.5rem;" id="posts-heading">Your Recent Submissions</h2>
-    <div id="my-posts"></div>
+    <div class="panel" id="panel-posts">
+      <label>Your Name (shown as the author)</label>
+      <input type="text" id="post-author" placeholder="e.g. Jesse Otah">
+      <label>Title</label>
+      <input type="text" id="post-title" placeholder="Post title">
+      <label>Content</label>
+      <textarea id="post-content" placeholder="Write the post here..."></textarea>
+      <button id="submit-btn">Submit for Review</button>
+      <div class="msg" id="submit-msg"></div>
+
+      <h2 style="font-size:1rem; margin-top:2.5rem;" id="posts-heading">Your Recent Submissions</h2>
+      <div id="my-posts"></div>
+    </div>
+
+    <div class="panel hidden" id="panel-bookings">
+      <h2 style="font-size:1rem; margin-top:0;">Consultation Bookings</h2>
+      <p class="sub" style="margin-bottom:1rem;">Read-only — booking requests submitted through the site.</p>
+      <div id="bookings-list"></div>
+    </div>
   </div>
 
 </div>
@@ -128,6 +151,62 @@
     });
   }
 
+  function fmtDate(iso){
+    try{
+      return new Date(iso).toLocaleString();
+    } catch(e){ return iso; }
+  }
+
+  var bookingsLoaded = false;
+
+  function loadBookings(){
+    sb.from('bookings').select('*').order('created_at', {ascending:false}).limit(50)
+      .then(function(res){
+        var box = document.getElementById('bookings-list');
+        if(res.error){
+          box.innerHTML = '<p class="sub">Could not load bookings: ' + escapeHtml(res.error.message) + '</p>';
+          return;
+        }
+        if(!res.data || !res.data.length){
+          box.innerHTML = '<p class="sub">No bookings yet.</p>';
+          return;
+        }
+        box.innerHTML = res.data.map(function(b){
+          return '<div class="booking-item">'
+            + '<div class="when">' + escapeHtml(fmtDate(b.created_at)) + '</div>'
+            + '<div class="row"><strong>Name</strong>' + escapeHtml(b.name || '—') + '</div>'
+            + '<div class="row"><strong>Phone</strong>' + escapeHtml(b.phone || '—') + '</div>'
+            + '<div class="row"><strong>Email</strong>' + escapeHtml(b.email || '—') + '</div>'
+            + '<div class="row"><strong>Organisation</strong>' + escapeHtml(b.organisation || '—') + '</div>'
+            + '<div class="row"><strong>Area of Law</strong>' + escapeHtml(b.area || '—') + '</div>'
+            + '<div class="row"><strong>Brief</strong>' + escapeHtml(b.note || '—') + '</div>'
+            + '</div>';
+        }).join('');
+      });
+  }
+
+  function showTab(which){
+    var postsBtn = document.getElementById('tab-posts-btn');
+    var bookingsBtn = document.getElementById('tab-bookings-btn');
+    var postsPanel = document.getElementById('panel-posts');
+    var bookingsPanel = document.getElementById('panel-bookings');
+    if(which === 'bookings'){
+      postsBtn.classList.remove('active');
+      bookingsBtn.classList.add('active');
+      postsPanel.classList.add('hidden');
+      bookingsPanel.classList.remove('hidden');
+      if(!bookingsLoaded){ bookingsLoaded = true; loadBookings(); }
+    } else {
+      bookingsBtn.classList.remove('active');
+      postsBtn.classList.add('active');
+      bookingsPanel.classList.add('hidden');
+      postsPanel.classList.remove('hidden');
+    }
+  }
+
+  document.getElementById('tab-posts-btn').addEventListener('click', function(){ showTab('posts'); });
+  document.getElementById('tab-bookings-btn').addEventListener('click', function(){ showTab('bookings'); });
+
   function showApp(session){
     loginView.classList.add('hidden');
     appView.classList.remove('hidden');
@@ -158,6 +237,8 @@
     sb.auth.signOut().then(function(){
       appView.classList.add('hidden');
       loginView.classList.remove('hidden');
+      bookingsLoaded = false;
+      showTab('posts');
     });
   });
 
