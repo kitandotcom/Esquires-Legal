@@ -335,7 +335,9 @@
   .lead-avatar{
     width:64px; height:64px; border:1px solid var(--blue); display:flex; align-items:center; justify-content:center;
     font-family:var(--serif); font-style:italic; font-size:1.3rem; color:var(--blue); margin-bottom:1.4rem;
+    overflow:hidden;
   }
+  .lead-avatar img{ width:100%; height:100%; object-fit:cover; display:block; }
   .lead-name{ font-family:var(--serif); font-size:1.08rem; color:var(--blue); line-height:1.3; }
   .lead-title{ margin-top:0.4rem; font-size:0.7rem; letter-spacing:0.06em; color:var(--gold); text-transform:uppercase; font-weight:600; }
   .lead-bio{
@@ -370,7 +372,9 @@
   .bio-modal-avatar{
     width:56px; height:56px; border:1px solid var(--blue); display:flex; align-items:center; justify-content:center;
     font-family:var(--serif); font-style:italic; font-size:1.15rem; color:var(--blue); margin-bottom:1.3rem;
+    overflow:hidden;
   }
+  .bio-modal-avatar img{ width:100%; height:100%; object-fit:cover; display:block; }
   .bio-modal-name{ font-family:var(--serif); font-size:1.4rem; color:var(--blue); line-height:1.28; padding-right:3rem; }
   .bio-modal-title{ margin-top:0.5rem; font-size:0.72rem; letter-spacing:0.08em; color:var(--gold); text-transform:uppercase; font-weight:600; }
   .bio-modal-text{ margin-top:1.5rem; font-size:0.9rem; line-height:1.8; color:#3c4350; font-weight:300; white-space:pre-line; }
@@ -658,7 +662,7 @@ His core areas of practice include legal and legislative drafting, company secre
 He was part of the legal team representing Samson Siasia before the Court of Arbitration for Sport (CAS), overturning his life ban and fine, and advises on media, entertainment and sports disputes. He is also recognised for his work in Family and Customary Law across Nigerian, UK and Commonwealth jurisdictions, and recently gave expert testimony on the Nigerian Legal Marriage System before a Canadian Superior Court of Record, where he is officially judicially recognised as an expert.
 
 He is presently CEO of Legum Consult Limited, a legislative and public affairs consultancy, and Chairman of the Legislative Advocacy and Law Reform Committee of his local Nigerian Bar Association branch.">
-        <div class="lead-avatar">AO</div>
+        <div class="lead-avatar"><img src="images/austin-otah.jpg" alt="Austin J. Otah"></div>
         <div class="lead-name">Austin J. Otah</div>
         <div class="lead-title">Principal Counsel</div>
         <div class="lead-tap">Tap for bio</div>
@@ -967,7 +971,7 @@ Esther has a particular interest in criminology and criminal law, and is working
 
   function openBioModal(card){
     if(!bioModal) return;
-    document.getElementById('bio-modal-avatar').textContent = card.querySelector('.lead-avatar').textContent;
+    document.getElementById('bio-modal-avatar').innerHTML = card.querySelector('.lead-avatar').innerHTML;
     document.getElementById('bio-modal-name').textContent = card.querySelector('.lead-name').textContent;
     document.getElementById('bio-modal-title').textContent = card.querySelector('.lead-title').textContent;
     document.getElementById('bio-modal-text').textContent = card.getAttribute('data-bio') || '';
