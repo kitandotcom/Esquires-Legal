@@ -313,6 +313,7 @@
   /* ---------- BLOG ---------- */
   .blog-meta{ font-size:0.7rem; letter-spacing:0.1em; text-transform:uppercase; color:#8b8f97; font-weight:600; margin-bottom:0.9rem; }
   .blog-empty{ padding:2.2rem 0; font-family:var(--serif); font-style:italic; font-size:1.1rem; color:#6b7280; }
+  .blog-image{ width:100%; max-height:360px; object-fit:cover; margin-bottom:1.4rem; display:block; }
 
   /* ---------- FINANCIAL ADVISORY (dark green) ---------- */
   .advisory{ background:var(--green); color:var(--paper); }
@@ -1149,7 +1150,7 @@ Esther has a particular interest in criminology and criminal law, and is working
     if(Array.isArray(d.members)){
       setHTML('leadership-grid', d.members.map(function(m){
         return '<div class="lead-card" role="button" tabindex="0" data-bio="' + esc(m.bio) + '">'
-          + '<div class="lead-avatar">' + esc(m.initials) + '</div>'
+          + '<div class="lead-avatar">' + (m.photo ? '<img src="' + esc(m.photo) + '" alt="' + esc(m.name) + '">' : esc(m.initials)) + '</div>'
           + '<div class="lead-name">' + esc(m.name) + '</div>'
           + '<div class="lead-title">' + esc(m.title) + '</div>'
           + '<div class="lead-tap">Tap for bio</div>'
@@ -1188,8 +1189,9 @@ Esther has a particular interest in criminology and criminal law, and is working
     list.innerHTML = posts.map(function(p){
       var dateLabel = '';
       try { dateLabel = new Date(p.created_at).toLocaleDateString('en-GB', {day:'2-digit', month:'short'}).toUpperCase(); } catch(e){}
+      var img = p.image_url ? '<img class="blog-image" src="' + esc(p.image_url) + '" alt="">' : '';
       return '<div class="acc-item"><button class="acc-trigger" aria-expanded="false"><span class="acc-trigger-text"><span class="idx">' + esc(dateLabel) + '</span>' + esc(p.title) + '</span><span class="acc-mark"></span></button>'
-        + '<div class="acc-panel"><div class="acc-panel-inner"><div class="blog-meta">By ' + esc(p.author) + '</div><p style="white-space:pre-line">' + esc(p.content) + '</p></div></div></div>';
+        + '<div class="acc-panel"><div class="acc-panel-inner">' + img + '<div class="blog-meta">By ' + esc(p.author) + '</div><p style="white-space:pre-line">' + esc(p.content) + '</p></div></div></div>';
     }).join('');
   }
 
