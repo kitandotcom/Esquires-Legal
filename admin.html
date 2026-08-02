@@ -219,7 +219,7 @@
       <div class="blog-toolbar">
         <div>
           <div class="section-head">Blog</div>
-          <div class="section-sub" style="margin-bottom:0;">Posts appear publicly on the site's Blog section, newest first. Posts submitted by the editor show "Pending Review" until you publish them.</div>
+          <div class="section-sub" style="margin-bottom:0;">Posts appear publicly on the site's Blog section, newest first.</div>
         </div>
         <button class="btn-primary" id="blog-new-btn">New Post</button>
       </div>
@@ -292,36 +292,12 @@
 
   sb.auth.onAuthStateChange(function(event, session){
     if(session){
-      checkAdminAndShow(session);
+      showDashboard(session);
     } else {
       dashboard.style.display = 'none';
       loginScreen.style.display = 'flex';
     }
   });
-
-  async function checkAdminAndShow(session){
-    try{
-      var res = await sb.from('profiles').select('role').eq('id', session.user.id).single();
-      if(res.error){
-        console.error('profiles lookup failed:', res.error);
-        loginError.textContent = 'Could not verify admin access: ' + res.error.message + ' (check the browser console for details).';
-        loginError.style.display = 'block';
-        return;
-      }
-      var role = res.data && res.data.role;
-      if(role !== 'admin'){
-        loginError.textContent = 'This account does not have admin access. Use submit.html instead.';
-        loginError.style.display = 'block';
-        await sb.auth.signOut();
-        return;
-      }
-      showDashboard(session);
-    } catch(err){
-      console.error('checkAdminAndShow threw:', err);
-      loginError.textContent = 'Unexpected error checking admin access: ' + (err && err.message ? err.message : err) + ' (check the browser console).';
-      loginError.style.display = 'block';
-    }
-  }
 
   function showDashboard(session){
     loginScreen.style.display = 'none';
@@ -456,4 +432,347 @@
   var CONTENT_SECTIONS = [
     { key:'hero', label:'Hero', build: function(c, d){
       field(c, d, 'eyebrow', 'Eyebrow');
-      field(
+      field(c, d, 'title', 'Title');
+      field(c, d, 'sub', 'Subtitle', {textarea:true});
+      field(c, d, 'cta_primary', 'Primary Button Label');
+      field(c, d, 'cta_secondary', 'Secondary Button Label');
+    }},
+    { key:'stats', label:'Stats', build: function(c, d, wrapper){
+      if(!Array.isArray(wrapper.value)) wrapper.value = [];
+      renderObjectList({appendChild:function(n){c.appendChild(n);}}, wrapper, 'value', 'Stats', [
+        {key:'value', label:'Value'}, {key:'suffix', label:'Suffix'}, {key:'label', label:'Label'}
+      ]);
+    }, raw:true },
+    { key:'firm', label:'The Firm', build: function(c, d){
+      field(c, d, 'title_pre', 'Title (plain part)');
+      field(c, d, 'title_em', 'Title (emphasis part)');
+      renderStringList(c, d, 'paragraphs', 'Paragraphs');
+      field(c, d, 'quote', 'Pull Quote');
+      field(c, d, 'quote_attrib', 'Quote Attribution');
+    }},
+    { key:'foundation', label:'Foundation (Mission / Vision / Philosophy)', build: function(c, d){
+      field(c, d, 'title_pre', 'Title (plain part)');
+      field(c, d, 'title_em', 'Title (emphasis part)');
+      renderObjectList(c, d, 'items', 'Items', [
+        {key:'idx', label:'Tag (e.g. MISSION)'}, {key:'head', label:'Heading'}, {key:'body', label:'Body', textarea:true}
+      ]);
+    }},
+    { key:'practice', label:'Practice Areas', build: function(c, d){
+      field(c, d, 'title_pre', 'Title (plain part)');
+      field(c, d, 'title_em', 'Title (emphasis part)');
+      renderObjectList(c, d, 'items', 'Practice Areas', [
+        {key:'idx', label:'Number'}, {key:'head', label:'Heading'}, {key:'body', label:'Body', textarea:true}
+      ]);
+    }},
+    { key:'advisory', label:'Financial & Corporate Advisory', build: function(c, d){
+      field(c, d, 'title_pre', 'Title (plain part)');
+      field(c, d, 'title_em', 'Title (emphasis part)');
+      renderStringList(c, d, 'paragraphs', 'Paragraphs');
+      renderObjectList(c, d, 'served', 'Who We Serve', [
+        {key:'k', label:'Label'}, {key:'v', label:'Value'}
+      ]);
+    }},
+    { key:'leadership', label:'Counsel (Leadership)', build: function(c, d){
+      field(c, d, 'title_pre', 'Title (plain part)');
+      field(c, d, 'title_em', 'Title (emphasis part)');
+      renderObjectList(c, d, 'members', 'Members', [
+        {key:'initials', label:'Initials'}, {key:'name', label:'Name'}, {key:'title', label:'Title'}, {key:'bio', label:'Bio', textarea:true}
+      ]);
+    }},
+    { key:'contact', label:'Contact', build: function(c, d){
+      field(c, d, 'title_pre', 'Title (plain part)');
+      field(c, d, 'title_em', 'Title (emphasis part)');
+      renderObjectList(c, d, 'offices', 'Offices', [
+        {key:'flag', label:'Location'}, {key:'addr', label:'Address', textarea:true}
+      ]);
+    }},
+    { key:'footer', label:'Footer', build: function(c, d){
+      field(c, d, 'tagline', 'Tagline', {textarea:true});
+      field(c, d, 'phone', 'Phone');
+      field(c, d, 'email', 'Email');
+      field(c, d, 'hours', 'Hours');
+      renderStringList(c, d, 'chambers', 'Chambers Lines');
+      field(c, d, 'copyright', 'Copyright Line');
+      field(c, d, 'associate_chambers', 'Associate Chambers Line', {textarea:true});
+    }},
+    { key:'closing', label:'Closing Quote', build: function(c, d){
+      field(c, d, 'quote', 'Quote');
+    }}
+  ];
+
+  var contentData = {};
+
+  async function loadContentTab(){
+    var accordion = document.getElementById('content-accordion');
+    accordion.innerHTML = '<div class="loading-row">Loading…</div>';
+    var res = await sb.from('site_content').select('key,value');
+    if(res.error){
+      accordion.innerHTML = '<div class="empty-row">Could not load site content: ' + esc(res.error.message) + '</div>';
+      return;
+    }
+    (res.data || []).forEach(function(row){ contentData[row.key] = row.value; });
+
+    accordion.innerHTML = '';
+    CONTENT_SECTIONS.forEach(function(section){
+      if(contentData[section.key] === undefined){
+        contentData[section.key] = section.raw ? [] : {};
+      }
+      var item = document.createElement('div');
+      item.className = 'acc-item';
+
+      var trigger = document.createElement('button');
+      trigger.type = 'button';
+      trigger.className = 'acc-trigger';
+      trigger.setAttribute('aria-expanded', 'false');
+      trigger.innerHTML = '<span>' + esc(section.label) + '</span><span class="acc-mark"></span>';
+      item.appendChild(trigger);
+
+      var panel = document.createElement('div');
+      panel.className = 'acc-panel';
+      var panelInner = document.createElement('div');
+      panelInner.className = 'acc-panel-inner';
+      var fieldsWrap = document.createElement('div');
+      fieldsWrap.className = 'flat-fields';
+
+      var dataRef = section.raw ? { value: contentData[section.key] } : contentData[section.key];
+      section.build(fieldsWrap, dataRef);
+      panelInner.appendChild(fieldsWrap);
+
+      var saveRow = document.createElement('div');
+      saveRow.className = 'save-row';
+      var saveBtn = document.createElement('button');
+      saveBtn.type = 'button';
+      saveBtn.className = 'btn-primary';
+      saveBtn.textContent = 'Save ' + section.label;
+      var status = document.createElement('span');
+      status.className = 'save-status';
+      saveBtn.addEventListener('click', async function(){
+        saveBtn.disabled = true;
+        status.textContent = 'Saving…';
+        status.className = 'save-status';
+        var valueToSave = section.raw ? dataRef.value : dataRef;
+        var res = await sb.from('site_content').upsert({ key: section.key, value: valueToSave }, { onConflict: 'key' });
+        saveBtn.disabled = false;
+        if(res.error){
+          status.textContent = 'Failed: ' + res.error.message;
+          status.className = 'save-status err';
+        } else {
+          status.textContent = 'Saved.';
+          status.className = 'save-status ok';
+        }
+      });
+      saveRow.appendChild(saveBtn);
+      saveRow.appendChild(status);
+      panelInner.appendChild(saveRow);
+
+      panel.appendChild(panelInner);
+      item.appendChild(panel);
+      accordion.appendChild(item);
+
+      trigger.addEventListener('click', function(){
+        var isOpen = item.classList.contains('open');
+        if(isOpen){
+          item.classList.remove('open');
+          panel.style.maxHeight = null;
+          trigger.setAttribute('aria-expanded', 'false');
+        } else {
+          item.classList.add('open');
+          panel.style.maxHeight = panel.scrollHeight + 'px';
+          trigger.setAttribute('aria-expanded', 'true');
+        }
+      });
+    });
+  }
+
+  // -----------------------------------------------------------------
+  // Blog tab
+  // -----------------------------------------------------------------
+  var blogPosts = [];
+  var blogFormWrap = document.getElementById('blog-form-wrap');
+  var blogListWrap = document.getElementById('blog-list-wrap');
+
+  async function loadBlogTab(){
+    blogListWrap.innerHTML = '<div class="loading-row">Loading…</div>';
+    var res = await sb.from('blog_posts').select('*').order('created_at', {ascending:false});
+    if(res.error){
+      blogListWrap.innerHTML = '<div class="empty-row">Could not load posts: ' + esc(res.error.message) + '</div>';
+      return;
+    }
+    blogPosts = res.data || [];
+    renderBlogList();
+  }
+
+  function renderBlogList(){
+    if(!blogPosts.length){
+      blogListWrap.innerHTML = '<div class="blog-empty">No posts yet.</div>';
+      return;
+    }
+    blogListWrap.innerHTML = '';
+    blogPosts.forEach(function(post){
+      var row = document.createElement('div');
+      row.className = 'blog-row';
+      var left = document.createElement('div');
+      var dateStr = '';
+      try { dateStr = new Date(post.created_at).toLocaleDateString('en-GB', {day:'2-digit', month:'short', year:'numeric'}); } catch(e){}
+      left.innerHTML = '<div class="blog-row-title">' + esc(post.title) + '</div><div class="blog-row-meta">By ' + esc(post.author) + ' · ' + esc(dateStr) + '</div>';
+      row.appendChild(left);
+      var actions = document.createElement('div');
+      actions.className = 'blog-row-actions';
+      var editBtn = document.createElement('button');
+      editBtn.className = 'btn-text';
+      editBtn.textContent = 'Edit';
+      editBtn.addEventListener('click', function(){ openBlogForm(post); });
+      var delBtn = document.createElement('button');
+      delBtn.className = 'btn-text danger';
+      delBtn.textContent = 'Delete';
+      delBtn.addEventListener('click', async function(){
+        if(!confirm('Delete "' + post.title + '"? This cannot be undone.')) return;
+        var res = await sb.from('blog_posts').delete().eq('id', post.id);
+        if(res.error){ alert('Failed to delete: ' + res.error.message); return; }
+        blogPosts = blogPosts.filter(function(p){ return p.id !== post.id; });
+        renderBlogList();
+      });
+      actions.appendChild(editBtn);
+      actions.appendChild(delBtn);
+      row.appendChild(actions);
+      blogListWrap.appendChild(row);
+    });
+  }
+
+  function openBlogForm(post){
+    var isEdit = !!post;
+    blogFormWrap.innerHTML = '';
+    var form = document.createElement('div');
+    form.className = 'blog-form';
+    var title = { value: isEdit ? post.title : '' };
+    var author = { value: isEdit ? post.author : '' };
+    var content = { value: isEdit ? post.content : '' };
+
+    field(form, title, 'value', 'Title');
+    field(form, author, 'value', 'Author');
+    field(form, content, 'value', 'Post', {textarea:true});
+    var contentTa = form.querySelector('textarea');
+    contentTa.style.minHeight = '180px';
+
+    var row = document.createElement('div');
+    row.className = 'save-row';
+    var saveBtn = document.createElement('button');
+    saveBtn.className = 'btn-primary';
+    saveBtn.textContent = isEdit ? 'Update Post' : 'Publish Post';
+    var cancelBtn = document.createElement('button');
+    cancelBtn.className = 'btn-text';
+    cancelBtn.textContent = 'Cancel';
+    cancelBtn.addEventListener('click', function(){ blogFormWrap.innerHTML = ''; });
+    var status = document.createElement('span');
+    status.className = 'save-status';
+
+    saveBtn.addEventListener('click', async function(){
+      if(!title.value.trim() || !author.value.trim() || !content.value.trim()){
+        status.textContent = 'Title, author and post body are required.';
+        status.className = 'save-status err';
+        return;
+      }
+      saveBtn.disabled = true;
+      status.textContent = 'Saving…';
+      status.className = 'save-status';
+      var payload = { title: title.value.trim(), author: author.value.trim(), content: content.value.trim() };
+      var res;
+      if(isEdit){
+        res = await sb.from('blog_posts').update(payload).eq('id', post.id);
+      } else {
+        res = await sb.from('blog_posts').insert([payload]);
+      }
+      saveBtn.disabled = false;
+      if(res.error){
+        status.textContent = 'Failed: ' + res.error.message;
+        status.className = 'save-status err';
+        return;
+      }
+      blogFormWrap.innerHTML = '';
+      loadBlogTab();
+    });
+
+    row.appendChild(saveBtn);
+    row.appendChild(cancelBtn);
+    row.appendChild(status);
+    form.appendChild(row);
+    blogFormWrap.appendChild(form);
+  }
+
+  document.getElementById('blog-new-btn').addEventListener('click', function(){ openBlogForm(null); });
+
+  // -----------------------------------------------------------------
+  // Bookings tab
+  // -----------------------------------------------------------------
+  async function loadBookingsTab(){
+    var loading = document.getElementById('bookings-loading');
+    var empty = document.getElementById('bookings-empty');
+    var table = document.getElementById('bookings-table');
+    var tbody = document.getElementById('bookings-tbody');
+    loading.style.display = 'block';
+    empty.style.display = 'none';
+    table.style.display = 'none';
+
+    var res = await sb.from('bookings').select('*').order('created_at', {ascending:false});
+    loading.style.display = 'none';
+    if(res.error){
+      loading.style.display = 'block';
+      loading.textContent = 'Could not load bookings: ' + res.error.message;
+      return;
+    }
+    var rows = res.data || [];
+    if(!rows.length){
+      empty.style.display = 'block';
+      return;
+    }
+    table.style.display = 'table';
+    tbody.innerHTML = '';
+    rows.forEach(function(b){
+      var tr = document.createElement('tr');
+      var dateStr = '';
+      try { dateStr = new Date(b.created_at).toLocaleDateString('en-GB', {day:'2-digit', month:'short', year:'numeric'}); } catch(e){}
+      tr.innerHTML =
+        '<td>' + esc(dateStr) + '</td>' +
+        '<td>' + esc(b.name) + '</td>' +
+        '<td>' + esc(b.organisation) + '</td>' +
+        '<td>' + esc(b.area) + '</td>' +
+        '<td>' + esc(b.phone) + '</td>' +
+        '<td>' + esc(b.email) + '</td>' +
+        '<td class="note">' + esc(b.note) + '</td>';
+
+      var statusTd = document.createElement('td');
+      var select = document.createElement('select');
+      ['new','contacted','closed'].forEach(function(opt){
+        var o = document.createElement('option');
+        o.value = opt;
+        o.textContent = opt.charAt(0).toUpperCase() + opt.slice(1);
+        if((b.status || 'new') === opt) o.selected = true;
+        select.appendChild(o);
+      });
+      select.addEventListener('change', async function(){
+        var res = await sb.from('bookings').update({ status: select.value }).eq('id', b.id);
+        if(res.error) alert('Failed to update status: ' + res.error.message);
+      });
+      statusTd.appendChild(select);
+      tr.appendChild(statusTd);
+
+      var actionTd = document.createElement('td');
+      var delBtn = document.createElement('button');
+      delBtn.className = 'btn-text danger';
+      delBtn.textContent = 'Delete';
+      delBtn.addEventListener('click', async function(){
+        if(!confirm('Delete this booking from ' + b.name + '?')) return;
+        var res = await sb.from('bookings').delete().eq('id', b.id);
+        if(res.error){ alert('Failed to delete: ' + res.error.message); return; }
+        tr.remove();
+      });
+      actionTd.appendChild(delBtn);
+      tr.appendChild(actionTd);
+
+      tbody.appendChild(tr);
+    });
+  }
+})();
+</script>
+</body>
+</html>
