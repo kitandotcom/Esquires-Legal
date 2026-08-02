@@ -204,6 +204,7 @@
     <div class="wrap">
       <button class="tab-btn active" data-tab="content">Content</button>
       <button class="tab-btn" data-tab="blog">Blog</button>
+      <button class="tab-btn" data-tab="counsel">Counsel</button>
       <button class="tab-btn" data-tab="bookings">Bookings</button>
     </div>
   </nav>
@@ -225,6 +226,12 @@
       </div>
       <div id="blog-form-wrap"></div>
       <div id="blog-list-wrap"><div class="loading-row">Loading…</div></div>
+    </section>
+
+    <section class="tab-panel" id="tab-counsel">
+      <div class="section-head">Counsel Photos</div>
+      <div class="section-sub">Upload or replace a headshot — updates the live site directly. Names, titles and bios are still edited under the Content tab's "Counsel (Leadership)" section.</div>
+      <div id="counsel-list"><div class="loading-row">Loading…</div></div>
     </section>
 
     <section class="tab-panel" id="tab-bookings">
@@ -395,6 +402,7 @@
       dashboard.dataset.loaded = '1';
       loadContentTab();
       loadBlogTab();
+      loadCounselTab();
       loadBookingsTab();
     }
   }
@@ -413,6 +421,100 @@
 
   function slugify(s){
     return String(s || 'item').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+  }
+
+  // -----------------------------------------------------------------
+  // Admin: dedicated Counsel photo tab
+  // -----------------------------------------------------------------
+  var counselMembers = null;
+
+  async function loadCounselTab(){
+    var box = document.getElementById('counsel-list');
+    box.innerHTML = '<div class="loading-row">Loading…</div>';
+    var res = await sb.from('site_content').select('value').eq('key', 'leadership').single();
+    if(res.error || !res.data){
+      box.innerHTML = '<div class="empty-row">Could not load counsel list: ' + esc(res.error ? res.error.message : 'not found') + '</div>';
+      return;
+    }
+    counselMembers = (res.data.value && res.data.value.members) || [];
+    renderCounselTab();
+  }
+
+  function renderCounselTab(){
+    var box = document.getElementById('counsel-list');
+    if(!counselMembers.length){
+      box.innerHTML = '<div class="empty-row">No counsel members found.</div>';
+      return;
+    }
+    box.innerHTML = '';
+    counselMembers.forEach(function(item, i){
+      var card = document.createElement('div');
+      card.className = 'repeater-item';
+      var row = document.createElement('div');
+      row.style.cssText = 'display:flex; align-items:center; gap:1.2rem; flex-wrap:wrap;';
+
+      var thumb = document.createElement('div');
+      thumb.style.cssText = 'width:64px; height:64px; flex:none; border:1px solid var(--blue); display:flex; align-items:center; justify-content:center; font-family:var(--serif); font-style:italic; color:var(--blue); overflow:hidden; font-size:1.2rem;';
+      thumb.innerHTML = item.photo ? '<img src="' + esc(item.photo) + '" style="width:100%;height:100%;object-fit:cover;display:block;">' : esc(item.initials || '');
+      row.appendChild(thumb);
+
+      var info = document.createElement('div');
+      info.style.cssText = 'flex:1; min-width:160px;';
+      info.innerHTML = '<div class="blog-row-title" style="font-size:0.95rem;">' + esc(item.name) + '</div><div class="blog-row-meta">' + esc(item.title) + '</div>';
+      row.appendChild(info);
+
+      var fileInput = document.createElement('input');
+      fileInput.type = 'file'; fileInput.accept = 'image/*';
+      fileInput.style.cssText = 'flex:none;';
+      row.appendChild(fileInput);
+
+      var uploadBtn = document.createElement('button');
+      uploadBtn.type = 'button'; uploadBtn.className = 'btn-ghost'; uploadBtn.textContent = 'Upload Photo';
+      row.appendChild(uploadBtn);
+
+      var status = document.createElement('span');
+      status.className = 'save-status';
+      row.appendChild(status);
+
+      uploadBtn.addEventListener('click', async function(){
+        var file = fileInput.files[0];
+        if(!file){ status.textContent = 'Choose a photo first.'; status.className = 'save-status err'; return; }
+        uploadBtn.disabled = true;
+        status.textContent = 'Uploading…'; status.className = 'save-status';
+        var ext = (file.name.split('.').pop() || 'jpg').toLowerCase();
+        var path = slugify(item.name) + '-' + Date.now() + '.' + ext;
+        var upRes = await sb.storage.from('counsel-photos').upload(path, file, { upsert: true });
+        if(upRes.error){
+          uploadBtn.disabled = false;
+          status.textContent = 'Failed: ' + upRes.error.message; status.className = 'save-status err';
+          return;
+        }
+        var publicUrl = sb.storage.from('counsel-photos').getPublicUrl(path).data.publicUrl;
+        var freshRes = await sb.from('site_content').select('value').eq('key', 'leadership').single();
+        uploadBtn.disabled = false;
+        if(freshRes.error || !freshRes.data){
+          status.textContent = 'Uploaded, but could not save.'; status.className = 'save-status err';
+          return;
+        }
+        var freshValue = freshRes.data.value;
+        var freshMembers = freshValue.members || [];
+        var target = freshMembers.find(function(m){ return m.name === item.name; }) || freshMembers[i];
+        if(target) target.photo = publicUrl;
+        var saveRes = await sb.from('site_content').update({ value: freshValue }).eq('key', 'leadership');
+        if(saveRes.error){
+          status.textContent = 'Uploaded, but could not save: ' + saveRes.error.message; status.className = 'save-status err';
+          return;
+        }
+        item.photo = publicUrl;
+        counselMembers = freshMembers;
+        contentData.leadership = freshValue;
+        thumb.innerHTML = '<img src="' + esc(publicUrl) + '" style="width:100%;height:100%;object-fit:cover;display:block;">';
+        status.textContent = 'Saved.'; status.className = 'save-status ok';
+      });
+
+      card.appendChild(row);
+      box.appendChild(card);
+    });
   }
 
   // -----------------------------------------------------------------
