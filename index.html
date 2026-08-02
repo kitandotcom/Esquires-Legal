@@ -37,13 +37,12 @@
   .wrap{ max-width:480px; }
   .brand{
     font-family:var(--script); font-weight:400;
-    font-size:2.6rem; letter-spacing:0.01em; line-height:1;
-    display:flex; align-items:baseline; justify-content:center; gap:0.6rem;
-    margin-bottom:1.8rem;
+    font-size:clamp(1.6rem,9vw,2.6rem); line-height:1.15;
+    display:flex; flex-wrap:wrap; align-items:baseline; justify-content:center;
+    gap:0.4em; margin-bottom:1.8rem; max-width:100%;
   }
-  .brand .brand-e{ color:var(--ink); font-family:var(--script); font-size:0.72em; letter-spacing:1ch; }
-  .brand .brand-l{ color:var(--ink-grey); font-family:var(--bauhaus); font-weight:700;
-    font-size:0.82em; letter-spacing:2ch; }
+  .brand .brand-e{ color:var(--ink); font-family:var(--script); font-size:0.72em; letter-spacing:0.12em; }
+  .brand .brand-l{ color:var(--ink-grey); font-family:var(--bauhaus); font-weight:700; font-size:0.82em; letter-spacing:0.3em; }
   .tagline{
     font-family:var(--serif); font-style:italic; font-weight:400;
     font-size:clamp(1.3rem,4vw,1.7rem); color:var(--blue); margin-bottom:1.6rem;
