@@ -300,15 +300,27 @@
   });
 
   async function checkAdminAndShow(session){
-    var res = await sb.from('profiles').select('role').eq('id', session.user.id).single();
-    var role = (res.data && res.data.role) || 'editor';
-    if(role !== 'admin'){
-      loginError.textContent = 'This account does not have admin access. Use submit.html instead.';
+    try{
+      var res = await sb.from('profiles').select('role').eq('id', session.user.id).single();
+      if(res.error){
+        console.error('profiles lookup failed:', res.error);
+        loginError.textContent = 'Could not verify admin access: ' + res.error.message + ' (check the browser console for details).';
+        loginError.style.display = 'block';
+        return;
+      }
+      var role = res.data && res.data.role;
+      if(role !== 'admin'){
+        loginError.textContent = 'This account does not have admin access. Use submit.html instead.';
+        loginError.style.display = 'block';
+        await sb.auth.signOut();
+        return;
+      }
+      showDashboard(session);
+    } catch(err){
+      console.error('checkAdminAndShow threw:', err);
+      loginError.textContent = 'Unexpected error checking admin access: ' + (err && err.message ? err.message : err) + ' (check the browser console).';
       loginError.style.display = 'block';
-      await sb.auth.signOut();
-      return;
     }
-    showDashboard(session);
   }
 
   function showDashboard(session){
@@ -444,15 +456,4 @@
   var CONTENT_SECTIONS = [
     { key:'hero', label:'Hero', build: function(c, d){
       field(c, d, 'eyebrow', 'Eyebrow');
-      field(c, d, 'title', 'Title');
-      field(c, d, 'sub', 'Subtitle', {textarea:true});
-      field(c, d, 'cta_primary', 'Primary Button Label');
-      field(c, d, 'cta_secondary', 'Secondary Button Label');
-    }},
-    { key:'stats', label:'Stats', build: function(c, d, wrapper){
-      if(!Array.isArray(wrapper.value)) wrapper.value = [];
-      renderObjectList({appendChild:function(n){c.appendChild(n);}}, wrapper, 'value', 'Stats', [
-        {key:'value', label:'Value'}, {key:'suffix', label:'Suffix'}, {key:'label', label:'Label'}
-      ]);
-    }, raw:true },
-    { key
+      field(
