@@ -3,412 +3,1149 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Esquires' Legal — Submit a Post</title>
+<title>Esquires' Legal — Admin</title>
 <meta name="robots" content="noindex, nofollow">
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="config.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400;1,9..144,500;1,9..144,600&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
-  :root{ --ink:#1a1d24; --paper:#f7f5f0; --line:#ddd8cc; --blue:#1f3a5f; --gold:#a8863f; }
-  *{box-sizing:border-box;}
-  body{ margin:0; font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Inter,sans-serif; background:var(--paper); color:var(--ink); }
-  .wrap{ max-width:560px; margin:0 auto; padding:3rem 24px; }
-  h1{ font-size:1.4rem; margin-bottom:0.3rem; }
-  .sub{ color:#666; font-size:0.92rem; margin-bottom:2rem; }
-  label{ display:block; font-size:0.8rem; font-weight:600; margin-bottom:0.3rem; margin-top:1.2rem; }
-  input, textarea{ width:100%; padding:0.7rem; border:1px solid var(--line); background:#fff; font-size:0.95rem; font-family:inherit; border-radius:4px; }
-  textarea{ min-height:220px; resize:vertical; }
-  button{ margin-top:1.5rem; padding:0.8rem 1.6rem; background:var(--blue); color:#fff; border:none; border-radius:4px; font-size:0.95rem; cursor:pointer; }
-  button:hover{ opacity:0.9; }
-  button:disabled{ opacity:0.5; cursor:not-allowed; }
-  .msg{ margin-top:1rem; font-size:0.88rem; padding:0.7rem; border-radius:4px; display:none; }
-  .msg.ok{ display:block; background:#e6f4ea; color:#1e4620; }
-  .msg.err{ display:block; background:#fbe9e7; color:#7a2b20; }
-  .topbar{ display:flex; justify-content:space-between; align-items:center; }
-  .logout{ background:none; color:var(--blue); text-decoration:underline; padding:0; font-size:0.85rem; margin:0; }
-  .hidden{ display:none; }
-  .list-item{ border:1px solid var(--line); border-radius:6px; padding:0.9rem; margin-top:0.8rem; }
-  .list-item .status{ font-size:0.72rem; text-transform:uppercase; letter-spacing:0.05em; color:var(--gold); font-weight:600; }
-  .post-thumb{ width:100%; max-height:140px; object-fit:cover; border-radius:4px; margin-bottom:0.6rem; display:block; }
-  .publish-btn{ margin-top:0.7rem; margin-left:0; padding:0.45rem 0.9rem; font-size:0.8rem; display:block; }
-  .tabs{ display:flex; gap:0.5rem; margin-top:1.5rem; border-bottom:1px solid var(--line); }
-  .tab-btn{ margin:0; padding:0.6rem 0.2rem; background:none; color:#888; border:none; border-bottom:2px solid transparent; border-radius:0; font-size:0.9rem; font-weight:600; cursor:pointer; }
-  .tab-btn.active{ color:var(--blue); border-bottom-color:var(--blue); }
-  .tab-btn:hover{ opacity:1; }
-  .panel{ margin-top:1.5rem; }
-  .panel.hidden{ display:none; }
-  .booking-item{ border:1px solid var(--line); border-radius:6px; padding:0.9rem; margin-top:0.8rem; }
-  .booking-item .when{ font-size:0.72rem; color:#888; margin-bottom:0.4rem; }
-  .booking-item .row{ font-size:0.9rem; margin-top:0.2rem; }
-  .booking-item .row strong{ display:inline-block; min-width:100px; color:#555; font-weight:600; font-size:0.8rem; }
-  .counsel-item{ display:flex; gap:1rem; align-items:center; border:1px solid var(--line); border-radius:6px; padding:0.9rem; margin-top:0.8rem; }
-  .counsel-thumb{ width:56px; height:56px; flex:none; border:1px solid var(--blue); display:flex; align-items:center; justify-content:center; font-family:serif; font-style:italic; color:var(--blue); overflow:hidden; font-size:1.1rem; }
-  .counsel-thumb img{ width:100%; height:100%; object-fit:cover; display:block; }
-  .counsel-info{ flex:1; min-width:0; }
-  .counsel-info .name{ font-weight:600; font-size:0.92rem; }
-  .counsel-info .title{ font-size:0.78rem; color:#888; margin-top:0.1rem; }
-  .counsel-actions{ display:flex; align-items:center; gap:0.5rem; flex:none; }
-  .counsel-actions input[type=file]{ width:auto; padding:0; border:none; font-size:0.78rem; }
-  .counsel-actions button{ margin:0; padding:0.4rem 0.8rem; font-size:0.78rem; }
+  :root{
+    --blue:#0C1B32;
+    --blue-soft:#152945;
+    --paper:#F7F4ED;
+    --paper-2:#F1ECE1;
+    --gold:#AD8A46;
+    --gold-soft:#C9AD70;
+    --ink:#14161A;
+    --green:#0D251D;
+    --line: rgba(12,27,50,0.14);
+    --line-on-dark: rgba(247,244,237,0.18);
+    --serif: 'Fraunces', serif;
+    --sans: 'Inter', sans-serif;
+    --red:#8a2b2b;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  body{
+    background:var(--paper); color:var(--ink); font-family:var(--sans); font-weight:400;
+    -webkit-font-smoothing:antialiased;
+  }
+  a{color:inherit; text-decoration:none;}
+  button{font-family:inherit; cursor:pointer;}
+  a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visible, select:focus-visible{
+    outline:1px solid var(--gold); outline-offset:2px;
+  }
+  .wrap{ max-width:1080px; margin:0 auto; padding:0 40px; }
+  @media(max-width:700px){ .wrap{padding:0 20px;} }
+
+  .eyebrow{
+    font-family:var(--sans); font-size:0.72rem; letter-spacing:0.22em;
+    text-transform:uppercase; color:var(--gold); font-weight:600;
+  }
+
+  /* ---------- LOGIN ---------- */
+  .login-screen{
+    min-height:100svh; display:flex; align-items:center; justify-content:center; padding:2rem;
+  }
+  .login-card{
+    width:100%; max-width:380px; border:1px solid var(--line); padding:3rem 2.4rem;
+  }
+  .login-card .brand{ font-family:var(--serif); font-style:italic; font-size:1.6rem; color:var(--blue); margin-bottom:0.3rem; }
+  .login-card .eyebrow{ display:block; margin-bottom:1.6rem; }
+  .login-error{
+    margin-top:1.2rem; font-size:0.82rem; color:var(--red); display:none;
+  }
+
+  /* ---------- FORM FIELDS (shared with public site) ---------- */
+  .form-field{ margin-bottom:1.4rem; }
+  .form-field label{ display:block; font-size:0.68rem; letter-spacing:0.14em; text-transform:uppercase; color:#6b7280; margin-bottom:0.5rem; font-weight:600; }
+  .form-field input, .form-field textarea, .form-field select{
+    width:100%; border:none; border-bottom:1px solid var(--line); background:transparent;
+    padding:0.6rem 0; font-family:var(--sans); font-size:0.92rem; color:var(--ink); font-weight:400;
+  }
+  .form-field input:focus, .form-field textarea:focus, .form-field select:focus{ outline:none; border-bottom-color:var(--blue); }
+  .form-field textarea{ resize:vertical; min-height:60px; }
+
+  .btn-primary{
+    background:var(--blue); color:var(--paper); font-size:0.72rem; letter-spacing:0.1em;
+    text-transform:uppercase; font-weight:600; padding:0.85rem 1.6rem; display:inline-block;
+    border:1px solid var(--blue); transition:all .2s ease;
+  }
+  .btn-primary:hover{ background:transparent; color:var(--blue); }
+  .btn-primary:disabled{ opacity:0.5; cursor:default; }
+  .btn-ghost{
+    font-size:0.72rem; letter-spacing:0.1em; text-transform:uppercase; font-weight:600;
+    padding:0.85rem 1.6rem; display:inline-block; border:1px solid var(--line); color:var(--blue);
+    background:none; transition:all .2s ease;
+  }
+  .btn-ghost:hover{ border-color:var(--blue); }
+  .btn-text{
+    background:none; border:none; font-size:0.68rem; letter-spacing:0.1em; text-transform:uppercase;
+    color:#6b7280; font-weight:600; padding:0.3rem 0;
+  }
+  .btn-text:hover{ color:var(--blue); }
+  .btn-text.danger:hover{ color:var(--red); }
+
+  /* ---------- DASHBOARD SHELL ---------- */
+  .admin-header{
+    border-bottom:1px solid var(--line); padding:1.4rem 0;
+  }
+  .admin-header .wrap{ display:flex; align-items:center; justify-content:space-between; gap:1.5rem; flex-wrap:wrap; }
+  .admin-header .brand{ font-family:var(--serif); font-style:italic; font-size:1.2rem; color:var(--blue); }
+  .admin-header .brand span{ font-style:normal; font-weight:400; font-size:0.6rem; letter-spacing:0.24em;
+    display:block; text-transform:uppercase; color:var(--gold); margin-top:2px; font-family:var(--sans); }
+  .admin-header .who{ display:flex; align-items:center; gap:1.2rem; font-size:0.78rem; color:#6b7280; }
+
+  .tabs{ border-bottom:1px solid var(--line); }
+  .tabs .wrap{ display:flex; gap:2.2rem; }
+  .tab-btn{
+    background:none; border:none; padding:1.1rem 0; font-size:0.76rem; letter-spacing:0.1em;
+    text-transform:uppercase; font-weight:600; color:#6b7280; border-bottom:2px solid transparent; margin-bottom:-1px;
+  }
+  .tab-btn.active{ color:var(--blue); border-bottom-color:var(--gold); }
+
+  main{ padding:3rem 0 6rem; }
+  .tab-panel{ display:none; }
+  .tab-panel.active{ display:block; }
+
+  .section-head{ font-family:var(--serif); font-size:1.4rem; color:var(--blue); margin-bottom:0.3rem; }
+  .section-sub{ font-size:0.82rem; color:#6b7280; margin-bottom:1.6rem; }
+
+  /* ---------- CONTENT ACCORDION ---------- */
+  .accordion-list{ border-top:1px solid var(--line); }
+  .acc-item{ border-bottom:1px solid var(--line); }
+  .acc-trigger{
+    width:100%; background:none; border:none; text-align:left; cursor:pointer;
+    padding:1.3rem 0; display:flex; align-items:center; justify-content:space-between; gap:1rem;
+    font-family:var(--serif); font-size:1.1rem; color:var(--blue); font-weight:400;
+  }
+  .acc-mark{ position:relative; width:14px; height:14px; flex:none; }
+  .acc-mark::before, .acc-mark::after{ content:""; position:absolute; background:var(--blue); transition:transform .3s ease, opacity .25s ease; }
+  .acc-mark::before{ width:14px; height:1px; top:6px; left:0; }
+  .acc-mark::after{ width:1px; height:14px; top:0; left:6px; }
+  .acc-item.open .acc-mark::after{ transform:rotate(90deg); opacity:0; }
+  .acc-panel{ max-height:0; overflow:hidden; transition:max-height .4s ease; }
+  .acc-panel-inner{ padding:0 0 2rem 0; }
+
+  .flat-fields{ margin-bottom:1.6rem; }
+  .list-label{ font-size:0.68rem; letter-spacing:0.14em; text-transform:uppercase; color:#6b7280; font-weight:600; margin:1.6rem 0 0.8rem; }
+  .repeater-item{
+    border:1px solid var(--line); padding:1.2rem 1.4rem 0.4rem; margin-bottom:1rem; position:relative;
+  }
+  .repeater-item .form-field{ margin-bottom:1.1rem; }
+  .repeater-item-head{ display:flex; justify-content:flex-end; margin-bottom:0.4rem; }
+  .btn-add{
+    background:none; border:1px dashed var(--line); color:var(--blue); font-size:0.72rem; letter-spacing:0.1em;
+    text-transform:uppercase; font-weight:600; padding:0.75rem 1rem; width:100%; text-align:center; margin-top:0.4rem;
+  }
+  .btn-add:hover{ border-color:var(--gold); color:var(--gold); }
+  .string-list-row{ display:flex; gap:0.8rem; align-items:flex-end; margin-bottom:0.9rem; }
+  .string-list-row .form-field{ flex:1; margin-bottom:0; }
+
+  .save-row{ display:flex; align-items:center; gap:1rem; margin-top:1.2rem; }
+  .save-status{ font-size:0.78rem; color:#6b7280; }
+  .save-status.ok{ color:var(--blue); }
+  .save-status.err{ color:var(--red); }
+
+  /* ---------- BLOG ---------- */
+  .blog-toolbar{ display:flex; justify-content:space-between; align-items:center; margin-bottom:1.6rem; }
+  .blog-row{
+    display:flex; justify-content:space-between; align-items:center; gap:1rem; padding:1.1rem 0; border-bottom:1px solid var(--line);
+  }
+  .blog-row-title{ font-family:var(--serif); font-size:1.05rem; color:var(--blue); }
+  .blog-row-meta{ font-size:0.72rem; letter-spacing:0.06em; text-transform:uppercase; color:#8b8f97; margin-top:0.3rem; }
+  .blog-row-actions{ display:flex; gap:1.2rem; flex:none; }
+  .blog-form{ border:1px solid var(--line); padding:1.6rem 1.8rem; margin-bottom:2rem; }
+  .blog-empty{ padding:2rem 0; font-family:var(--serif); font-style:italic; color:#6b7280; }
+
+  /* ---------- BOOKINGS ---------- */
+  table.bookings{ width:100%; border-collapse:collapse; font-size:0.84rem; }
+  table.bookings th{
+    text-align:left; font-size:0.66rem; letter-spacing:0.1em; text-transform:uppercase; color:#6b7280;
+    font-weight:600; padding:0.7rem 0.8rem 0.7rem 0; border-bottom:1px solid var(--line); white-space:nowrap;
+  }
+  table.bookings td{ padding:0.9rem 0.8rem 0.9rem 0; border-bottom:1px solid var(--line); vertical-align:top; }
+  table.bookings td.note{ max-width:220px; color:#4a5160; }
+  table.bookings select{ border:1px solid var(--line); background:var(--paper); padding:0.35rem 0.5rem; font-size:0.78rem; font-family:inherit; }
+  .table-scroll{ overflow-x:auto; }
+
+  .loading-row, .empty-row{ padding:2rem 0; color:#6b7280; font-size:0.88rem; }
 </style>
 </head>
 <body>
-<div class="wrap">
 
-  <div id="login-view">
-    <h1>Esquires' Legal</h1>
-    <p class="sub">Sign in to submit a blog post for review.</p>
-    <label>Email</label>
-    <input type="email" id="login-email" autocomplete="username">
-    <label>Password</label>
-    <input type="password" id="login-password" autocomplete="current-password">
-    <button id="login-btn">Sign In</button>
-    <div class="msg" id="login-msg"></div>
+<!-- LOGIN -->
+<div class="login-screen" id="login-screen">
+  <div class="login-card">
+    <div class="brand">Esquires' Legal</div>
+    <span class="eyebrow">Admin</span>
+    <form id="login-form">
+      <div class="form-field"><label>Email</label><input type="email" id="login-email" required autocomplete="username"></div>
+      <div class="form-field"><label>Password</label><input type="password" id="login-password" required autocomplete="current-password"></div>
+      <button type="submit" class="btn-primary" id="login-submit" style="width:100%;">Sign In</button>
+      <div class="login-error" id="login-error"></div>
+    </form>
   </div>
-
-  <div id="app-view" class="hidden">
-    <div class="topbar">
-      <div>
-        <h1 id="app-title">Submit a Post</h1>
-        <p class="sub" id="whoami"></p>
-      </div>
-      <button class="logout" id="logout-btn">Sign out</button>
-    </div>
-
-    <div class="tabs">
-      <button class="tab-btn active" id="tab-posts-btn">Posts</button>
-      <button class="tab-btn" id="tab-bookings-btn">Bookings</button>
-      <button class="tab-btn hidden" id="tab-counsel-btn">Counsel</button>
-    </div>
-
-    <div class="panel" id="panel-posts">
-      <label>Your Name (shown as the author)</label>
-      <input type="text" id="post-author" placeholder="e.g. Jesse Otah">
-      <label>Title</label>
-      <input type="text" id="post-title" placeholder="Post title">
-      <label>Content</label>
-      <textarea id="post-content" placeholder="Write the post here..."></textarea>
-      <label>Featured Image (optional)</label>
-      <input type="file" id="post-image" accept="image/*">
-      <button id="submit-btn">Submit for Review</button>
-      <div class="msg" id="submit-msg"></div>
-
-      <h2 style="font-size:1rem; margin-top:2.5rem;" id="posts-heading">Your Recent Submissions</h2>
-      <div id="my-posts"></div>
-    </div>
-
-    <div class="panel hidden" id="panel-bookings">
-      <h2 style="font-size:1rem; margin-top:0;">Consultation Bookings</h2>
-      <p class="sub" style="margin-bottom:1rem;">Read-only — booking requests submitted through the site.</p>
-      <div id="bookings-list"></div>
-    </div>
-
-    <div class="panel hidden" id="panel-counsel">
-      <h2 style="font-size:1rem; margin-top:0;">Counsel Photos</h2>
-      <p class="sub" style="margin-bottom:1rem;">Upload or replace a headshot — updates the live site directly, no code changes needed.</p>
-      <div id="counsel-msg" class="msg"></div>
-      <div id="counsel-list"></div>
-    </div>
-  </div>
-
 </div>
 
+<!-- DASHBOARD -->
+<div id="dashboard" style="display:none;">
+  <header class="admin-header">
+    <div class="wrap">
+      <div class="brand">Esquires' <span>Legal · Admin</span></div>
+      <div class="who">
+        <span id="who-email"></span>
+        <a href="index.html" class="btn-text">View Site</a>
+        <button class="btn-text" id="sign-out-btn">Sign Out</button>
+      </div>
+    </div>
+  </header>
+
+  <nav class="tabs">
+    <div class="wrap">
+      <button class="tab-btn active" data-tab="content">Content</button>
+      <button class="tab-btn" data-tab="blog">Blog</button>
+      <button class="tab-btn" data-tab="bookings">Bookings</button>
+    </div>
+  </nav>
+
+  <main class="wrap">
+    <section class="tab-panel active" id="tab-content">
+      <div class="section-head">Site Content</div>
+      <div class="section-sub">Edits here publish live to the public site as soon as you save each section.</div>
+      <div class="accordion-list" id="content-accordion"></div>
+    </section>
+
+    <section class="tab-panel" id="tab-blog">
+      <div class="blog-toolbar">
+        <div>
+          <div class="section-head">Blog</div>
+          <div class="section-sub" style="margin-bottom:0;">Posts appear publicly on the site's Blog section, newest first. Posts submitted by the editor show "Pending Review" until you publish them.</div>
+        </div>
+        <button class="btn-primary" id="blog-new-btn">New Post</button>
+      </div>
+      <div id="blog-form-wrap"></div>
+      <div id="blog-list-wrap"><div class="loading-row">Loading…</div></div>
+    </section>
+
+    <section class="tab-panel" id="tab-bookings">
+      <div class="section-head">Consultation Bookings</div>
+      <div class="section-sub">Submissions from the public "Book a Consultation" form.</div>
+      <div class="table-scroll">
+        <table class="bookings" id="bookings-table" style="display:none;">
+          <thead><tr>
+            <th>Received</th><th>Name</th><th>Organisation</th><th>Matter</th><th>Phone</th><th>Email</th><th>Note</th><th>Status</th><th></th>
+          </tr></thead>
+          <tbody id="bookings-tbody"></tbody>
+        </table>
+      </div>
+      <div class="loading-row" id="bookings-loading">Loading…</div>
+      <div class="empty-row" id="bookings-empty" style="display:none;">No bookings yet.</div>
+    </section>
+  </main>
+</div>
+
+<!-- EDITOR DASHBOARD -->
+<div id="editor-dashboard" style="display:none;">
+  <header class="admin-header">
+    <div class="wrap">
+      <div class="brand">Esquires' <span>Legal · Editor</span></div>
+      <div class="who">
+        <span id="editor-who-email"></span>
+        <a href="index.html" class="btn-text">View Site</a>
+        <button class="btn-text" id="editor-sign-out-btn">Sign Out</button>
+      </div>
+    </div>
+  </header>
+
+  <nav class="tabs">
+    <div class="wrap">
+      <button class="tab-btn active" data-tab="eblog">Blog</button>
+      <button class="tab-btn" data-tab="ebookings">Bookings</button>
+    </div>
+  </nav>
+
+  <main class="wrap">
+    <section class="tab-panel active" id="tab-eblog">
+      <div class="section-head">Submit a Post</div>
+      <div class="section-sub">Your post is sent to the admin for review — it won't appear on the site until they publish it.</div>
+      <div class="blog-form" style="margin-top:0.5rem;">
+        <div class="form-field"><label>Your Name (shown as the author)</label><input type="text" id="e-post-author" placeholder="e.g. Jesse Otah"></div>
+        <div class="form-field"><label>Title</label><input type="text" id="e-post-title" placeholder="Post title"></div>
+        <div class="form-field"><label>Content</label><textarea id="e-post-content" style="min-height:180px;" placeholder="Write the post here..."></textarea></div>
+        <div class="form-field"><label>Featured Image (optional)</label><input type="file" id="e-post-image" accept="image/*"></div>
+        <div class="save-row">
+          <button class="btn-primary" id="e-post-submit-btn">Submit for Review</button>
+          <span class="save-status" id="e-post-status"></span>
+        </div>
+      </div>
+
+      <div class="list-label" style="margin-top:2.4rem;">Your Recent Submissions</div>
+      <div id="e-post-list"><div class="loading-row">Loading…</div></div>
+    </section>
+
+    <section class="tab-panel" id="tab-ebookings">
+      <div class="section-head">Consultation Bookings</div>
+      <div class="section-sub">Submissions from the public "Book a Consultation" form. You can update each one's status.</div>
+      <div class="table-scroll">
+        <table class="bookings" id="e-bookings-table" style="display:none;">
+          <thead><tr>
+            <th>Received</th><th>Name</th><th>Organisation</th><th>Matter</th><th>Phone</th><th>Email</th><th>Note</th><th>Status</th>
+          </tr></thead>
+          <tbody id="e-bookings-tbody"></tbody>
+        </table>
+      </div>
+      <div class="loading-row" id="e-bookings-loading">Loading…</div>
+      <div class="empty-row" id="e-bookings-empty" style="display:none;">No bookings yet.</div>
+    </section>
+  </main>
+</div>
+
+<script src="config.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script>
-  var sb = window.supabase.createClient(window.SITE_CONFIG.SUPABASE_URL, window.SITE_CONFIG.SUPABASE_ANON_KEY);
-
-  var loginView = document.getElementById('login-view');
-  var appView = document.getElementById('app-view');
-  var loginMsg = document.getElementById('login-msg');
-  var submitMsg = document.getElementById('submit-msg');
-  var currentRole = null;
-
-  function showMsg(el, text, isError){
-    el.textContent = text;
-    el.className = 'msg ' + (isError ? 'err' : 'ok');
+(function(){
+  if(!window.SITE_CONFIG || !window.SITE_CONFIG.SUPABASE_URL || !window.SITE_CONFIG.SUPABASE_ANON_KEY){
+    document.getElementById('login-error').textContent = 'Site is not configured with Supabase credentials (config.js).';
+    document.getElementById('login-error').style.display = 'block';
+    return;
   }
+  var sb = supabase.createClient(window.SITE_CONFIG.SUPABASE_URL, window.SITE_CONFIG.SUPABASE_ANON_KEY);
 
-  function loadPosts(){
-    var query = sb.from('blog_posts').select('*').order('created_at', {ascending:false}).limit(20);
-    if(currentRole === 'admin'){
-      query = query.eq('status', 'pending');
-    }
-    query.then(function(res){
-      var box = document.getElementById('my-posts');
-      if(res.error || !res.data || !res.data.length){
-        box.innerHTML = '<p class="sub">' + (currentRole === 'admin' ? 'No pending posts.' : 'No submissions yet.') + '</p>';
-        return;
-      }
-      box.innerHTML = res.data.map(function(p){
-        var publishBtn = (currentRole === 'admin' && p.status === 'pending')
-          ? '<button class="publish-btn" data-id="' + p.id + '">Publish</button>' : '';
-        var thumb = p.image_url ? '<img class="post-thumb" src="' + escapeHtml(p.image_url) + '" alt="">' : '';
-        return '<div class="list-item">' + thumb + '<div class="status">' + p.status + '</div>'
-          + '<strong>' + escapeHtml(p.title) + '</strong><div class="sub">by ' + escapeHtml(p.author) + '</div>'
-          + publishBtn + '</div>';
-      }).join('');
-      if(currentRole === 'admin'){
-        Array.prototype.forEach.call(document.querySelectorAll('.publish-btn'), function(btn){
-          btn.addEventListener('click', function(){
-            var id = btn.getAttribute('data-id');
-            btn.disabled = true;
-            btn.textContent = 'Publishing...';
-            sb.from('blog_posts').update({ status: 'published' }).eq('id', id).then(function(upd){
-              if(upd.error){
-                btn.disabled = false;
-                btn.textContent = 'Publish';
-                alert(upd.error.message);
-                return;
-              }
-              loadPosts();
-            });
-          });
-        });
-      }
-    });
-  }
-
-  function escapeHtml(s){
-    return String(s || '').replace(/[&<>"']/g, function(c){
+  function esc(s){
+    return String(s == null ? '' : s).replace(/[&<>"']/g, function(c){
       return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];
     });
   }
 
-  function fmtDate(iso){
-    try{
-      return new Date(iso).toLocaleString();
-    } catch(e){ return iso; }
-  }
+  // -----------------------------------------------------------------
+  // Auth
+  // -----------------------------------------------------------------
+  var loginScreen = document.getElementById('login-screen');
+  var dashboard = document.getElementById('dashboard');
+  var editorDashboard = document.getElementById('editor-dashboard');
+  var loginForm = document.getElementById('login-form');
+  var loginError = document.getElementById('login-error');
+  var loginSubmit = document.getElementById('login-submit');
 
-  var bookingsLoaded = false;
-
-  function loadBookings(){
-    sb.from('bookings').select('*').order('created_at', {ascending:false}).limit(50)
-      .then(function(res){
-        var box = document.getElementById('bookings-list');
-        if(res.error){
-          box.innerHTML = '<p class="sub">Could not load bookings: ' + escapeHtml(res.error.message) + '</p>';
-          return;
-        }
-        if(!res.data || !res.data.length){
-          box.innerHTML = '<p class="sub">No bookings yet.</p>';
-          return;
-        }
-        box.innerHTML = res.data.map(function(b){
-          return '<div class="booking-item">'
-            + '<div class="when">' + escapeHtml(fmtDate(b.created_at)) + '</div>'
-            + '<div class="row"><strong>Name</strong>' + escapeHtml(b.name || '—') + '</div>'
-            + '<div class="row"><strong>Phone</strong>' + escapeHtml(b.phone || '—') + '</div>'
-            + '<div class="row"><strong>Email</strong>' + escapeHtml(b.email || '—') + '</div>'
-            + '<div class="row"><strong>Organisation</strong>' + escapeHtml(b.organisation || '—') + '</div>'
-            + '<div class="row"><strong>Area of Law</strong>' + escapeHtml(b.area || '—') + '</div>'
-            + '<div class="row"><strong>Brief</strong>' + escapeHtml(b.note || '—') + '</div>'
-            + '</div>';
-        }).join('');
-      });
-  }
-
-  var counselMembers = null; // cached copy of the leadership row's members array
-
-  function slugify(name){
-    return String(name || 'member').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
-  }
-
-  function loadCounsel(){
-    var box = document.getElementById('counsel-list');
-    box.innerHTML = '<p class="sub">Loading...</p>';
-    sb.from('site_content').select('value').eq('key', 'leadership').single().then(function(res){
-      if(res.error || !res.data){
-        box.innerHTML = '<p class="sub">Could not load counsel list: ' + escapeHtml(res.error ? res.error.message : 'not found') + '</p>';
-        return;
-      }
-      counselMembers = (res.data.value && res.data.value.members) || [];
-      renderCounsel();
-    });
-  }
-
-  function renderCounsel(){
-    var box = document.getElementById('counsel-list');
-    if(!counselMembers.length){
-      box.innerHTML = '<p class="sub">No counsel members found.</p>';
-      return;
-    }
-    box.innerHTML = counselMembers.map(function(m, i){
-      var thumb = m.photo
-        ? '<img src="' + escapeHtml(m.photo) + '" alt="">'
-        : escapeHtml(m.initials || '');
-      return '<div class="counsel-item">'
-        + '<div class="counsel-thumb">' + thumb + '</div>'
-        + '<div class="counsel-info"><div class="name">' + escapeHtml(m.name) + '</div><div class="title">' + escapeHtml(m.title) + '</div></div>'
-        + '<div class="counsel-actions">'
-        + '<input type="file" accept="image/*" data-idx="' + i + '" class="counsel-file">'
-        + '<button data-idx="' + i + '" class="counsel-upload-btn">Upload</button>'
-        + '</div></div>';
-    }).join('');
-    Array.prototype.forEach.call(document.querySelectorAll('.counsel-upload-btn'), function(btn){
-      btn.addEventListener('click', function(){
-        var idx = parseInt(btn.getAttribute('data-idx'), 10);
-        var fileInput = document.querySelector('.counsel-file[data-idx="' + idx + '"]');
-        var file = fileInput.files && fileInput.files[0];
-        if(!file){ showMsg(document.getElementById('counsel-msg'), 'Choose a photo first.', true); return; }
-        uploadCounselPhoto(idx, file, btn);
-      });
-    });
-  }
-
-  function uploadCounselPhoto(idx, file, btn){
-    var msgEl = document.getElementById('counsel-msg');
-    btn.disabled = true;
-    btn.textContent = 'Uploading...';
-    var member = counselMembers[idx];
-    var ext = (file.name.split('.').pop() || 'jpg').toLowerCase();
-    var path = slugify(member.name) + '-' + Date.now() + '.' + ext;
-
-    sb.storage.from('counsel-photos').upload(path, file, { upsert: true }).then(function(uploadRes){
-      if(uploadRes.error){
-        btn.disabled = false;
-        btn.textContent = 'Upload';
-        showMsg(msgEl, uploadRes.error.message, true);
-        return;
-      }
-      var publicUrl = sb.storage.from('counsel-photos').getPublicUrl(path).data.publicUrl;
-
-      // Re-fetch the leadership row fresh before patching, so we never
-      // clobber a photo update someone else made in the meantime.
-      sb.from('site_content').select('value').eq('key', 'leadership').single().then(function(res){
-        if(res.error || !res.data){
-          btn.disabled = false;
-          btn.textContent = 'Upload';
-          showMsg(msgEl, 'Uploaded, but could not save: ' + (res.error ? res.error.message : 'not found'), true);
-          return;
-        }
-        var value = res.data.value;
-        var members = value.members || [];
-        var target = members.find(function(m){ return m.name === member.name; }) || members[idx];
-        if(target) target.photo = publicUrl;
-
-        sb.from('site_content').update({ value: value }).eq('key', 'leadership').then(function(updRes){
-          btn.disabled = false;
-          btn.textContent = 'Upload';
-          if(updRes.error){
-            showMsg(msgEl, 'Uploaded, but could not save: ' + updRes.error.message, true);
-            return;
-          }
-          showMsg(msgEl, 'Photo updated for ' + member.name + '.', false);
-          loadCounsel();
-        });
-      });
-    });
-  }
-
-  function showTab(which){
-    var postsBtn = document.getElementById('tab-posts-btn');
-    var bookingsBtn = document.getElementById('tab-bookings-btn');
-    var counselBtn = document.getElementById('tab-counsel-btn');
-    var postsPanel = document.getElementById('panel-posts');
-    var bookingsPanel = document.getElementById('panel-bookings');
-    var counselPanel = document.getElementById('panel-counsel');
-    postsBtn.classList.remove('active');
-    bookingsBtn.classList.remove('active');
-    counselBtn.classList.remove('active');
-    postsPanel.classList.add('hidden');
-    bookingsPanel.classList.add('hidden');
-    counselPanel.classList.add('hidden');
-    if(which === 'bookings'){
-      bookingsBtn.classList.add('active');
-      bookingsPanel.classList.remove('hidden');
-      if(!bookingsLoaded){ bookingsLoaded = true; loadBookings(); }
-    } else if(which === 'counsel'){
-      counselBtn.classList.add('active');
-      counselPanel.classList.remove('hidden');
-      loadCounsel();
-    } else {
-      postsBtn.classList.add('active');
-      postsPanel.classList.remove('hidden');
-    }
-  }
-
-  document.getElementById('tab-posts-btn').addEventListener('click', function(){ showTab('posts'); });
-  document.getElementById('tab-bookings-btn').addEventListener('click', function(){ showTab('bookings'); });
-  document.getElementById('tab-counsel-btn').addEventListener('click', function(){ showTab('counsel'); });
-
-  function showApp(session){
-    loginView.classList.add('hidden');
-    appView.classList.remove('hidden');
-    document.getElementById('whoami').textContent = 'Signed in as ' + session.user.email;
-    sb.from('profiles').select('role').eq('id', session.user.id).single().then(function(res){
-      currentRole = (res.data && res.data.role) || 'editor';
-      document.getElementById('whoami').textContent = 'Signed in as ' + session.user.email + (currentRole === 'admin' ? ' (admin)' : '');
-      document.getElementById('posts-heading').textContent = currentRole === 'admin' ? 'Pending Posts' : 'Your Recent Submissions';
-      if(currentRole === 'admin'){
-        document.getElementById('tab-counsel-btn').classList.remove('hidden');
-      }
-      loadPosts();
-    });
-  }
-
-  sb.auth.getSession().then(function(res){
-    if(res.data.session) showApp(res.data.session);
-  });
-
-  document.getElementById('login-btn').addEventListener('click', function(){
+  loginForm.addEventListener('submit', async function(e){
+    e.preventDefault();
+    loginError.style.display = 'none';
+    loginSubmit.disabled = true;
+    loginSubmit.textContent = 'Signing in…';
     var email = document.getElementById('login-email').value.trim();
     var password = document.getElementById('login-password').value;
-    if(!email || !password){ showMsg(loginMsg, 'Enter your email and password.', true); return; }
-    sb.auth.signInWithPassword({ email: email, password: password }).then(function(res){
-      if(res.error){ showMsg(loginMsg, res.error.message, true); return; }
-      showApp(res.data.session);
-    });
-  });
-
-  document.getElementById('logout-btn').addEventListener('click', function(){
-    sb.auth.signOut().then(function(){
-      appView.classList.add('hidden');
-      loginView.classList.remove('hidden');
-      bookingsLoaded = false;
-      document.getElementById('tab-counsel-btn').classList.add('hidden');
-      showTab('posts');
-    });
-  });
-
-  document.getElementById('submit-btn').addEventListener('click', function(){
-    var author = document.getElementById('post-author').value.trim();
-    var title = document.getElementById('post-title').value.trim();
-    var content = document.getElementById('post-content').value.trim();
-    var imageFile = document.getElementById('post-image').files[0];
-    if(!author || !title || !content){ showMsg(submitMsg, 'Fill in all fields.', true); return; }
-
-    var btn = document.getElementById('submit-btn');
-    btn.disabled = true;
-
-    function insertPost(imageUrl){
-      var row = { author: author, title: title, content: content, status: 'pending' };
-      if(imageUrl) row.image_url = imageUrl;
-      sb.from('blog_posts').insert(row).then(function(res){
-        btn.disabled = false;
-        if(res.error){ showMsg(submitMsg, res.error.message, true); return; }
-        showMsg(submitMsg, 'Submitted — it will appear on the site once reviewed.', false);
-        document.getElementById('post-title').value = '';
-        document.getElementById('post-content').value = '';
-        document.getElementById('post-image').value = '';
-        sb.auth.getSession().then(function(r){ if(r.data.session) loadPosts(); });
-      });
+    var res = await sb.auth.signInWithPassword({ email: email, password: password });
+    loginSubmit.disabled = false;
+    loginSubmit.textContent = 'Sign In';
+    if(res.error){
+      loginError.textContent = res.error.message || 'Sign in failed.';
+      loginError.style.display = 'block';
     }
+  });
 
+  document.getElementById('sign-out-btn').addEventListener('click', async function(){
+    await sb.auth.signOut();
+  });
+  document.getElementById('editor-sign-out-btn').addEventListener('click', async function(){
+    await sb.auth.signOut();
+  });
+
+  sb.auth.onAuthStateChange(function(event, session){
+    if(session){
+      routeByRole(session);
+    } else {
+      dashboard.style.display = 'none';
+      editorDashboard.style.display = 'none';
+      loginScreen.style.display = 'flex';
+    }
+  });
+
+  async function routeByRole(session){
+    try{
+      var res = await sb.from('profiles').select('role').eq('id', session.user.id).single();
+      if(res.error){
+        console.error('profiles lookup failed:', res.error);
+        loginError.textContent = 'Could not verify account access: ' + res.error.message + ' (check the browser console for details).';
+        loginError.style.display = 'block';
+        return;
+      }
+      var role = res.data && res.data.role;
+      if(role === 'admin'){
+        showAdminDashboard(session);
+      } else if(role === 'editor'){
+        showEditorDashboard(session);
+      } else {
+        loginError.textContent = 'This account has no recognized role assigned. Contact the developer.';
+        loginError.style.display = 'block';
+        await sb.auth.signOut();
+      }
+    } catch(err){
+      console.error('routeByRole threw:', err);
+      loginError.textContent = 'Unexpected error checking account access: ' + (err && err.message ? err.message : err) + ' (check the browser console).';
+      loginError.style.display = 'block';
+    }
+  }
+
+  function showAdminDashboard(session){
+    loginScreen.style.display = 'none';
+    editorDashboard.style.display = 'none';
+    dashboard.style.display = 'block';
+    document.getElementById('who-email').textContent = session.user.email;
+    if(!dashboard.dataset.loaded){
+      dashboard.dataset.loaded = '1';
+      loadContentTab();
+      loadBlogTab();
+      loadBookingsTab();
+    }
+  }
+
+  function showEditorDashboard(session){
+    loginScreen.style.display = 'none';
+    dashboard.style.display = 'none';
+    editorDashboard.style.display = 'block';
+    document.getElementById('editor-who-email').textContent = session.user.email;
+    if(!editorDashboard.dataset.loaded){
+      editorDashboard.dataset.loaded = '1';
+      loadEditorPosts();
+      loadEditorBookings();
+    }
+  }
+
+  function slugify(s){
+    return String(s || 'item').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+  }
+
+  // -----------------------------------------------------------------
+  // Editor: submit posts + view own submissions
+  // -----------------------------------------------------------------
+  async function loadEditorPosts(){
+    var box = document.getElementById('e-post-list');
+    box.innerHTML = '<div class="loading-row">Loading…</div>';
+    var res = await sb.from('blog_posts').select('*').order('created_at', {ascending:false}).limit(20);
+    if(res.error){
+      box.innerHTML = '<div class="empty-row">Could not load posts: ' + esc(res.error.message) + '</div>';
+      return;
+    }
+    var rows = res.data || [];
+    if(!rows.length){
+      box.innerHTML = '<div class="empty-row">No submissions yet.</div>';
+      return;
+    }
+    box.innerHTML = rows.map(function(p){
+      var thumb = p.image_url ? '<img src="' + esc(p.image_url) + '" style="width:100%;max-height:120px;object-fit:cover;display:block;margin-bottom:0.5rem;">' : '';
+      var statusLabel = p.status === 'pending' ? 'Pending Review' : 'Published';
+      var statusColor = p.status === 'pending' ? 'var(--gold)' : 'var(--blue)';
+      return '<div class="repeater-item">' + thumb
+        + '<div class="blog-row-meta" style="color:' + statusColor + ';">' + esc(statusLabel) + '</div>'
+        + '<div class="blog-row-title">' + esc(p.title) + '</div>'
+        + '<div class="blog-row-meta">By ' + esc(p.author) + '</div>'
+        + '</div>';
+    }).join('');
+  }
+
+  document.getElementById('e-post-submit-btn').addEventListener('click', async function(){
+    var author = document.getElementById('e-post-author').value.trim();
+    var title = document.getElementById('e-post-title').value.trim();
+    var content = document.getElementById('e-post-content').value.trim();
+    var imageFile = document.getElementById('e-post-image').files[0];
+    var status = document.getElementById('e-post-status');
+    if(!author || !title || !content){
+      status.textContent = 'Fill in all fields.';
+      status.className = 'save-status err';
+      return;
+    }
+    var btn = document.getElementById('e-post-submit-btn');
+    btn.disabled = true;
+    status.textContent = 'Submitting…';
+    status.className = 'save-status';
+
+    var imageUrl = null;
     if(imageFile){
       var ext = (imageFile.name.split('.').pop() || 'jpg').toLowerCase();
       var path = slugify(title) + '-' + Date.now() + '.' + ext;
-      sb.storage.from('blog-images').upload(path, imageFile, { upsert: true }).then(function(uploadRes){
-        if(uploadRes.error){
-          btn.disabled = false;
-          showMsg(submitMsg, uploadRes.error.message, true);
+      var upRes = await sb.storage.from('blog-images').upload(path, imageFile, { upsert: true });
+      if(upRes.error){
+        btn.disabled = false;
+        status.textContent = 'Image upload failed: ' + upRes.error.message;
+        status.className = 'save-status err';
+        return;
+      }
+      imageUrl = sb.storage.from('blog-images').getPublicUrl(path).data.publicUrl;
+    }
+
+    var payload = { author: author, title: title, content: content, status: 'pending' };
+    if(imageUrl) payload.image_url = imageUrl;
+    var res = await sb.from('blog_posts').insert(payload);
+    btn.disabled = false;
+    if(res.error){
+      status.textContent = 'Failed: ' + res.error.message;
+      status.className = 'save-status err';
+      return;
+    }
+    status.textContent = 'Submitted — it will appear on the site once the admin reviews it.';
+    status.className = 'save-status ok';
+    document.getElementById('e-post-title').value = '';
+    document.getElementById('e-post-content').value = '';
+    document.getElementById('e-post-image').value = '';
+    loadEditorPosts();
+  });
+
+  // -----------------------------------------------------------------
+  // Editor: view bookings + update status (no delete)
+  // -----------------------------------------------------------------
+  async function loadEditorBookings(){
+    var loading = document.getElementById('e-bookings-loading');
+    var empty = document.getElementById('e-bookings-empty');
+    var table = document.getElementById('e-bookings-table');
+    var tbody = document.getElementById('e-bookings-tbody');
+    loading.style.display = 'block';
+    empty.style.display = 'none';
+    table.style.display = 'none';
+
+    var res = await sb.from('bookings').select('*').order('created_at', {ascending:false});
+    loading.style.display = 'none';
+    if(res.error){
+      loading.style.display = 'block';
+      loading.textContent = 'Could not load bookings: ' + res.error.message;
+      return;
+    }
+    var rows = res.data || [];
+    if(!rows.length){
+      empty.style.display = 'block';
+      return;
+    }
+    table.style.display = 'table';
+    tbody.innerHTML = '';
+    rows.forEach(function(b){
+      var tr = document.createElement('tr');
+      var dateStr = '';
+      try { dateStr = new Date(b.created_at).toLocaleDateString('en-GB', {day:'2-digit', month:'short', year:'numeric'}); } catch(e){}
+      tr.innerHTML =
+        '<td>' + esc(dateStr) + '</td>' +
+        '<td>' + esc(b.name) + '</td>' +
+        '<td>' + esc(b.organisation) + '</td>' +
+        '<td>' + esc(b.area) + '</td>' +
+        '<td>' + esc(b.phone) + '</td>' +
+        '<td>' + esc(b.email) + '</td>' +
+        '<td class="note">' + esc(b.note) + '</td>';
+
+      var statusTd = document.createElement('td');
+      var select = document.createElement('select');
+      ['new','contacted','closed'].forEach(function(opt){
+        var o = document.createElement('option');
+        o.value = opt;
+        o.textContent = opt.charAt(0).toUpperCase() + opt.slice(1);
+        if((b.status || 'new') === opt) o.selected = true;
+        select.appendChild(o);
+      });
+      select.addEventListener('change', async function(){
+        var res = await sb.from('bookings').update({ status: select.value }).eq('id', b.id);
+        if(res.error) alert('Failed to update status: ' + res.error.message);
+      });
+      statusTd.appendChild(select);
+      tr.appendChild(statusTd);
+
+      tbody.appendChild(tr);
+    });
+  }
+
+  // -----------------------------------------------------------------
+  // Tabs
+  // -----------------------------------------------------------------
+  document.querySelectorAll('.tab-btn').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      document.querySelectorAll('.tab-btn').forEach(function(b){ b.classList.remove('active'); });
+      document.querySelectorAll('.tab-panel').forEach(function(p){ p.classList.remove('active'); });
+      btn.classList.add('active');
+      document.getElementById('tab-' + btn.dataset.tab).classList.add('active');
+    });
+  });
+
+  // -----------------------------------------------------------------
+  // Shared form-building helpers
+  // -----------------------------------------------------------------
+  function field(container, obj, key, label, opts){
+    opts = opts || {};
+    var wrap = document.createElement('div');
+    wrap.className = 'form-field';
+    var lab = document.createElement('label');
+    lab.textContent = label;
+    wrap.appendChild(lab);
+    var input = document.createElement(opts.textarea ? 'textarea' : 'input');
+    if(!opts.textarea) input.type = 'text';
+    input.value = obj[key] == null ? '' : obj[key];
+    input.addEventListener('input', function(){ obj[key] = input.value; });
+    wrap.appendChild(input);
+    container.appendChild(wrap);
+    return wrap;
+  }
+
+  function renderStringList(container, obj, key, label){
+    var listLabel = document.createElement('div');
+    listLabel.className = 'list-label';
+    listLabel.textContent = label;
+    container.appendChild(listLabel);
+    if(!Array.isArray(obj[key])) obj[key] = [];
+    var listEl = document.createElement('div');
+    container.appendChild(listEl);
+
+    function redraw(){
+      listEl.innerHTML = '';
+      obj[key].forEach(function(_, i){
+        var row = document.createElement('div');
+        row.className = 'string-list-row';
+        var fwrap = document.createElement('div');
+        fwrap.className = 'form-field';
+        var ta = document.createElement('textarea');
+        ta.value = obj[key][i];
+        ta.addEventListener('input', function(){ obj[key][i] = ta.value; });
+        fwrap.appendChild(ta);
+        row.appendChild(fwrap);
+        var rm = document.createElement('button');
+        rm.type = 'button';
+        rm.className = 'btn-text danger';
+        rm.textContent = 'Remove';
+        rm.addEventListener('click', function(){ obj[key].splice(i, 1); redraw(); });
+        row.appendChild(rm);
+        listEl.appendChild(row);
+      });
+    }
+    redraw();
+
+    var add = document.createElement('button');
+    add.type = 'button';
+    add.className = 'btn-add';
+    add.textContent = '+ Add';
+    add.addEventListener('click', function(){ obj[key].push(''); redraw(); });
+    container.appendChild(add);
+  }
+
+  function renderObjectList(container, obj, key, label, itemFields){
+    var listLabel = document.createElement('div');
+    listLabel.className = 'list-label';
+    listLabel.textContent = label;
+    container.appendChild(listLabel);
+    if(!Array.isArray(obj[key])) obj[key] = [];
+    var listEl = document.createElement('div');
+    container.appendChild(listEl);
+
+    function redraw(){
+      listEl.innerHTML = '';
+      obj[key].forEach(function(item, i){
+        var card = document.createElement('div');
+        card.className = 'repeater-item';
+        var head = document.createElement('div');
+        head.className = 'repeater-item-head';
+        var rm = document.createElement('button');
+        rm.type = 'button';
+        rm.className = 'btn-text danger';
+        rm.textContent = 'Remove';
+        rm.addEventListener('click', function(){ obj[key].splice(i, 1); redraw(); });
+        head.appendChild(rm);
+        card.appendChild(head);
+        itemFields.forEach(function(f){
+          field(card, item, f.key, f.label, {textarea: !!f.textarea});
+        });
+        listEl.appendChild(card);
+      });
+    }
+    redraw();
+
+    var add = document.createElement('button');
+    add.type = 'button';
+    add.className = 'btn-add';
+    add.textContent = '+ Add ' + label.replace(/s$/, '');
+    add.addEventListener('click', function(){
+      var blank = {};
+      itemFields.forEach(function(f){ blank[f.key] = ''; });
+      obj[key].push(blank);
+      redraw();
+    });
+    container.appendChild(add);
+  }
+
+  // -----------------------------------------------------------------
+  // Content tab
+  // -----------------------------------------------------------------
+  var CONTENT_SECTIONS = [
+    { key:'hero', label:'Hero', build: function(c, d){
+      field(c, d, 'eyebrow', 'Eyebrow');
+      field(c, d, 'title', 'Title');
+      field(c, d, 'sub', 'Subtitle', {textarea:true});
+      field(c, d, 'cta_primary', 'Primary Button Label');
+      field(c, d, 'cta_secondary', 'Secondary Button Label');
+    }},
+    { key:'stats', label:'Stats', build: function(c, d, wrapper){
+      if(!Array.isArray(wrapper.value)) wrapper.value = [];
+      renderObjectList({appendChild:function(n){c.appendChild(n);}}, wrapper, 'value', 'Stats', [
+        {key:'value', label:'Value'}, {key:'suffix', label:'Suffix'}, {key:'label', label:'Label'}
+      ]);
+    }, raw:true },
+    { key:'firm', label:'The Firm', build: function(c, d){
+      field(c, d, 'title_pre', 'Title (plain part)');
+      field(c, d, 'title_em', 'Title (emphasis part)');
+      renderStringList(c, d, 'paragraphs', 'Paragraphs');
+      field(c, d, 'quote', 'Pull Quote');
+      field(c, d, 'quote_attrib', 'Quote Attribution');
+    }},
+    { key:'foundation', label:'Foundation (Mission / Vision / Philosophy)', build: function(c, d){
+      field(c, d, 'title_pre', 'Title (plain part)');
+      field(c, d, 'title_em', 'Title (emphasis part)');
+      renderObjectList(c, d, 'items', 'Items', [
+        {key:'idx', label:'Tag (e.g. MISSION)'}, {key:'head', label:'Heading'}, {key:'body', label:'Body', textarea:true}
+      ]);
+    }},
+    { key:'practice', label:'Practice Areas', build: function(c, d){
+      field(c, d, 'title_pre', 'Title (plain part)');
+      field(c, d, 'title_em', 'Title (emphasis part)');
+      renderObjectList(c, d, 'items', 'Practice Areas', [
+        {key:'idx', label:'Number'}, {key:'head', label:'Heading'}, {key:'body', label:'Body', textarea:true}
+      ]);
+    }},
+    { key:'advisory', label:'Financial & Corporate Advisory', build: function(c, d){
+      field(c, d, 'title_pre', 'Title (plain part)');
+      field(c, d, 'title_em', 'Title (emphasis part)');
+      renderStringList(c, d, 'paragraphs', 'Paragraphs');
+      renderObjectList(c, d, 'served', 'Who We Serve', [
+        {key:'k', label:'Label'}, {key:'v', label:'Value'}
+      ]);
+    }},
+    { key:'leadership', label:'Counsel (Leadership)', build: function(c, d){
+      field(c, d, 'title_pre', 'Title (plain part)');
+      field(c, d, 'title_em', 'Title (emphasis part)');
+      if(!Array.isArray(d.members)) d.members = [];
+      var listLabel = document.createElement('div');
+      listLabel.className = 'list-label';
+      listLabel.textContent = 'Members';
+      c.appendChild(listLabel);
+      var listEl = document.createElement('div');
+      c.appendChild(listEl);
+
+      function redrawMembers(){
+        listEl.innerHTML = '';
+        d.members.forEach(function(item, i){
+          var card = document.createElement('div');
+          card.className = 'repeater-item';
+          var head = document.createElement('div');
+          head.className = 'repeater-item-head';
+          var rm = document.createElement('button');
+          rm.type = 'button'; rm.className = 'btn-text danger'; rm.textContent = 'Remove';
+          rm.addEventListener('click', function(){ d.members.splice(i, 1); redrawMembers(); });
+          head.appendChild(rm);
+          card.appendChild(head);
+
+          var photoRow = document.createElement('div');
+          photoRow.style.cssText = 'display:flex; align-items:center; gap:1rem; margin-bottom:1.2rem; flex-wrap:wrap;';
+          var thumb = document.createElement('div');
+          thumb.style.cssText = 'width:56px; height:56px; flex:none; border:1px solid var(--blue); display:flex; align-items:center; justify-content:center; font-family:var(--serif); font-style:italic; color:var(--blue); overflow:hidden; font-size:1.1rem;';
+          thumb.innerHTML = item.photo ? '<img src="' + esc(item.photo) + '" style="width:100%;height:100%;object-fit:cover;display:block;">' : esc(item.initials || '');
+          var fileInput = document.createElement('input');
+          fileInput.type = 'file'; fileInput.accept = 'image/*';
+          var uploadBtn = document.createElement('button');
+          uploadBtn.type = 'button'; uploadBtn.className = 'btn-ghost'; uploadBtn.textContent = 'Upload Photo';
+          var photoStatus = document.createElement('span');
+          photoStatus.className = 'save-status';
+          uploadBtn.addEventListener('click', async function(){
+            var file = fileInput.files[0];
+            if(!file){ photoStatus.textContent = 'Choose a photo first.'; photoStatus.className = 'save-status err'; return; }
+            uploadBtn.disabled = true;
+            photoStatus.textContent = 'Uploading…'; photoStatus.className = 'save-status';
+            var ext = (file.name.split('.').pop() || 'jpg').toLowerCase();
+            var path = slugify(item.name) + '-' + Date.now() + '.' + ext;
+            var upRes = await sb.storage.from('counsel-photos').upload(path, file, { upsert: true });
+            if(upRes.error){
+              uploadBtn.disabled = false;
+              photoStatus.textContent = 'Failed: ' + upRes.error.message; photoStatus.className = 'save-status err';
+              return;
+            }
+            var publicUrl = sb.storage.from('counsel-photos').getPublicUrl(path).data.publicUrl;
+            // Re-fetch the leadership row fresh so we patch onto the latest saved state.
+            var freshRes = await sb.from('site_content').select('value').eq('key', 'leadership').single();
+            uploadBtn.disabled = false;
+            if(freshRes.error || !freshRes.data){
+              photoStatus.textContent = 'Uploaded, but could not save.'; photoStatus.className = 'save-status err';
+              return;
+            }
+            var freshValue = freshRes.data.value;
+            var freshMembers = freshValue.members || [];
+            var target = freshMembers.find(function(m){ return m.name === item.name; }) || freshMembers[i];
+            if(target) target.photo = publicUrl;
+            var saveRes = await sb.from('site_content').update({ value: freshValue }).eq('key', 'leadership');
+            if(saveRes.error){
+              photoStatus.textContent = 'Uploaded, but could not save: ' + saveRes.error.message; photoStatus.className = 'save-status err';
+              return;
+            }
+            item.photo = publicUrl;
+            contentData.leadership = freshValue;
+            thumb.innerHTML = '<img src="' + esc(publicUrl) + '" style="width:100%;height:100%;object-fit:cover;display:block;">';
+            photoStatus.textContent = 'Saved.'; photoStatus.className = 'save-status ok';
+          });
+          photoRow.appendChild(thumb);
+          photoRow.appendChild(fileInput);
+          photoRow.appendChild(uploadBtn);
+          photoRow.appendChild(photoStatus);
+          card.appendChild(photoRow);
+
+          field(card, item, 'initials', 'Initials');
+          field(card, item, 'name', 'Name');
+          field(card, item, 'title', 'Title');
+          field(card, item, 'bio', 'Bio', {textarea:true});
+          listEl.appendChild(card);
+        });
+      }
+      redrawMembers();
+
+      var addBtn = document.createElement('button');
+      addBtn.type = 'button'; addBtn.className = 'btn-add'; addBtn.textContent = '+ Add Member';
+      addBtn.addEventListener('click', function(){
+        d.members.push({ initials:'', name:'', title:'', bio:'' });
+        redrawMembers();
+      });
+      c.appendChild(addBtn);
+    }},
+    { key:'contact', label:'Contact', build: function(c, d){
+      field(c, d, 'title_pre', 'Title (plain part)');
+      field(c, d, 'title_em', 'Title (emphasis part)');
+      renderObjectList(c, d, 'offices', 'Offices', [
+        {key:'flag', label:'Location'}, {key:'addr', label:'Address', textarea:true}
+      ]);
+    }},
+    { key:'footer', label:'Footer', build: function(c, d){
+      field(c, d, 'tagline', 'Tagline', {textarea:true});
+      field(c, d, 'phone', 'Phone');
+      field(c, d, 'email', 'Email');
+      field(c, d, 'hours', 'Hours');
+      renderStringList(c, d, 'chambers', 'Chambers Lines');
+      field(c, d, 'copyright', 'Copyright Line');
+      field(c, d, 'associate_chambers', 'Associate Chambers Line', {textarea:true});
+    }},
+    { key:'closing', label:'Closing Quote', build: function(c, d){
+      field(c, d, 'quote', 'Quote');
+    }}
+  ];
+
+  var contentData = {};
+
+  async function loadContentTab(){
+    var accordion = document.getElementById('content-accordion');
+    accordion.innerHTML = '<div class="loading-row">Loading…</div>';
+    var res = await sb.from('site_content').select('key,value');
+    if(res.error){
+      accordion.innerHTML = '<div class="empty-row">Could not load site content: ' + esc(res.error.message) + '</div>';
+      return;
+    }
+    (res.data || []).forEach(function(row){ contentData[row.key] = row.value; });
+
+    accordion.innerHTML = '';
+    CONTENT_SECTIONS.forEach(function(section){
+      if(contentData[section.key] === undefined){
+        contentData[section.key] = section.raw ? [] : {};
+      }
+      var item = document.createElement('div');
+      item.className = 'acc-item';
+
+      var trigger = document.createElement('button');
+      trigger.type = 'button';
+      trigger.className = 'acc-trigger';
+      trigger.setAttribute('aria-expanded', 'false');
+      trigger.innerHTML = '<span>' + esc(section.label) + '</span><span class="acc-mark"></span>';
+      item.appendChild(trigger);
+
+      var panel = document.createElement('div');
+      panel.className = 'acc-panel';
+      var panelInner = document.createElement('div');
+      panelInner.className = 'acc-panel-inner';
+      var fieldsWrap = document.createElement('div');
+      fieldsWrap.className = 'flat-fields';
+
+      var dataRef = section.raw ? { value: contentData[section.key] } : contentData[section.key];
+      section.build(fieldsWrap, dataRef);
+      panelInner.appendChild(fieldsWrap);
+
+      var saveRow = document.createElement('div');
+      saveRow.className = 'save-row';
+      var saveBtn = document.createElement('button');
+      saveBtn.type = 'button';
+      saveBtn.className = 'btn-primary';
+      saveBtn.textContent = 'Save ' + section.label;
+      var status = document.createElement('span');
+      status.className = 'save-status';
+      saveBtn.addEventListener('click', async function(){
+        saveBtn.disabled = true;
+        status.textContent = 'Saving…';
+        status.className = 'save-status';
+        var valueToSave = section.raw ? dataRef.value : dataRef;
+        var res = await sb.from('site_content').upsert({ key: section.key, value: valueToSave }, { onConflict: 'key' });
+        saveBtn.disabled = false;
+        if(res.error){
+          status.textContent = 'Failed: ' + res.error.message;
+          status.className = 'save-status err';
+        } else {
+          status.textContent = 'Saved.';
+          status.className = 'save-status ok';
+        }
+      });
+      saveRow.appendChild(saveBtn);
+      saveRow.appendChild(status);
+      panelInner.appendChild(saveRow);
+
+      panel.appendChild(panelInner);
+      item.appendChild(panel);
+      accordion.appendChild(item);
+
+      trigger.addEventListener('click', function(){
+        var isOpen = item.classList.contains('open');
+        if(isOpen){
+          item.classList.remove('open');
+          panel.style.maxHeight = null;
+          trigger.setAttribute('aria-expanded', 'false');
+        } else {
+          item.classList.add('open');
+          panel.style.maxHeight = panel.scrollHeight + 'px';
+          trigger.setAttribute('aria-expanded', 'true');
+        }
+      });
+    });
+  }
+
+  // -----------------------------------------------------------------
+  // Blog tab
+  // -----------------------------------------------------------------
+  var blogPosts = [];
+  var blogFormWrap = document.getElementById('blog-form-wrap');
+  var blogListWrap = document.getElementById('blog-list-wrap');
+
+  async function loadBlogTab(){
+    blogListWrap.innerHTML = '<div class="loading-row">Loading…</div>';
+    var res = await sb.from('blog_posts').select('*').order('created_at', {ascending:false});
+    if(res.error){
+      blogListWrap.innerHTML = '<div class="empty-row">Could not load posts: ' + esc(res.error.message) + '</div>';
+      return;
+    }
+    blogPosts = res.data || [];
+    renderBlogList();
+  }
+
+  function renderBlogList(){
+    if(!blogPosts.length){
+      blogListWrap.innerHTML = '<div class="blog-empty">No posts yet.</div>';
+      return;
+    }
+    blogListWrap.innerHTML = '';
+    blogPosts.forEach(function(post){
+      var row = document.createElement('div');
+      row.className = 'blog-row';
+      var left = document.createElement('div');
+      var dateStr = '';
+      try { dateStr = new Date(post.created_at).toLocaleDateString('en-GB', {day:'2-digit', month:'short', year:'numeric'}); } catch(e){}
+      var statusBadge = post.status === 'pending' ? ' · <span style="color:var(--gold);">Pending Review</span>' : '';
+      left.innerHTML = '<div class="blog-row-title">' + esc(post.title) + '</div><div class="blog-row-meta">By ' + esc(post.author) + ' · ' + esc(dateStr) + statusBadge + '</div>';
+      row.appendChild(left);
+      var actions = document.createElement('div');
+      actions.className = 'blog-row-actions';
+      if(post.status === 'pending'){
+        var publishBtn = document.createElement('button');
+        publishBtn.className = 'btn-text';
+        publishBtn.textContent = 'Publish';
+        publishBtn.addEventListener('click', async function(){
+          publishBtn.disabled = true;
+          publishBtn.textContent = 'Publishing…';
+          var res = await sb.from('blog_posts').update({ status: 'published' }).eq('id', post.id);
+          if(res.error){ alert('Failed to publish: ' + res.error.message); publishBtn.disabled = false; publishBtn.textContent = 'Publish'; return; }
+          loadBlogTab();
+        });
+        actions.appendChild(publishBtn);
+      }
+      var editBtn = document.createElement('button');
+      editBtn.className = 'btn-text';
+      editBtn.textContent = 'Edit';
+      editBtn.addEventListener('click', function(){ openBlogForm(post); });
+      var delBtn = document.createElement('button');
+      delBtn.className = 'btn-text danger';
+      delBtn.textContent = 'Delete';
+      delBtn.addEventListener('click', async function(){
+        if(!confirm('Delete "' + post.title + '"? This cannot be undone.')) return;
+        var res = await sb.from('blog_posts').delete().eq('id', post.id);
+        if(res.error){ alert('Failed to delete: ' + res.error.message); return; }
+        blogPosts = blogPosts.filter(function(p){ return p.id !== post.id; });
+        renderBlogList();
+      });
+      actions.appendChild(editBtn);
+      actions.appendChild(delBtn);
+      row.appendChild(actions);
+      blogListWrap.appendChild(row);
+    });
+  }
+
+  function openBlogForm(post){
+    var isEdit = !!post;
+    blogFormWrap.innerHTML = '';
+    var form = document.createElement('div');
+    form.className = 'blog-form';
+    var title = { value: isEdit ? post.title : '' };
+    var author = { value: isEdit ? post.author : '' };
+    var content = { value: isEdit ? post.content : '' };
+    var currentImageUrl = isEdit ? (post.image_url || null) : null;
+
+    field(form, title, 'value', 'Title');
+    field(form, author, 'value', 'Author');
+    field(form, content, 'value', 'Post', {textarea:true});
+    var contentTa = form.querySelector('textarea');
+    contentTa.style.minHeight = '180px';
+
+    var imgWrap = document.createElement('div');
+    imgWrap.className = 'form-field';
+    var imgLabel = document.createElement('label');
+    imgLabel.textContent = 'Featured Image (optional)';
+    imgWrap.appendChild(imgLabel);
+    if(currentImageUrl){
+      var preview = document.createElement('img');
+      preview.src = currentImageUrl;
+      preview.style.cssText = 'max-width:200px; max-height:120px; object-fit:cover; display:block; margin-bottom:0.6rem;';
+      imgWrap.appendChild(preview);
+    }
+    var imgInput = document.createElement('input');
+    imgInput.type = 'file'; imgInput.accept = 'image/*';
+    imgWrap.appendChild(imgInput);
+    form.appendChild(imgWrap);
+
+    var row = document.createElement('div');
+    row.className = 'save-row';
+    var saveBtn = document.createElement('button');
+    saveBtn.className = 'btn-primary';
+    saveBtn.textContent = isEdit ? 'Update Post' : 'Publish Post';
+    var cancelBtn = document.createElement('button');
+    cancelBtn.className = 'btn-text';
+    cancelBtn.textContent = 'Cancel';
+    cancelBtn.addEventListener('click', function(){ blogFormWrap.innerHTML = ''; });
+    var status = document.createElement('span');
+    status.className = 'save-status';
+
+    saveBtn.addEventListener('click', async function(){
+      if(!title.value.trim() || !author.value.trim() || !content.value.trim()){
+        status.textContent = 'Title, author and post body are required.';
+        status.className = 'save-status err';
+        return;
+      }
+      saveBtn.disabled = true;
+      status.textContent = 'Saving…';
+      status.className = 'save-status';
+
+      var imageFile = imgInput.files[0];
+      var imageUrl = currentImageUrl;
+      if(imageFile){
+        var ext = (imageFile.name.split('.').pop() || 'jpg').toLowerCase();
+        var path = slugify(title.value) + '-' + Date.now() + '.' + ext;
+        var upRes = await sb.storage.from('blog-images').upload(path, imageFile, { upsert: true });
+        if(upRes.error){
+          saveBtn.disabled = false;
+          status.textContent = 'Image upload failed: ' + upRes.error.message;
+          status.className = 'save-status err';
           return;
         }
-        var publicUrl = sb.storage.from('blog-images').getPublicUrl(path).data.publicUrl;
-        insertPost(publicUrl);
-      });
-    } else {
-      insertPost(null);
+        imageUrl = sb.storage.from('blog-images').getPublicUrl(path).data.publicUrl;
+      }
+
+      var payload = { title: title.value.trim(), author: author.value.trim(), content: content.value.trim() };
+      if(imageUrl) payload.image_url = imageUrl;
+      var res;
+      if(isEdit){
+        res = await sb.from('blog_posts').update(payload).eq('id', post.id);
+      } else {
+        payload.status = 'published';
+        res = await sb.from('blog_posts').insert([payload]);
+      }
+      saveBtn.disabled = false;
+      if(res.error){
+        status.textContent = 'Failed: ' + res.error.message;
+        status.className = 'save-status err';
+        return;
+      }
+      blogFormWrap.innerHTML = '';
+      loadBlogTab();
+    });
+
+    row.appendChild(saveBtn);
+    row.appendChild(cancelBtn);
+    row.appendChild(status);
+    form.appendChild(row);
+    blogFormWrap.appendChild(form);
+  }
+
+  document.getElementById('blog-new-btn').addEventListener('click', function(){ openBlogForm(null); });
+
+  // -----------------------------------------------------------------
+  // Bookings tab
+  // -----------------------------------------------------------------
+  async function loadBookingsTab(){
+    var loading = document.getElementById('bookings-loading');
+    var empty = document.getElementById('bookings-empty');
+    var table = document.getElementById('bookings-table');
+    var tbody = document.getElementById('bookings-tbody');
+    loading.style.display = 'block';
+    empty.style.display = 'none';
+    table.style.display = 'none';
+
+    var res = await sb.from('bookings').select('*').order('created_at', {ascending:false});
+    loading.style.display = 'none';
+    if(res.error){
+      loading.style.display = 'block';
+      loading.textContent = 'Could not load bookings: ' + res.error.message;
+      return;
     }
-  });
+    var rows = res.data || [];
+    if(!rows.length){
+      empty.style.display = 'block';
+      return;
+    }
+    table.style.display = 'table';
+    tbody.innerHTML = '';
+    rows.forEach(function(b){
+      var tr = document.createElement('tr');
+      var dateStr = '';
+      try { dateStr = new Date(b.created_at).toLocaleDateString('en-GB', {day:'2-digit', month:'short', year:'numeric'}); } catch(e){}
+      tr.innerHTML =
+        '<td>' + esc(dateStr) + '</td>' +
+        '<td>' + esc(b.name) + '</td>' +
+        '<td>' + esc(b.organisation) + '</td>' +
+        '<td>' + esc(b.area) + '</td>' +
+        '<td>' + esc(b.phone) + '</td>' +
+        '<td>' + esc(b.email) + '</td>' +
+        '<td class="note">' + esc(b.note) + '</td>';
+
+      var statusTd = document.createElement('td');
+      var select = document.createElement('select');
+      ['new','contacted','closed'].forEach(function(opt){
+        var o = document.createElement('option');
+        o.value = opt;
+        o.textContent = opt.charAt(0).toUpperCase() + opt.slice(1);
+        if((b.status || 'new') === opt) o.selected = true;
+        select.appendChild(o);
+      });
+      select.addEventListener('change', async function(){
+        var res = await sb.from('bookings').update({ status: select.value }).eq('id', b.id);
+        if(res.error) alert('Failed to update status: ' + res.error.message);
+      });
+      statusTd.appendChild(select);
+      tr.appendChild(statusTd);
+
+      var actionTd = document.createElement('td');
+      var delBtn = document.createElement('button');
+      delBtn.className = 'btn-text danger';
+      delBtn.textContent = 'Delete';
+      delBtn.addEventListener('click', async function(){
+        if(!confirm('Delete this booking from ' + b.name + '?')) return;
+        var res = await sb.from('bookings').delete().eq('id', b.id);
+        if(res.error){ alert('Failed to delete: ' + res.error.message); return; }
+        tr.remove();
+      });
+      actionTd.appendChild(delBtn);
+      tr.appendChild(actionTd);
+
+      tbody.appendChild(tr);
+    });
+  }
+})();
 </script>
 </body>
 </html>
