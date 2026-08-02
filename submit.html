@@ -15,7 +15,7 @@
   h1{ font-size:1.4rem; margin-bottom:0.3rem; }
   .sub{ color:#666; font-size:0.92rem; margin-bottom:2rem; }
   label{ display:block; font-size:0.8rem; font-weight:600; margin-bottom:0.3rem; margin-top:1.2rem; }
-  input, textarea, select{ width:100%; padding:0.7rem; border:1px solid var(--line); background:#fff; font-size:0.95rem; font-family:inherit; border-radius:4px; }
+  input, textarea{ width:100%; padding:0.7rem; border:1px solid var(--line); background:#fff; font-size:0.95rem; font-family:inherit; border-radius:4px; }
   textarea{ min-height:220px; resize:vertical; }
   button{ margin-top:1.5rem; padding:0.8rem 1.6rem; background:var(--blue); color:#fff; border:none; border-radius:4px; font-size:0.95rem; cursor:pointer; }
   button:hover{ opacity:0.9; }
@@ -29,6 +29,7 @@
   .list-item{ border:1px solid var(--line); border-radius:6px; padding:0.9rem; margin-top:0.8rem; }
   .list-item .status{ font-size:0.72rem; text-transform:uppercase; letter-spacing:0.05em; color:var(--gold); font-weight:600; }
   .post-thumb{ width:100%; max-height:140px; object-fit:cover; border-radius:4px; margin-bottom:0.6rem; display:block; }
+  .publish-btn{ margin-top:0.7rem; margin-left:0; padding:0.45rem 0.9rem; font-size:0.8rem; display:block; }
   .tabs{ display:flex; gap:0.5rem; margin-top:1.5rem; border-bottom:1px solid var(--line); }
   .tab-btn{ margin:0; padding:0.6rem 0.2rem; background:none; color:#888; border:none; border-bottom:2px solid transparent; border-radius:0; font-size:0.9rem; font-weight:600; cursor:pointer; }
   .tab-btn.active{ color:var(--blue); border-bottom-color:var(--blue); }
@@ -39,9 +40,15 @@
   .booking-item .when{ font-size:0.72rem; color:#888; margin-bottom:0.4rem; }
   .booking-item .row{ font-size:0.9rem; margin-top:0.2rem; }
   .booking-item .row strong{ display:inline-block; min-width:100px; color:#555; font-weight:600; font-size:0.8rem; }
-  .booking-item .status-row{ margin-top:0.7rem; display:flex; align-items:center; gap:0.6rem; }
-  .booking-item .status-row select{ width:auto; padding:0.4rem 0.6rem; font-size:0.82rem; }
-  .booking-item .status-saved{ font-size:0.78rem; color:#1e4620; display:none; }
+  .counsel-item{ display:flex; gap:1rem; align-items:center; border:1px solid var(--line); border-radius:6px; padding:0.9rem; margin-top:0.8rem; }
+  .counsel-thumb{ width:56px; height:56px; flex:none; border:1px solid var(--blue); display:flex; align-items:center; justify-content:center; font-family:serif; font-style:italic; color:var(--blue); overflow:hidden; font-size:1.1rem; }
+  .counsel-thumb img{ width:100%; height:100%; object-fit:cover; display:block; }
+  .counsel-info{ flex:1; min-width:0; }
+  .counsel-info .name{ font-weight:600; font-size:0.92rem; }
+  .counsel-info .title{ font-size:0.78rem; color:#888; margin-top:0.1rem; }
+  .counsel-actions{ display:flex; align-items:center; gap:0.5rem; flex:none; }
+  .counsel-actions input[type=file]{ width:auto; padding:0; border:none; font-size:0.78rem; }
+  .counsel-actions button{ margin:0; padding:0.4rem 0.8rem; font-size:0.78rem; }
 </style>
 </head>
 <body>
@@ -61,7 +68,7 @@
   <div id="app-view" class="hidden">
     <div class="topbar">
       <div>
-        <h1>Submit a Post</h1>
+        <h1 id="app-title">Submit a Post</h1>
         <p class="sub" id="whoami"></p>
       </div>
       <button class="logout" id="logout-btn">Sign out</button>
@@ -70,6 +77,7 @@
     <div class="tabs">
       <button class="tab-btn active" id="tab-posts-btn">Posts</button>
       <button class="tab-btn" id="tab-bookings-btn">Bookings</button>
+      <button class="tab-btn hidden" id="tab-counsel-btn">Counsel</button>
     </div>
 
     <div class="panel" id="panel-posts">
@@ -84,15 +92,21 @@
       <button id="submit-btn">Submit for Review</button>
       <div class="msg" id="submit-msg"></div>
 
-      <h2 style="font-size:1rem; margin-top:2.5rem;">Your Recent Submissions</h2>
-      <p class="sub" style="margin-top:0.2rem;">Sent to the admin for review before they appear on the site.</p>
+      <h2 style="font-size:1rem; margin-top:2.5rem;" id="posts-heading">Your Recent Submissions</h2>
       <div id="my-posts"></div>
     </div>
 
     <div class="panel hidden" id="panel-bookings">
       <h2 style="font-size:1rem; margin-top:0;">Consultation Bookings</h2>
-      <p class="sub" style="margin-bottom:1rem;">Booking requests submitted through the site. You can update each one's status.</p>
+      <p class="sub" style="margin-bottom:1rem;">Read-only — booking requests submitted through the site.</p>
       <div id="bookings-list"></div>
+    </div>
+
+    <div class="panel hidden" id="panel-counsel">
+      <h2 style="font-size:1rem; margin-top:0;">Counsel Photos</h2>
+      <p class="sub" style="margin-bottom:1rem;">Upload or replace a headshot — updates the live site directly, no code changes needed.</p>
+      <div id="counsel-msg" class="msg"></div>
+      <div id="counsel-list"></div>
     </div>
   </div>
 
@@ -105,10 +119,51 @@
   var appView = document.getElementById('app-view');
   var loginMsg = document.getElementById('login-msg');
   var submitMsg = document.getElementById('submit-msg');
+  var currentRole = null;
 
   function showMsg(el, text, isError){
     el.textContent = text;
     el.className = 'msg ' + (isError ? 'err' : 'ok');
+  }
+
+  function loadPosts(){
+    var query = sb.from('blog_posts').select('*').order('created_at', {ascending:false}).limit(20);
+    if(currentRole === 'admin'){
+      query = query.eq('status', 'pending');
+    }
+    query.then(function(res){
+      var box = document.getElementById('my-posts');
+      if(res.error || !res.data || !res.data.length){
+        box.innerHTML = '<p class="sub">' + (currentRole === 'admin' ? 'No pending posts.' : 'No submissions yet.') + '</p>';
+        return;
+      }
+      box.innerHTML = res.data.map(function(p){
+        var publishBtn = (currentRole === 'admin' && p.status === 'pending')
+          ? '<button class="publish-btn" data-id="' + p.id + '">Publish</button>' : '';
+        var thumb = p.image_url ? '<img class="post-thumb" src="' + escapeHtml(p.image_url) + '" alt="">' : '';
+        return '<div class="list-item">' + thumb + '<div class="status">' + p.status + '</div>'
+          + '<strong>' + escapeHtml(p.title) + '</strong><div class="sub">by ' + escapeHtml(p.author) + '</div>'
+          + publishBtn + '</div>';
+      }).join('');
+      if(currentRole === 'admin'){
+        Array.prototype.forEach.call(document.querySelectorAll('.publish-btn'), function(btn){
+          btn.addEventListener('click', function(){
+            var id = btn.getAttribute('data-id');
+            btn.disabled = true;
+            btn.textContent = 'Publishing...';
+            sb.from('blog_posts').update({ status: 'published' }).eq('id', id).then(function(upd){
+              if(upd.error){
+                btn.disabled = false;
+                btn.textContent = 'Publish';
+                alert(upd.error.message);
+                return;
+              }
+              loadPosts();
+            });
+          });
+        });
+      }
+    });
   }
 
   function escapeHtml(s){
@@ -118,27 +173,9 @@
   }
 
   function fmtDate(iso){
-    try{ return new Date(iso).toLocaleString(); } catch(e){ return iso; }
-  }
-
-  function slugify(s){
-    return String(s || 'post').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
-  }
-
-  function loadPosts(){
-    sb.from('blog_posts').select('*').order('created_at', {ascending:false}).limit(20).then(function(res){
-      var box = document.getElementById('my-posts');
-      if(res.error || !res.data || !res.data.length){
-        box.innerHTML = '<p class="sub">No submissions yet.</p>';
-        return;
-      }
-      box.innerHTML = res.data.map(function(p){
-        var thumb = p.image_url ? '<img class="post-thumb" src="' + escapeHtml(p.image_url) + '" alt="">' : '';
-        return '<div class="list-item">' + thumb + '<div class="status">' + escapeHtml(p.status) + '</div>'
-          + '<strong>' + escapeHtml(p.title) + '</strong><div class="sub">by ' + escapeHtml(p.author) + '</div>'
-          + '</div>';
-      }).join('');
-    });
+    try{
+      return new Date(iso).toLocaleString();
+    } catch(e){ return iso; }
   }
 
   var bookingsLoaded = false;
@@ -156,7 +193,7 @@
           return;
         }
         box.innerHTML = res.data.map(function(b){
-          return '<div class="booking-item" data-id="' + b.id + '">'
+          return '<div class="booking-item">'
             + '<div class="when">' + escapeHtml(fmtDate(b.created_at)) + '</div>'
             + '<div class="row"><strong>Name</strong>' + escapeHtml(b.name || '—') + '</div>'
             + '<div class="row"><strong>Phone</strong>' + escapeHtml(b.phone || '—') + '</div>'
@@ -164,56 +201,148 @@
             + '<div class="row"><strong>Organisation</strong>' + escapeHtml(b.organisation || '—') + '</div>'
             + '<div class="row"><strong>Area of Law</strong>' + escapeHtml(b.area || '—') + '</div>'
             + '<div class="row"><strong>Brief</strong>' + escapeHtml(b.note || '—') + '</div>'
-            + '<div class="status-row">'
-            + '<select data-id="' + b.id + '" class="booking-status">'
-            + ['new','contacted','closed'].map(function(opt){
-                return '<option value="' + opt + '"' + ((b.status || 'new') === opt ? ' selected' : '') + '>' + opt.charAt(0).toUpperCase() + opt.slice(1) + '</option>';
-              }).join('')
-            + '</select><span class="status-saved">Saved</span>'
-            + '</div>'
             + '</div>';
         }).join('');
-        Array.prototype.forEach.call(document.querySelectorAll('.booking-status'), function(sel){
-          sel.addEventListener('change', function(){
-            var id = sel.getAttribute('data-id');
-            var savedEl = sel.parentElement.querySelector('.status-saved');
-            sb.from('bookings').update({ status: sel.value }).eq('id', id).then(function(res){
-              if(res.error){ alert('Could not update status: ' + res.error.message); return; }
-              savedEl.style.display = 'inline';
-              setTimeout(function(){ savedEl.style.display = 'none'; }, 1500);
-            });
-          });
+      });
+  }
+
+  var counselMembers = null; // cached copy of the leadership row's members array
+
+  function slugify(name){
+    return String(name || 'member').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+  }
+
+  function loadCounsel(){
+    var box = document.getElementById('counsel-list');
+    box.innerHTML = '<p class="sub">Loading...</p>';
+    sb.from('site_content').select('value').eq('key', 'leadership').single().then(function(res){
+      if(res.error || !res.data){
+        box.innerHTML = '<p class="sub">Could not load counsel list: ' + escapeHtml(res.error ? res.error.message : 'not found') + '</p>';
+        return;
+      }
+      counselMembers = (res.data.value && res.data.value.members) || [];
+      renderCounsel();
+    });
+  }
+
+  function renderCounsel(){
+    var box = document.getElementById('counsel-list');
+    if(!counselMembers.length){
+      box.innerHTML = '<p class="sub">No counsel members found.</p>';
+      return;
+    }
+    box.innerHTML = counselMembers.map(function(m, i){
+      var thumb = m.photo
+        ? '<img src="' + escapeHtml(m.photo) + '" alt="">'
+        : escapeHtml(m.initials || '');
+      return '<div class="counsel-item">'
+        + '<div class="counsel-thumb">' + thumb + '</div>'
+        + '<div class="counsel-info"><div class="name">' + escapeHtml(m.name) + '</div><div class="title">' + escapeHtml(m.title) + '</div></div>'
+        + '<div class="counsel-actions">'
+        + '<input type="file" accept="image/*" data-idx="' + i + '" class="counsel-file">'
+        + '<button data-idx="' + i + '" class="counsel-upload-btn">Upload</button>'
+        + '</div></div>';
+    }).join('');
+    Array.prototype.forEach.call(document.querySelectorAll('.counsel-upload-btn'), function(btn){
+      btn.addEventListener('click', function(){
+        var idx = parseInt(btn.getAttribute('data-idx'), 10);
+        var fileInput = document.querySelector('.counsel-file[data-idx="' + idx + '"]');
+        var file = fileInput.files && fileInput.files[0];
+        if(!file){ showMsg(document.getElementById('counsel-msg'), 'Choose a photo first.', true); return; }
+        uploadCounselPhoto(idx, file, btn);
+      });
+    });
+  }
+
+  function uploadCounselPhoto(idx, file, btn){
+    var msgEl = document.getElementById('counsel-msg');
+    btn.disabled = true;
+    btn.textContent = 'Uploading...';
+    var member = counselMembers[idx];
+    var ext = (file.name.split('.').pop() || 'jpg').toLowerCase();
+    var path = slugify(member.name) + '-' + Date.now() + '.' + ext;
+
+    sb.storage.from('counsel-photos').upload(path, file, { upsert: true }).then(function(uploadRes){
+      if(uploadRes.error){
+        btn.disabled = false;
+        btn.textContent = 'Upload';
+        showMsg(msgEl, uploadRes.error.message, true);
+        return;
+      }
+      var publicUrl = sb.storage.from('counsel-photos').getPublicUrl(path).data.publicUrl;
+
+      // Re-fetch the leadership row fresh before patching, so we never
+      // clobber a photo update someone else made in the meantime.
+      sb.from('site_content').select('value').eq('key', 'leadership').single().then(function(res){
+        if(res.error || !res.data){
+          btn.disabled = false;
+          btn.textContent = 'Upload';
+          showMsg(msgEl, 'Uploaded, but could not save: ' + (res.error ? res.error.message : 'not found'), true);
+          return;
+        }
+        var value = res.data.value;
+        var members = value.members || [];
+        var target = members.find(function(m){ return m.name === member.name; }) || members[idx];
+        if(target) target.photo = publicUrl;
+
+        sb.from('site_content').update({ value: value }).eq('key', 'leadership').then(function(updRes){
+          btn.disabled = false;
+          btn.textContent = 'Upload';
+          if(updRes.error){
+            showMsg(msgEl, 'Uploaded, but could not save: ' + updRes.error.message, true);
+            return;
+          }
+          showMsg(msgEl, 'Photo updated for ' + member.name + '.', false);
+          loadCounsel();
         });
       });
+    });
   }
 
   function showTab(which){
     var postsBtn = document.getElementById('tab-posts-btn');
     var bookingsBtn = document.getElementById('tab-bookings-btn');
+    var counselBtn = document.getElementById('tab-counsel-btn');
     var postsPanel = document.getElementById('panel-posts');
     var bookingsPanel = document.getElementById('panel-bookings');
+    var counselPanel = document.getElementById('panel-counsel');
+    postsBtn.classList.remove('active');
+    bookingsBtn.classList.remove('active');
+    counselBtn.classList.remove('active');
+    postsPanel.classList.add('hidden');
+    bookingsPanel.classList.add('hidden');
+    counselPanel.classList.add('hidden');
     if(which === 'bookings'){
-      postsBtn.classList.remove('active');
       bookingsBtn.classList.add('active');
-      postsPanel.classList.add('hidden');
       bookingsPanel.classList.remove('hidden');
       if(!bookingsLoaded){ bookingsLoaded = true; loadBookings(); }
+    } else if(which === 'counsel'){
+      counselBtn.classList.add('active');
+      counselPanel.classList.remove('hidden');
+      loadCounsel();
     } else {
-      bookingsBtn.classList.remove('active');
       postsBtn.classList.add('active');
-      bookingsPanel.classList.add('hidden');
       postsPanel.classList.remove('hidden');
     }
   }
 
   document.getElementById('tab-posts-btn').addEventListener('click', function(){ showTab('posts'); });
   document.getElementById('tab-bookings-btn').addEventListener('click', function(){ showTab('bookings'); });
+  document.getElementById('tab-counsel-btn').addEventListener('click', function(){ showTab('counsel'); });
 
   function showApp(session){
     loginView.classList.add('hidden');
     appView.classList.remove('hidden');
     document.getElementById('whoami').textContent = 'Signed in as ' + session.user.email;
-    loadPosts();
+    sb.from('profiles').select('role').eq('id', session.user.id).single().then(function(res){
+      currentRole = (res.data && res.data.role) || 'editor';
+      document.getElementById('whoami').textContent = 'Signed in as ' + session.user.email + (currentRole === 'admin' ? ' (admin)' : '');
+      document.getElementById('posts-heading').textContent = currentRole === 'admin' ? 'Pending Posts' : 'Your Recent Submissions';
+      if(currentRole === 'admin'){
+        document.getElementById('tab-counsel-btn').classList.remove('hidden');
+      }
+      loadPosts();
+    });
   }
 
   sb.auth.getSession().then(function(res){
@@ -235,6 +364,7 @@
       appView.classList.add('hidden');
       loginView.classList.remove('hidden');
       bookingsLoaded = false;
+      document.getElementById('tab-counsel-btn').classList.add('hidden');
       showTab('posts');
     });
   });
@@ -255,7 +385,7 @@
       sb.from('blog_posts').insert(row).then(function(res){
         btn.disabled = false;
         if(res.error){ showMsg(submitMsg, res.error.message, true); return; }
-        showMsg(submitMsg, 'Submitted — it will appear on the site once the admin reviews it.', false);
+        showMsg(submitMsg, 'Submitted — it will appear on the site once reviewed.', false);
         document.getElementById('post-title').value = '';
         document.getElementById('post-content').value = '';
         document.getElementById('post-image').value = '';
