@@ -308,7 +308,7 @@
 </div>
 
 <script src="config.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.117.2/dist/umd/supabase.min.js"></script>
 <script>
 (function(){
   if(!window.SITE_CONFIG || !window.SITE_CONFIG.SUPABASE_URL || !window.SITE_CONFIG.SUPABASE_ANON_KEY){
@@ -324,6 +324,14 @@
     });
   }
 
+  function safeImageUrl(value){
+    try {
+      var url = new URL(String(value || ''), window.location.origin);
+      var sameOrigin = url.origin === window.location.origin;
+      var supabaseStorage = url.protocol === 'https:' && /\.supabase\.co$/i.test(url.hostname);
+      return (url.protocol === 'https:' && (sameOrigin || supabaseStorage)) ? esc(url.href) : '';
+    } catch(e){ return ''; }
+  }
   // -----------------------------------------------------------------
   // Auth
   // -----------------------------------------------------------------
@@ -371,8 +379,7 @@
     try{
       var res = await sb.from('profiles').select('role').eq('id', session.user.id).single();
       if(res.error){
-        console.error('profiles lookup failed:', res.error);
-        loginError.textContent = 'Could not verify account access: ' + res.error.message + ' (check the browser console for details).';
+        loginError.textContent = 'Could not verify account access. Please try again.';
         loginError.style.display = 'block';
         return;
       }
@@ -387,8 +394,7 @@
         await sb.auth.signOut();
       }
     } catch(err){
-      console.error('routeByRole threw:', err);
-      loginError.textContent = 'Unexpected error checking account access: ' + (err && err.message ? err.message : err) + ' (check the browser console).';
+      loginError.textContent = 'Unexpected error checking account access. Please try again.';
       loginError.style.display = 'block';
     }
   }
@@ -455,7 +461,7 @@
 
       var thumb = document.createElement('div');
       thumb.style.cssText = 'width:64px; height:64px; flex:none; border:1px solid var(--blue); display:flex; align-items:center; justify-content:center; font-family:var(--serif); font-style:italic; color:var(--blue); overflow:hidden; font-size:1.2rem;';
-      thumb.innerHTML = item.photo ? '<img src="' + esc(item.photo) + '" style="width:100%;height:100%;object-fit:cover;display:block;">' : esc(item.initials || '');
+      thumb.innerHTML = item.photo ? '<img src="' + safeImageUrl(item.photo) + '" style="width:100%;height:100%;object-fit:cover;display:block;">' : esc(item.initials || '');
       row.appendChild(thumb);
 
       var info = document.createElement('div');
@@ -508,7 +514,7 @@
         item.photo = publicUrl;
         counselMembers = freshMembers;
         contentData.leadership = freshValue;
-        thumb.innerHTML = '<img src="' + esc(publicUrl) + '" style="width:100%;height:100%;object-fit:cover;display:block;">';
+        thumb.innerHTML = '<img src="' + safeImageUrl(publicUrl) + '" style="width:100%;height:100%;object-fit:cover;display:block;">';
         status.textContent = 'Saved.'; status.className = 'save-status ok';
       });
 
@@ -840,7 +846,7 @@
           photoRow.style.cssText = 'display:flex; align-items:center; gap:1rem; margin-bottom:1.2rem; flex-wrap:wrap;';
           var thumb = document.createElement('div');
           thumb.style.cssText = 'width:56px; height:56px; flex:none; border:1px solid var(--blue); display:flex; align-items:center; justify-content:center; font-family:var(--serif); font-style:italic; color:var(--blue); overflow:hidden; font-size:1.1rem;';
-          thumb.innerHTML = item.photo ? '<img src="' + esc(item.photo) + '" style="width:100%;height:100%;object-fit:cover;display:block;">' : esc(item.initials || '');
+          thumb.innerHTML = item.photo ? '<img src="' + safeImageUrl(item.photo) + '" style="width:100%;height:100%;object-fit:cover;display:block;">' : esc(item.initials || '');
           var fileInput = document.createElement('input');
           fileInput.type = 'file'; fileInput.accept = 'image/*';
           var uploadBtn = document.createElement('button');
@@ -879,7 +885,7 @@
             }
             item.photo = publicUrl;
             contentData.leadership = freshValue;
-            thumb.innerHTML = '<img src="' + esc(publicUrl) + '" style="width:100%;height:100%;object-fit:cover;display:block;">';
+            thumb.innerHTML = '<img src="' + safeImageUrl(publicUrl) + '" style="width:100%;height:100%;object-fit:cover;display:block;">';
             photoStatus.textContent = 'Saved.'; photoStatus.className = 'save-status ok';
           });
           photoRow.appendChild(thumb);

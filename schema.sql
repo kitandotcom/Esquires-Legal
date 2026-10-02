@@ -6,12 +6,10 @@
 -- re-run: it will not duplicate data or clobber existing bookings.
 --
 -- Tables:
---   bookings      already exists live (written to by the public consultation
---                 form). This script adds a `status` column and — important —
---                 TIGHTENS row-level security. Today anon SELECT is open
---                 (anyone with the public anon key can read all bookings);
---                 after this runs, only a signed-in admin can read/update/
---                 delete bookings, while the public form can still insert.
+--   bookings      already exists live. This script adds a `status` column and
+--                 tightens row-level security. Public writes go through the
+--                 throttled /api/submit-booking server endpoint; only staff
+--                 roles can read/update bookings and only admins can delete.
 --   blog_posts    new. Publicly readable; only a signed-in admin can write.
 --   site_content  new. Key/value(jsonb) store for the editable sections of
 --                 the public site (hero, stats, firm, foundation, practice,
@@ -26,6 +24,23 @@
 -- ---------------------------------------------------------------------------
 
 create extension if not exists pgcrypto;
+
+-- ---------------------------------------------------------------------------
+-- roles and policy helpers
+-- ---------------------------------------------------------------------------
+create table if not exists public.profiles (
+  id uuid primary key references auth.users(id) on delete cascade,
+  role text not null check (role in ('admin', 'editor')),
+  created_at timestamptz not null default now()
+);
+alter table public.profiles enable row level security;
+drop policy if exists "profiles_select_self" on public.profiles;
+create policy "profiles_select_self" on public.profiles for select to authenticated using (id = auth.uid());
+create or replace function public.has_role(required_role text)
+returns boolean language sql stable security definer set search_path = public
+as $$ select exists (select 1 from public.profiles where id = auth.uid() and role = required_role); $$;
+revoke all on function public.has_role(text) from public;
+grant execute on function public.has_role(text) to authenticated;
 
 -- ---------------------------------------------------------------------------
 -- bookings
@@ -57,17 +72,16 @@ begin
   end loop;
 end $$;
 
-create policy "bookings_insert_public" on public.bookings
-  for insert to anon, authenticated with check (true);
-
-create policy "bookings_select_admin" on public.bookings
-  for select to authenticated using (true);
-
-create policy "bookings_update_admin" on public.bookings
-  for update to authenticated using (true) with check (true);
-
+-- Public submissions use /api/submit-booking with the server-only service role.
+-- There is deliberately no anon INSERT policy: it would bypass throttling.
+create policy "bookings_select_staff" on public.bookings
+  for select to authenticated using (public.has_role('admin') or public.has_role('editor'));
+create policy "bookings_update_staff" on public.bookings
+  for update to authenticated
+  using (public.has_role('admin') or public.has_role('editor'))
+  with check (public.has_role('admin') or public.has_role('editor'));
 create policy "bookings_delete_admin" on public.bookings
-  for delete to authenticated using (true);
+  for delete to authenticated using (public.has_role('admin'));
 
 -- ---------------------------------------------------------------------------
 -- shared updated_at trigger
@@ -101,19 +115,29 @@ create trigger blog_posts_set_updated_at
 
 drop policy if exists "blog_select_public" on public.blog_posts;
 create policy "blog_select_public" on public.blog_posts
-  for select to anon, authenticated using (true);
+  for select to anon using (status = 'published');
+drop policy if exists "blog_select_staff" on public.blog_posts;
+create policy "blog_select_staff" on public.blog_posts
+  for select to authenticated using (public.has_role('admin') or public.has_role('editor'));
 
 drop policy if exists "blog_insert_admin" on public.blog_posts;
-create policy "blog_insert_admin" on public.blog_posts
-  for insert to authenticated with check (true);
-
+create policy "blog_insert_staff" on public.blog_posts
+  for insert to authenticated
+  with check (
+    (public.has_role('admin') and status in ('draft', 'pending', 'published'))
+    or (public.has_role('editor') and status = 'pending')
+  );
 drop policy if exists "blog_update_admin" on public.blog_posts;
-create policy "blog_update_admin" on public.blog_posts
-  for update to authenticated using (true) with check (true);
-
+create policy "blog_update_staff" on public.blog_posts
+  for update to authenticated
+  using (public.has_role('admin') or (public.has_role('editor') and status = 'pending'))
+  with check (
+    (public.has_role('admin') and status in ('draft', 'pending', 'published'))
+    or (public.has_role('editor') and status = 'pending')
+  );
 drop policy if exists "blog_delete_admin" on public.blog_posts;
 create policy "blog_delete_admin" on public.blog_posts
-  for delete to authenticated using (true);
+  for delete to authenticated using (public.has_role('admin'));
 
 -- ---------------------------------------------------------------------------
 -- site_content
@@ -137,7 +161,7 @@ create policy "content_select_public" on public.site_content
 
 drop policy if exists "content_write_admin" on public.site_content;
 create policy "content_write_admin" on public.site_content
-  for all to authenticated using (true) with check (true);
+  for all to authenticated using (public.has_role('admin')) with check (public.has_role('admin'));
 
 -- ---------------------------------------------------------------------------
 -- site_content seed data — mirrors the copy already live in index.html.

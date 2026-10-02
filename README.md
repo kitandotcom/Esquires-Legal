@@ -1,72 +1,47 @@
-# ⚖️ Esquires Legal
+# Esquires' Legal
 
-A modern, responsive website for **Esquires Legal**, designed to showcase the firm's legal services, expertise, and contact information through a clean, professional user experience.
+A responsive static website for Esquires' Legal with Supabase-backed content, staff authentication, blog management, counsel profiles, and consultation bookings.
 
----
+## Security setup
 
-## 📖 Overview
+The browser contains only the Supabase **publishable/anon key**. That key is designed for browser use and is constrained by Row Level Security. Supabase Auth handles password hashing and session management; this site never stores passwords itself. Never put a `service_role` key, database password, Resend key, or webhook secret in `config.js`.
 
-Esquires Legal is a law firm website focused on presenting legal services through a clean, responsive, and user-friendly interface.
+Configure these **server-only** Vercel environment variables before deploying:
 
-## ✨ Features
+- `SUPABASE_URL`
+- `SUPABASE_SERVICE_ROLE_KEY`
+- `SUPABASE_WEBHOOK_SECRET`
+- `RESEND_API_KEY`
+- `NOTIFY_EMAIL`
 
-- Responsive design
-- Modern UI
-- Practice areas
-- About section
-- Contact page
-- Mobile-friendly navigation
+Use `.env.example` as the variable checklist. Do not commit `.env` files.
 
-## 🛠 Tech Stack
+## Database migration
 
-- HTML5
-- CSS3
-- JavaScript
+Run `schema.sql` in the Supabase SQL editor. It:
 
-> Update this section to match your actual stack.
+- creates the `profiles` role table and role helper;
+- restricts bookings to staff reads/updates and admin deletes;
+- removes the anonymous bookings insert policy because public submissions now use the throttled `/api/submit-booking` endpoint;
+- permits editors to submit pending blog posts while only admins can publish/delete and edit site content;
+- ensures anonymous visitors can read only published blog posts.
 
-## 🚀 Getting Started
+After running it, create one `profiles` row for each staff account using the matching Supabase Auth user ID and either `admin` or `editor` role.
+
+## Local smoke test
+
+This repository has no package manager dependencies. Serve it with:
 
 ```bash
-git clone https://github.com/kitandotcom/Esquires-Legal.git
-cd Esquires-Legal
-npm install
-npm run dev
+python3 -m http.server 4173
 ```
 
-## 📂 Project Structure
+The production deployment uses Vercel serverless functions under `api/` and the security headers in `vercel.json`.
 
-```text
-Esquires-Legal/
-├── public/
-├── src/
-├── package.json
-└── README.md
-```
+## Routes
 
-## 📱 Responsive
-
-Optimized for desktop, tablet, and mobile devices.
-
-## 🔮 Future Improvements
-
-- Appointment booking
-- Blog
-- Live chat
-- SEO improvements
-
-## 🤝 Contributing
-
-Fork the repository, create a feature branch, commit your changes, and open a pull request.
-
-## 📄 License
-
-MIT License
-
-## 👨‍💻 Author
-
-**Kitan**
-
-GitHub: https://github.com/kitandotcom
-
-If you found this project useful, consider giving it a ⭐.
+- `/` — public site
+- `/admin` — staff login and admin dashboard
+- `/submit` — editor dashboard
+- `/api/submit-booking` — validated, rate-limited booking submission
+- `/api/notify-booking` — authenticated Supabase webhook email notification

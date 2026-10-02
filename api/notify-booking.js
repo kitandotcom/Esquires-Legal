@@ -13,7 +13,7 @@
 //        Events: Insert
 //        Type: HTTP Request
 //        URL: https://<your-vercel-domain>/api/notify-booking
-//        HTTP Headers: none required
+//        HTTP Headers: x-webhook-secret: <same value as SUPABASE_WEBHOOK_SECRET>
 //   4. Redeploy on Vercel so the new env vars take effect.
 // ---------------------------------------------------------------------------
 
@@ -26,7 +26,6 @@ export default async function handler(req, res) {
   const NOTIFY_EMAIL = process.env.NOTIFY_EMAIL;
 
   if (!RESEND_API_KEY || !NOTIFY_EMAIL) {
-    console.error('Missing RESEND_API_KEY or NOTIFY_EMAIL env var');
     return res.status(500).json({ error: 'Server not configured' });
   }
 
@@ -76,14 +75,12 @@ export default async function handler(req, res) {
     });
 
     if (!resendRes.ok) {
-      const errText = await resendRes.text();
-      console.error('Resend error:', errText);
+      await resendRes.text();
       return res.status(502).json({ error: 'Failed to send email' });
     }
 
     return res.status(200).json({ ok: true });
-  } catch (err) {
-    console.error('notify-booking error:', err);
+  } catch {
     return res.status(500).json({ error: 'Unexpected error' });
   }
 }
