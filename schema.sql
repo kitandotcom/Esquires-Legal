@@ -241,12 +241,34 @@ insert into public.site_content (key, value) values
     {"idx": "12", "head": "Consumer Protection & Anti-trust", "body": "A fairly novel area in Nigerian law. We actively represent clients and petitioners before the Federal Competition and Consumer Protection Commission (FCCPC)."},
     {"idx": "13", "head": "Family Law", "body": "Family responsibility proceedings, cohabitation contracts, child and spousal support, divorce, adoption and custody matters."},
     {"idx": "14", "head": "Customary Law & Practice", "body": "Customary law practice and custom, with pragmatic, traditional application to marriage, land, inheritance and ancillary matters."},
-    {"idx": "15", "head": "Proof Reading & Editing", "body": "Assisting authors in editing and proofing their works, for an international clientele spanning the globe."},
+    {"idx": "15", "head": "International Editorial & Knowledge Services", "body": "Assisting authors in editing and proofing their works, for an international clientele spanning the globe."},
     {"idx": "16", "head": "Other Areas", "body": "Education law, wills and probate, housing law (landlord and tenancy), information and communications technology, and class actions."}
   ]
 }
 $j$::jsonb)
 on conflict (key) do nothing;
+
+-- Keep an existing live practice row in sync with the renamed item 15.
+update public.site_content
+set value = jsonb_set(
+  value,
+  '{items}',
+  (
+    select jsonb_agg(
+      case
+        when item->>'idx' = '15' or item->>'head' = 'Proof Reading & Editing'
+          then jsonb_set(item, '{head}', to_jsonb('International Editorial & Knowledge Services'::text))
+        else item
+      end
+      order by ordinality
+    )
+    from jsonb_array_elements(value->'items') with ordinality as rows(item, ordinality)
+  ),
+  false
+)
+where key = 'practice'
+  and jsonb_typeof(value->'items') = 'array'
+  and value->'items' @> '[{"idx":"15"}]'::jsonb;
 
 insert into public.site_content (key, value) values
 ('advisory', $j$

@@ -609,7 +609,7 @@
       </div>
 
       <div class="acc-item">
-        <button class="acc-trigger" aria-expanded="false"><span class="acc-trigger-text"><span class="idx">15</span>Proof Reading &amp; Editing</span><span class="acc-mark"></span></button>
+        <button class="acc-trigger" aria-expanded="false"><span class="acc-trigger-text"><span class="idx">15</span>International Editorial &amp; Knowledge Services</span><span class="acc-mark"></span></button>
         <div class="acc-panel"><div class="acc-panel-inner"><p>Assisting authors in editing and proofing their works, for an international clientele spanning the globe.</p></div></div>
       </div>
 
@@ -1147,7 +1147,17 @@ Esther has a particular interest in criminology and criminal law, and is working
   }
   function renderPractice(d){
     setTitle('practice-title', d.title_pre, d.title_em);
-    if(Array.isArray(d.items)) setHTML('practice-list', accordionItemsHTML(d.items));
+    if(Array.isArray(d.items)){
+      var practiceItems = d.items.map(function(item){
+        if(String(item.idx) === '15' || item.head === 'Proof Reading & Editing'){
+          var updated = Object.assign({}, item);
+          updated.head = 'International Editorial & Knowledge Services';
+          return updated;
+        }
+        return item;
+      });
+      setHTML('practice-list', accordionItemsHTML(practiceItems));
+    }
   }
   function renderAdvisory(d){
     setTitle('advisory-title', d.title_pre, d.title_em);
